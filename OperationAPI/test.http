@@ -1,0 +1,9 @@
+
+@hostname=localhost
+@port=7056
+
+GET https://{{hostname}}:{{port}}/Operation
+###
+
+POST https://{{hostname}}:{{port}}/Operation?code=gd&name=dfh
+
