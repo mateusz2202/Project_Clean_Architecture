@@ -15,6 +15,7 @@ public class OperationService : IOperationService
     {
         await _dbContext.Operations.AddAsync(new Entities.Operation() { Name = name, Code = code });
         xd
+
         await _dbContext.SaveChangesAsync();
         await Task.CompletedTask;
     }
