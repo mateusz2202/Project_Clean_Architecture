@@ -1,4 +1,6 @@
-﻿using OperationAPI.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using OperationAPI.Data;
+using OperationAPI.Entities;
 using OperationAPI.Interfaces;
 
 namespace OperationAPI.Services;
@@ -10,6 +12,11 @@ public class OperationService : IOperationService
     {
         _dbContext = dbContext;
     }
+    public async Task<IEnumerable<Operation>> GetAll()
+    {
+        var result = await _dbContext.Operations.ToListAsync();
+        return result;
+    }
 
     public async Task AddOperation(string name, string code)
     {
@@ -17,4 +24,5 @@ public class OperationService : IOperationService
         await _dbContext.SaveChangesAsync();
         await Task.CompletedTask;
     }
+
 }
