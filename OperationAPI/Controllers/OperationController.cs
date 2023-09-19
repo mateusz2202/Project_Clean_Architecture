@@ -14,6 +14,13 @@ public class OperationController : ControllerBase
         _operationService = operationService;
     }
 
+    [HttpGet]
+    public async Task<IActionResult> Get()
+    {
+        var operations = await _operationService.GetAll();
+        return Ok(operations);
+    }
+
     [HttpPost]
     public async Task<IActionResult> Post(string code, string name)
     {
