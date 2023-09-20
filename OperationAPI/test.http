@@ -5,5 +5,7 @@
 GET https://{{hostname}}:{{port}}/Operation
 ###
 
-POST https://{{hostname}}:{{port}}/Operation?code=gd&name=dfh
+@code= xd
+@name = fdg
+POST https://{{hostname}}:{{port}}/Operation?code={{code}}&name={{name}}
 
