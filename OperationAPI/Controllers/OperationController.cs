@@ -24,7 +24,21 @@ public class OperationController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Post(string code, string name)
     {
-        await _operationService.AddOperation(code, name);
+        await _operationService.AddOperation(name, code);
+        return NoContent();
+    }
+
+    [HttpDelete]
+    public async Task<IActionResult> Delete(string code)
+    {
+        await _operationService.DeleteOperation(code);
+        return NoContent();
+    }
+
+    [HttpDelete("all")]
+    public async Task<IActionResult> DeleteAll()
+    {
+        await _operationService.DeleteAll();
         return NoContent();
     }
 }
