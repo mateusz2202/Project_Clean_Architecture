@@ -1,3 +1,4 @@
+using Microsoft.Azure.Cosmos;
 using Microsoft.EntityFrameworkCore;
 using OperationAPI.Data;
 using OperationAPI.Interfaces;
@@ -11,8 +12,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 builder.Services.AddDbContext<OperationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnectionString")));
+builder.Services.AddSingleton((s) => new CosmosClient(builder.Configuration.GetConnectionString("CosmosDbConnectionString")));
 
 builder.Services.AddScoped<IOperationService, OperationService>();
+builder.Services.AddScoped<IOperationAttributeService, OperationAttributeService>();
 
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
