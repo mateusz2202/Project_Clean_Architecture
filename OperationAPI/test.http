@@ -1,0 +1,16 @@
+
+@hostname=localhost
+@port=7056
+
+GET https://{{hostname}}:{{port}}/Operation
+###
+
+@code= xd
+@name = fdg
+POST https://{{hostname}}:{{port}}/Operation?code={{code}}&name={{name}}
+
+###
+DELETE https://{{hostname}}:{{port}}/Operation?code={{code}}
+
+###
+DELETE https://{{hostname}}:{{port}}/Operation/all
