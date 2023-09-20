@@ -9,3 +9,8 @@ GET https://{{hostname}}:{{port}}/Operation
 @name = fdg
 POST https://{{hostname}}:{{port}}/Operation?code={{code}}&name={{name}}
 
+###
+DELETE https://{{hostname}}:{{port}}/Operation?code={{code}}
+
+###
+DELETE https://{{hostname}}:{{port}}/Operation/all

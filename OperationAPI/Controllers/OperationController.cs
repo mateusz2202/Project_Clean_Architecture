@@ -27,4 +27,18 @@ public class OperationController : ControllerBase
         await _operationService.AddOperation(name, code);
         return NoContent();
     }
+
+    [HttpDelete]
+    public async Task<IActionResult> Delete(string code)
+    {
+        await _operationService.DeleteOperation(code);
+        return NoContent();
+    }
+
+    [HttpDelete("all")]
+    public async Task<IActionResult> DeleteAll()
+    {
+        await _operationService.DeleteAll();
+        return NoContent();
+    }
 }
