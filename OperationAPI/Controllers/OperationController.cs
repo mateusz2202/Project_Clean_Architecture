@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OperationAPI.Interfaces;
+using OperationAPI.Models;
 
 namespace OperationAPI.Controllers;
 
@@ -22,9 +23,9 @@ public class OperationController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post(string code, string name)
+    public async Task<IActionResult> Post(CreateOperationDTO dto)
     {
-        await _operationService.AddOperation(name, code);
+        await _operationService.AddOperation(dto);
         return NoContent();
     }
 

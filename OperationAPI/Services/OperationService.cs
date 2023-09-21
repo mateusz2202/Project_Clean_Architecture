@@ -7,6 +7,7 @@ using OperationAPI.Data;
 using OperationAPI.Entities;
 using OperationAPI.Exceptions;
 using OperationAPI.Interfaces;
+using OperationAPI.Models;
 using System.Dynamic;
 
 namespace OperationAPI.Services;
@@ -42,9 +43,9 @@ public class OperationService : IOperationService
         return result;
     }
 
-    public async Task AddOperation(string name, string code)
+    public async Task AddOperation(CreateOperationDTO dto)
     {
-        await _dbContext.Operations.AddAsync(new Entities.Operation() { Name = name, Code = code });
+        await _dbContext.Operations.AddAsync(new Entities.Operation() { Name = dto.Name, Code = dto.Code });
         await _dbContext.SaveChangesAsync();
         await _cacheService.RemoveAsync(OPERATION_KEY);
         await Task.CompletedTask;

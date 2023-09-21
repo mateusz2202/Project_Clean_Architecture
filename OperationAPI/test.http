@@ -7,8 +7,14 @@ GET https://{{hostname}}:{{port}}/Operation
 
 @code= xd
 @name = fdg
-POST https://{{hostname}}:{{port}}/Operation?code={{code}}&name={{name}}
+POST https://{{hostname}}:{{port}}/Operation
+Content-Type: application/json
+Accept-Language: en-US,en;q=0.5
 
+{ 
+  "Code":"{{code}}",
+  "Name":"{{name}}"
+}
 ###
 DELETE https://{{hostname}}:{{port}}/Operation?code={{code}}
 
@@ -23,9 +29,9 @@ Content-Type: application/json
 Accept-Language: en-US,en;q=0.5
 
 {
-  "id":"1042",
+  "id":"1058",
   "code":"xd",
-  "test":"tes33",
+  "test":"tes334",
   "afsdfd1":"adasd3"
 }
 ###
