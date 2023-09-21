@@ -47,11 +47,11 @@ public class OperationAttributeService : IOperationAttributeService
        
         while (setIterator.HasMoreResults)
         {
-            foreach (ExpandoObject item in await setIterator.ReadNextAsync())
+            foreach (var item in await setIterator.ReadNextAsync())
             {
                 var stringJson=JsonConvert.SerializeObject(item);
-                var xd = JsonConvert.DeserializeObject<ExpandoObject>(stringJson);
-                result.Add(item);
+                var obj = JsonConvert.DeserializeObject<ExpandoObject>(stringJson);
+                result.Add(obj);
             }
         }
         return result;
