@@ -4,6 +4,7 @@ using OperationAPI.Data;
 using OperationAPI.Interfaces;
 using OperationAPI.Middleware;
 using OperationAPI.Services;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,9 +12,24 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
+//sql server
 builder.Services.AddDbContext<OperationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnectionString")));
+
+//cosmos db
 builder.Services.AddSingleton((s) => new CosmosClient(builder.Configuration.GetConnectionString("CosmosDbConnectionString")));
 
+//redis
+builder.Services.AddSingleton<IDatabase>(cfg =>
+{
+    var redisConnection =
+        ConnectionMultiplexer
+            .Connect(builder.Configuration.GetConnectionString("RedisConnectionString") ?? string.Empty);
+
+    return redisConnection.GetDatabase();
+});
+
+//services
+builder.Services.AddScoped<ICacheService, CacheService>();
 builder.Services.AddScoped<IOperationService, OperationService>();
 builder.Services.AddScoped<IOperationAttributeService, OperationAttributeService>();
 
