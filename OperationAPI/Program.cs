@@ -31,7 +31,6 @@ builder.Services.AddSingleton<IDatabase>(cfg =>
 //services
 builder.Services.AddScoped<ICacheService, CacheService>();
 builder.Services.AddScoped<IOperationService, OperationService>();
-builder.Services.AddScoped<IOperationAttributeService, OperationAttributeService>();
 
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

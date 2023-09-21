@@ -8,4 +8,6 @@ public interface IOperationService
     public Task AddOperation(string name, string code);
     public Task DeleteOperation(string code);
     public Task DeleteAll();
+    public Task AddAttributes(object attributes);
+    public Task<IEnumerable<object>> GetAllAttribute();
 }
