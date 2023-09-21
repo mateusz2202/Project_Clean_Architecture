@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.Azure.Cosmos;
+﻿using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Linq;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -10,12 +9,14 @@ using OperationAPI.Interfaces;
 using OperationAPI.Models;
 using System.Dynamic;
 
+
 namespace OperationAPI.Services;
 
 public class OperationService : IOperationService
 {
     private const string OPERATION_KEY = "operation";
     private const string OPERATIONATTRIBUTE_KEY = "operationAttribute";
+    private const string OPERATIONWITHATTRIBUTE_KEY = "operationWithAttribute";
 
     private readonly OperationDbContext _dbContext;
     private readonly CosmosClient _cosmosClient;
@@ -42,12 +43,56 @@ public class OperationService : IOperationService
 
         return result;
     }
-
-    public async Task AddOperation(CreateOperationDTO dto)
+    public async Task<IEnumerable<dynamic>> GetAllWithAtrributes()
     {
-        await _dbContext.Operations.AddAsync(new Entities.Operation() { Name = dto.Name, Code = dto.Code });
+        var cacheData = await _cacheService.GetAsync<IEnumerable<dynamic>>(OPERATIONWITHATTRIBUTE_KEY);
+        if (cacheData != null && cacheData.Count() > 0)
+            return cacheData;
+
+        var operations = await GetAll();
+        var attributes = await GetAllAttribute();
+        var dynamicAtrributes = attributes.Select(x => JsonConvert.DeserializeObject<dynamic>(x.ToString())).Select(x => (dynamic)x);
+        
+        var union = from x in operations
+                     join z in dynamicAtrributes on x.Id equals (int?)z.id
+                     select new { Operation = x, Atrributes = JsonConvert.DeserializeObject<ExpandoObject>(JsonConvert.SerializeObject(z)) };
+        
+        var result = union.ToList();
+
+        var expiryTime = DateTimeOffset.Now.AddMinutes(30);
+        await _cacheService.SetAsync(OPERATIONWITHATTRIBUTE_KEY, result, expiryTime);
+
+        return result;
+    }
+
+    public async Task<Operation> Get(int id)
+    {
+        var operation = await _dbContext.Operations.FirstOrDefaultAsync(x => x.Id == id)
+                         ?? throw new NotFoundException("Operation not found");
+        return operation;
+    }
+
+    public async Task<Operation> AddOperation(CreateOperationDTO dto)
+    {
+        var operation = await _dbContext.Operations.AddAsync(new Entities.Operation() { Name = dto.Name, Code = dto.Code });
         await _dbContext.SaveChangesAsync();
+        await _cacheService.RemoveAsync(OPERATIONATTRIBUTE_KEY);     
+        await _cacheService.RemoveAsync(OPERATIONWITHATTRIBUTE_KEY);
+        return operation.Entity;
+    }
+
+    public async Task AddOperationWithAttributes(CreateOperationWithAttributeDTO dto)
+    {
+        var addObj = await AddOperation(dto.CreateOperationDTO);
+        var item = JsonConvert.DeserializeObject<dynamic>(dto?.Attributes?.ToString());
+        ((dynamic)item).id = addObj.Id.ToString();
+        ((dynamic)item).code = addObj.Code;
+
+        string json = JsonConvert.SerializeObject(item);
+        await AddAttributes(json);
+        await _cacheService.RemoveAsync(OPERATIONATTRIBUTE_KEY);
         await _cacheService.RemoveAsync(OPERATION_KEY);
+        await _cacheService.RemoveAsync(OPERATIONWITHATTRIBUTE_KEY);
         await Task.CompletedTask;
     }
 
@@ -64,6 +109,7 @@ public class OperationService : IOperationService
 
         await _cacheService.RemoveAsync(OPERATIONATTRIBUTE_KEY);
         await _cacheService.RemoveAsync(OPERATION_KEY);
+        await _cacheService.RemoveAsync(OPERATIONWITHATTRIBUTE_KEY);
 
         await Task.CompletedTask;
     }
@@ -79,6 +125,7 @@ public class OperationService : IOperationService
 
         await _cacheService.RemoveAsync(OPERATIONATTRIBUTE_KEY);
         await _cacheService.RemoveAsync(OPERATION_KEY);
+        await _cacheService.RemoveAsync(OPERATIONWITHATTRIBUTE_KEY);
 
         await Task.CompletedTask;
     }
@@ -101,6 +148,7 @@ public class OperationService : IOperationService
             await container.UpsertItemAsync(item);
 
         await _cacheService.RemoveAsync(OPERATIONATTRIBUTE_KEY);
+        await _cacheService.RemoveAsync(OPERATIONWITHATTRIBUTE_KEY);
     }
 
     public async Task<IEnumerable<object>> GetAllAttribute()
@@ -141,4 +189,5 @@ public class OperationService : IOperationService
         else
             throw new CreateResourceException("container not created");
     }
+
 }
