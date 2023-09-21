@@ -22,10 +22,24 @@ public class OperationController : ControllerBase
         return Ok(operations);
     }
 
+    [HttpGet("allWithAtrributes")]
+    public async Task<IActionResult> GetAllWithAtrributes()
+    {
+        var operations = await _operationService.GetAllWithAtrributes();
+        return Ok(operations);
+    }
+
     [HttpPost]
-    public async Task<IActionResult> Post(CreateOperationDTO dto)
+    public async Task<IActionResult> AddOperation(CreateOperationDTO dto)
     {
         await _operationService.AddOperation(dto);
+        return NoContent();
+    }
+
+    [HttpPost("attribute")]
+    public async Task<IActionResult> AddOperationWithAttributes(CreateOperationWithAttributeDTO dto)
+    {
+        await _operationService.AddOperationWithAttributes(dto);
         return NoContent();
     }
 
