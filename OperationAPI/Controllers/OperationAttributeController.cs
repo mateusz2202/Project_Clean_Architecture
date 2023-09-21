@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.Cosmos;
-using Newtonsoft.Json;
 using OperationAPI.Interfaces;
-using System.Text.Json.Nodes;
+
 
 namespace OperationAPI.Controllers;
 
@@ -10,23 +8,23 @@ namespace OperationAPI.Controllers;
 [ApiController]
 public class OperationAttributeController : ControllerBase
 {
-    private readonly IOperationAttributeService _operationAttributeService;
-    public OperationAttributeController(IOperationAttributeService operationAttributeService)
+    private readonly IOperationService _operationService;
+    public OperationAttributeController(IOperationService operationService)
     {
-        _operationAttributeService = operationAttributeService;
+        _operationService = operationService;
     }
 
     [HttpPost]
     public async Task<IActionResult> AddOperationAttributs([FromBody] object attributes)
     {
-        await _operationAttributeService.AddAttributes(attributes);
+        await _operationService.AddAttributes(attributes);
         return NoContent();
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var result = await _operationAttributeService.GetAll();
+        var result = await _operationService.GetAllAttribute();
         return Ok(result);
     }
 }

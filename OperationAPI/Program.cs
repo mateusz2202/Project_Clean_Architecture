@@ -1,16 +1,22 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.Azure.Cosmos;
 using Microsoft.EntityFrameworkCore;
 using OperationAPI.Data;
 using OperationAPI.Interfaces;
 using OperationAPI.Middleware;
+using OperationAPI.Models;
+using OperationAPI.Models.Validators;
 using OperationAPI.Services;
 using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
+
+// Add services to the container.
+builder.Services.AddFluentValidationAutoValidation();
 
 //sql server
 builder.Services.AddDbContext<OperationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnectionString")));
@@ -31,9 +37,14 @@ builder.Services.AddSingleton<IDatabase>(cfg =>
 //services
 builder.Services.AddScoped<ICacheService, CacheService>();
 builder.Services.AddScoped<IOperationService, OperationService>();
-builder.Services.AddScoped<IOperationAttributeService, OperationAttributeService>();
 
+////validator
+builder.Services.AddScoped<IValidator<CreateOperationDTO>, CreateOperationDTOValidator>();
+
+//midleware
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
+
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
