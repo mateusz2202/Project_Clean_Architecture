@@ -2,13 +2,40 @@
 @hostname=localhost
 @port=7056
 
+@id= 11
+@code= xd944
+@name = fdg
+
+
 GET https://{{hostname}}:{{port}}/Operation
 ###
-GET https://{{hostname}}:{{port}}/Operation/allWithAtrributes
+
+GET https://{{hostname}}:{{port}}/Operation/operations
 ###
-@code= xd94
-@name = fdg
-POST https://{{hostname}}:{{port}}/Operation
+
+GET https://{{hostname}}:{{port}}/Operation/attributes
+###
+
+GET https://{{hostname}}:{{port}}/Operation/operations/id/{{id}}
+###
+
+GET https://{{hostname}}:{{port}}/Operation/operations/code/{{code}}
+###
+
+
+GET https://{{hostname}}:{{port}}/Operation/attributes/id/{{id}}
+###
+
+GET https://{{hostname}}:{{port}}/Operation/attributes/code/{{code}}
+###
+
+GET https://{{hostname}}:{{port}}/Operation/id/{{id}}
+###
+
+GET https://{{hostname}}:{{port}}/Operation/code/{{code}}
+###
+
+POST https://{{hostname}}:{{port}}/Operation/operations
 Content-Type: application/json
 Accept-Language: en-US,en;q=0.5
 
@@ -18,7 +45,19 @@ Accept-Language: en-US,en;q=0.5
 }
 ###
 
-POST https://{{hostname}}:{{port}}/Operation/attribute
+POST https://{{hostname}}:{{port}}/Operation/attributes
+Content-Type: application/json
+Accept-Language: en-US,en;q=0.5
+
+  {
+  "id":"{{id}}",
+  "code":"{{code}}",
+  "test":"tes334",
+  "afsdfd1":"adasd3"
+  }
+###
+
+POST https://{{hostname}}:{{port}}/Operation
 Content-Type: application/json
 Accept-Language: en-US,en;q=0.5
 
@@ -28,32 +67,33 @@ Accept-Language: en-US,en;q=0.5
   "Name":"{{name}}"
   },
   "attributes":
-  {
-  "id":"1068",
-  "code":"xd",
+   {
+  "id":"{{id}}",
+  "code":"{{code}}",
   "test":"tes334",
   "afsdfd1":"adasd3"
   }
-}
+} 
 ###
-DELETE https://{{hostname}}:{{port}}/Operation?code={{code}}
 
+DELETE https://{{hostname}}:{{port}}/Operation/id/{{id}}
 ###
-DELETE https://{{hostname}}:{{port}}/Operation/all
 
+DELETE https://{{hostname}}:{{port}}/Operation/code/{{code}}
 ###
-#cosmos DB
 
-POST https://{{hostname}}:{{port}}/OperationAttribute 
-Content-Type: application/json
-Accept-Language: en-US,en;q=0.5
+DELETE https://{{hostname}}:{{port}}/Operation/attributes/id/{{id}}
+###
 
-{
-  "id":"1068",
-  "code":"xd",
-  "test":"tes334",
-  "afsdfd1":"adasd3"
-}
+DELETE https://{{hostname}}:{{port}}/Operation/attributes/code/{{code}}
 ###
-GET https://{{hostname}}:{{port}}/OperationAttribute
+
+DELETE https://{{hostname}}:{{port}}/Operation
 ###
+
+DELETE https://{{hostname}}:{{port}}/Operation/cache
+###
+
+
+
+

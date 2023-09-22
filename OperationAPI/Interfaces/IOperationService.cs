@@ -5,13 +5,23 @@ namespace OperationAPI.Interfaces;
 
 public interface IOperationService
 {
-    public Task<IEnumerable<Operation>> GetAll();
-    public Task<IEnumerable<dynamic>> GetAllWithAtrributes();
-    public Task<Operation> Get(int id);
+    public Task<IEnumerable<Operation>> GetAllOperations();
+    public Task<IEnumerable<dynamic>> GetAllAttributes();
+    public Task<IEnumerable<dynamic>> GetAllOperationsWithAtrributes();
+    public Task<Operation> GetOperationById(int id);
+    public Task<Operation> GetOperationByCode(string code);
+    public Task<dynamic> GetAttributeById(int id);  
+    public Task<dynamic> GetAttributeByCoded(string code);
+    public Task<dynamic> GetOperationWithAttributeById(int id);
+    public Task<dynamic> GetOperationWithAttributeByCoded(string code);
     public Task<Operation> AddOperation(CreateOperationDTO dto);
-    public Task AddOperationWithAttributes(CreateOperationWithAttributeDTO dto);
-    public Task DeleteOperation(string code);
-    public Task DeleteAll();
     public Task AddAttributes(object attributes);
-    public Task<IEnumerable<object>> GetAllAttribute();
+    public Task AddOperationWithAttributes(CreateOperationWithAttributeDTO dto);
+    public Task DeleteOperationById(int id);
+    public Task DeleteOperationByCode(string code);
+    public Task DeleteAttributeById(int id);
+    public Task DeleteAttributeByCode(string code);
+    public Task DeleteAll();
+    public Task ClearCache();
+ 
 }

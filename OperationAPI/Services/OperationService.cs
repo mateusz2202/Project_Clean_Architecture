@@ -8,7 +8,7 @@ using OperationAPI.Exceptions;
 using OperationAPI.Interfaces;
 using OperationAPI.Models;
 using System.Dynamic;
-
+using System.Net;
 
 namespace OperationAPI.Services;
 
@@ -29,132 +29,24 @@ public class OperationService : IOperationService
         _cacheService = cacheService;
     }
 
-    public async Task<IEnumerable<Operation>> GetAll()
+    public async Task<IEnumerable<Operation>> GetAllOperations()
     {
         var cacheData = await _cacheService.GetAsync<IEnumerable<Operation>>(OPERATION_KEY);
 
-        if (cacheData != null && cacheData.Count() > 0)
+        if (cacheData != null && cacheData.Any())
             return cacheData;
 
         var result = await _dbContext.Operations.ToListAsync();
 
-        var expiryTime = DateTimeOffset.Now.AddMinutes(30);
-        await _cacheService.SetAsync(OPERATION_KEY, result, expiryTime);
-
-        return result;
-    }
-    public async Task<IEnumerable<dynamic>> GetAllWithAtrributes()
-    {
-        var cacheData = await _cacheService.GetAsync<IEnumerable<dynamic>>(OPERATIONWITHATTRIBUTE_KEY);
-        if (cacheData != null && cacheData.Count() > 0)
-            return cacheData;
-
-        var operations = await GetAll();
-        var attributes = await GetAllAttribute();
-        var dynamicAtrributes = attributes.Select(x => JsonConvert.DeserializeObject<dynamic>(x.ToString())).Select(x => (dynamic)x);
-        
-        var union = from x in operations
-                     join z in dynamicAtrributes on x.Id equals (int?)z.id
-                     select new { Operation = x, Atrributes = JsonConvert.DeserializeObject<ExpandoObject>(JsonConvert.SerializeObject(z)) };
-        
-        var result = union.ToList();
-
-        var expiryTime = DateTimeOffset.Now.AddMinutes(30);
-        await _cacheService.SetAsync(OPERATIONWITHATTRIBUTE_KEY, result, expiryTime);
+        await _cacheService.SetAsync(OPERATION_KEY, result, DateTimeOffset.Now.AddMinutes(30));
 
         return result;
     }
 
-    public async Task<Operation> Get(int id)
+    public async Task<IEnumerable<dynamic>> GetAllAttributes()
     {
-        var operation = await _dbContext.Operations.FirstOrDefaultAsync(x => x.Id == id)
-                         ?? throw new NotFoundException("Operation not found");
-        return operation;
-    }
-
-    public async Task<Operation> AddOperation(CreateOperationDTO dto)
-    {
-        var operation = await _dbContext.Operations.AddAsync(new Entities.Operation() { Name = dto.Name, Code = dto.Code });
-        await _dbContext.SaveChangesAsync();
-        await _cacheService.RemoveAsync(OPERATIONATTRIBUTE_KEY);     
-        await _cacheService.RemoveAsync(OPERATIONWITHATTRIBUTE_KEY);
-        return operation.Entity;
-    }
-
-    public async Task AddOperationWithAttributes(CreateOperationWithAttributeDTO dto)
-    {
-        var addObj = await AddOperation(dto.CreateOperationDTO);
-        var item = JsonConvert.DeserializeObject<dynamic>(dto?.Attributes?.ToString());
-        ((dynamic)item).id = addObj.Id.ToString();
-        ((dynamic)item).code = addObj.Code;
-
-        string json = JsonConvert.SerializeObject(item);
-        await AddAttributes(json);
-        await _cacheService.RemoveAsync(OPERATIONATTRIBUTE_KEY);
-        await _cacheService.RemoveAsync(OPERATION_KEY);
-        await _cacheService.RemoveAsync(OPERATIONWITHATTRIBUTE_KEY);
-        await Task.CompletedTask;
-    }
-
-    public async Task DeleteOperation(string code)
-    {
-        var operation = await _dbContext.Operations.FirstOrDefaultAsync(o => o.Code == code)
-                        ?? throw new NotFoundException("Operation not found");
-
-        _dbContext.Operations.Remove(operation);
-        await _dbContext.SaveChangesAsync();
-
-        var container = await GetContainer();
-        await container.DeleteItemAsync<object>($"{operation.Id}", new PartitionKey(operation.Code));
-
-        await _cacheService.RemoveAsync(OPERATIONATTRIBUTE_KEY);
-        await _cacheService.RemoveAsync(OPERATION_KEY);
-        await _cacheService.RemoveAsync(OPERATIONWITHATTRIBUTE_KEY);
-
-        await Task.CompletedTask;
-    }
-
-
-    public async Task DeleteAll()
-    {
-        _dbContext.Operations.ExecuteDelete();
-        await _dbContext.SaveChangesAsync();
-
-        Container container = await GetContainer();
-        await container.DeleteContainerAsync();
-
-        await _cacheService.RemoveAsync(OPERATIONATTRIBUTE_KEY);
-        await _cacheService.RemoveAsync(OPERATION_KEY);
-        await _cacheService.RemoveAsync(OPERATIONWITHATTRIBUTE_KEY);
-
-        await Task.CompletedTask;
-    }
-
-    public async Task AddAttributes(object attributes)
-    {
-        Container container = await GetContainer();
-        var item = JsonConvert.DeserializeObject<dynamic>(attributes.ToString());
-        var idOperation = (int?)((dynamic)item).id ?? throw new NotFoundException("Operation not found");
-        var codeOperation = (string?)((dynamic)item).code ?? throw new NotFoundException("Operation not found");
-
-        if (!_dbContext.Operations.Any(x => x.Id == idOperation))
-            throw new NotFoundException("Operation not found");
-
-        var response = await container.ReadItemStreamAsync(idOperation.ToString(), new PartitionKey(codeOperation));
-
-        if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
-            await container.CreateItemAsync(item);
-        else
-            await container.UpsertItemAsync(item);
-
-        await _cacheService.RemoveAsync(OPERATIONATTRIBUTE_KEY);
-        await _cacheService.RemoveAsync(OPERATIONWITHATTRIBUTE_KEY);
-    }
-
-    public async Task<IEnumerable<object>> GetAllAttribute()
-    {
-        var cacheData = await _cacheService.GetAsync<IEnumerable<object>>(OPERATIONATTRIBUTE_KEY);
-        if (cacheData != null && cacheData.Count() > 0)
+        var cacheData = await _cacheService.GetAsync<IEnumerable<ExpandoObject>>(OPERATIONATTRIBUTE_KEY);
+        if (cacheData != null && cacheData.Any())
             return cacheData;
 
         Container container = await GetContainer();
@@ -174,11 +66,193 @@ public class OperationService : IOperationService
             }
         }
 
-        var expiryTime = DateTimeOffset.Now.AddMinutes(30);
-        await _cacheService.SetAsync(OPERATIONATTRIBUTE_KEY, result, expiryTime);
+        await _cacheService.SetAsync(OPERATIONATTRIBUTE_KEY, result, DateTimeOffset.Now.AddMinutes(30));
+
         return result;
     }
 
+    public async Task<IEnumerable<dynamic>> GetAllOperationsWithAtrributes()
+    {
+        var cacheData = await _cacheService.GetAsync<IEnumerable<dynamic>>(OPERATIONWITHATTRIBUTE_KEY);
+        if (cacheData != null && cacheData.Any())
+            return cacheData;
+
+        var operations = await GetAllOperations();
+        var attributes = await GetAllAttributes();
+
+        var union = from x in operations
+                    join z in attributes on x.Id.ToString() equals z.id into gj
+                    from subZ in gj.DefaultIfEmpty()
+                    select new { Operation = x, Atrributes = JsonConvert.DeserializeObject<ExpandoObject>(JsonConvert.SerializeObject(subZ)) };
+
+        var result = union.ToList();
+
+        await _cacheService.SetAsync(OPERATIONWITHATTRIBUTE_KEY, result, DateTimeOffset.Now.AddMinutes(30));
+
+        return result;
+    }
+
+    public async Task<Operation> GetOperationById(int id)
+    {
+        var operation = await _dbContext.Operations.FirstOrDefaultAsync(x => x.Id == id)
+                         ?? throw new NotFoundException("Operation not found");
+        return operation;
+    }
+
+    public async Task<Operation> GetOperationByCode(string code)
+    {
+        var operation = await _dbContext.Operations.FirstOrDefaultAsync(x => x.Code.ToUpper() == code.ToLower())
+                         ?? throw new NotFoundException("Operation not found");
+        return operation;
+    }
+
+    public async Task<dynamic> GetAttributeById(int id)
+    {
+        var operation = await GetOperationById(id);
+        var attribute = await GetAttribute(operation.Id.ToString(), new PartitionKey(operation.Code));
+
+        return attribute;
+    }
+
+    public async Task<dynamic> GetAttributeByCoded(string code)
+    {
+        var operation = await GetOperationByCode(code);
+        var attribute = await GetAttribute(operation.Id.ToString(), new PartitionKey(operation.Code));
+        return attribute;
+    }
+
+    public async Task<dynamic> GetOperationWithAttributeById(int id)
+    {
+        var operation = await GetOperationById(id);
+        var attribute = await GetAttributeById(id);
+
+        return new { Operation = operation, Attribute = attribute };
+    }
+
+    public async Task<dynamic> GetOperationWithAttributeByCoded(string code)
+    {
+        var operation = await GetOperationByCode(code);
+        var attribute = await GetAttributeByCoded(code);
+
+        return new { Operation = operation, Attribute = attribute };
+    }
+
+    public async Task<Operation> AddOperation(CreateOperationDTO dto)
+    {
+        var operation = await _dbContext.Operations.AddAsync(new Entities.Operation() { Name = dto.Name, Code = dto.Code });
+        await _dbContext.SaveChangesAsync();
+
+        await ClearCache();
+
+        return operation.Entity;
+    }
+
+    public async Task AddAttributes(object attributes)
+    {
+        Container container = await GetContainer();
+        var item = JsonConvert.DeserializeObject<dynamic>(attributes.ToString());
+        var idOperation = (int?)((dynamic)item).id ?? throw new NotFoundException("Operation not found");
+        var codeOperation = (string?)((dynamic)item).code ?? throw new NotFoundException("Operation not found");
+
+        if (!_dbContext.Operations.Any(x => x.Id == idOperation))
+            throw new NotFoundException("Operation not found");
+
+        var response = await container.ReadItemStreamAsync(idOperation.ToString(), new PartitionKey(codeOperation));
+
+        if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            await container.CreateItemAsync(item);
+        else
+            await container.UpsertItemAsync(item);
+
+        await ClearCache();
+
+        await Task.CompletedTask;
+    }
+
+    public async Task AddOperationWithAttributes(CreateOperationWithAttributeDTO dto)
+    {
+        var addObj = await AddOperation(dto.CreateOperationDTO);
+        var item = JsonConvert.DeserializeObject<dynamic>(dto?.Attributes?.ToString());
+        ((dynamic)item).id = addObj.Id.ToString();
+        ((dynamic)item).code = addObj.Code;
+
+        string json = JsonConvert.SerializeObject(item);
+        await AddAttributes(json);
+
+        await ClearCache();
+
+        await Task.CompletedTask;
+    }
+
+    public async Task DeleteOperationById(int id)
+    {
+        var operation = await GetOperationById(id);
+
+        await DeleteAttribute(operation.Id.ToString(), new PartitionKey(operation.Code));
+
+        _dbContext.Operations.Remove(operation);
+        await _dbContext.SaveChangesAsync();
+
+        await ClearCache();
+
+        await Task.CompletedTask;
+    }
+
+    public async Task DeleteOperationByCode(string code)
+    {
+        var operation = await GetOperationByCode(code);
+
+        await DeleteAttribute(operation.Id.ToString(), new PartitionKey(operation.Code));
+
+        _dbContext.Operations.Remove(operation);
+        await _dbContext.SaveChangesAsync();
+
+        await ClearCache();
+
+        await Task.CompletedTask;
+    }
+
+    public async Task DeleteAttributeById(int id)
+    {
+        var operation = await GetOperationById(id);
+
+        await DeleteAttribute(operation.Id.ToString(), new PartitionKey(operation.Code));
+
+        await ClearCache();
+
+        await Task.CompletedTask;
+    }
+
+    public async Task DeleteAttributeByCode(string code)
+    {
+        var operation = await GetOperationByCode(code);
+
+        await DeleteAttribute(operation.Id.ToString(), new PartitionKey(operation.Code));
+
+        await ClearCache();
+
+        await Task.CompletedTask;
+    }
+
+    public async Task DeleteAll()
+    {
+        _dbContext.Operations.ExecuteDelete();
+        await _dbContext.SaveChangesAsync();
+
+        Container container = await GetContainer();
+        await container.DeleteContainerAsync();
+
+        await ClearCache();
+
+        await Task.CompletedTask;
+    }
+
+    public async Task ClearCache()
+    {
+        await _cacheService.RemoveAsync(OPERATIONATTRIBUTE_KEY);
+        await _cacheService.RemoveAsync(OPERATION_KEY);
+        await _cacheService.RemoveAsync(OPERATIONWITHATTRIBUTE_KEY);
+    }
 
     private async Task<Container> GetContainer()
     {
@@ -188,6 +262,32 @@ public class OperationService : IOperationService
             return container.Container;
         else
             throw new CreateResourceException("container not created");
+    }
+
+    private async Task<dynamic> GetAttribute(string id, PartitionKey partitionKey)
+    {
+        var container = await GetContainer();
+        var item = await container.ReadItemStreamAsync(id, partitionKey);
+        if (item != null && item.StatusCode == HttpStatusCode.OK)
+        {
+            using StreamReader streamReader = new(item.Content);
+            string content = await streamReader.ReadToEndAsync();
+            var result = JsonConvert.DeserializeObject<ExpandoObject>(content);
+            return result;
+        }
+        else
+            return new { };
+    }
+
+    private async Task DeleteAttribute(string id, PartitionKey partitionKey)
+    {
+        var container = await GetContainer();
+        var item = await container.ReadItemStreamAsync(id, partitionKey);
+
+        if (item != null && item.StatusCode == HttpStatusCode.OK)
+            await container.DeleteItemAsync<object>(id, partitionKey);
+
+        await Task.CompletedTask;
     }
 
 }
