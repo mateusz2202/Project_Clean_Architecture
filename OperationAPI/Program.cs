@@ -40,6 +40,7 @@ builder.Services.AddScoped<IOperationService, OperationService>();
 
 ////validator
 builder.Services.AddScoped<IValidator<CreateOperationDTO>, CreateOperationDTOValidator>();
+builder.Services.AddScoped<IValidator<CreateOperationWithAttributeDTO>, CreateOperationWithAttributeDTOValidator>();
 
 //midleware
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
