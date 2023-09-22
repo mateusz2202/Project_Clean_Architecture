@@ -6,7 +6,7 @@ GET https://{{hostname}}:{{port}}/Operation
 ###
 GET https://{{hostname}}:{{port}}/Operation/allWithAtrributes
 ###
-@code= xd
+@code= xd94
 @name = fdg
 POST https://{{hostname}}:{{port}}/Operation
 Content-Type: application/json
