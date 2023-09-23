@@ -8,6 +8,8 @@ trigger:
 
 resources:
   containers:  
+  - container: my_container
+    image: ubuntu-latest
   - container: redis
     image: redis
 
@@ -15,6 +17,7 @@ resources:
 pool:
   vmImage: 'ubuntu-latest'
 
+container: my_container
 
 services: 
   redis: redis  
@@ -28,7 +31,7 @@ variables:
 steps:
 - script: |
     redis-cli -h redis ping
-    
+
 - task: UseDotNet@2
   displayName: 'Install .NET Core SDK'
   inputs:
