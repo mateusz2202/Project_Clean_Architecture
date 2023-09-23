@@ -51,7 +51,8 @@ steps:
   inputs:
     command: test    
     arguments: '--no-build --verbosity normal'
-
+  env:
+    CONNECTIONSTRINGS_REDIS: redis:6379
 # - task: VSBuild@1
 #   inputs:  
 #     solution: '$(solution)'
