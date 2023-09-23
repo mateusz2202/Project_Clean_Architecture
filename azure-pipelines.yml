@@ -18,6 +18,7 @@ trigger:
 pool:
   vmImage: 'windows-latest'
 
+
 # services:
 #   nginx: nginx
 #   redis: redis  
@@ -36,9 +37,10 @@ steps:
     script: |
       # Write your PowerShell commands here.
 
-      dir "C:\Windows\system32\"
-      docker.EXE -SwitchDaemon 
-    
+      cd "C:\Program Files\Docker\Docker"
+
+      DockerCli.exe -SwitchDaemon
+      
       docker pull redis
      
       docker run -d --name my-redis redis
