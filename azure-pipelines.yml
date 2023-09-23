@@ -36,7 +36,7 @@ steps:
     script: |
       # Write your PowerShell commands here.
 
-      & $Env:ProgramFiles\Docker\Docker\DockerCli.exe -SwitchDaemon 
+      & $Env:Windows\system32\docker.EXE -SwitchDaemon 
     
       docker pull redis
      
