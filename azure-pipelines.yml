@@ -6,23 +6,18 @@
 trigger:
 - main
 
-
-
-# resources:
-#   containers: 
-#   - container: nginx
-#     image: nginx
-#   - container: redis
-#     image: redis
+resources:
+  containers:  
+  - container: redis
+    image: redis
 
     
 pool:
-  vmImage: 'windows-latest'
+  vmImage: 'ubuntu-latest'
 
 
-# services:
-#   nginx: nginx
-#   redis: redis  
+services: 
+  redis: redis  
 
 variables:
   solution: '**/*.sln'
@@ -31,17 +26,6 @@ variables:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
 
 steps:
-- task: CmdLine@2
-  inputs:
-    script: |
-      echo Write your commands here
-      
-      echo Hello world
-      
-      cd C:\
-      dir
-     
-
 - task: UseDotNet@2
   displayName: 'Install .NET Core SDK'
   inputs:
@@ -50,23 +34,35 @@ steps:
     includePreviewVersions: true 
 
 
-- task: NuGetToolInstaller@1
-
 - task: NuGetCommand@2
   inputs:
     restoreSolution: '$(solution)'
 
 
-- task: VSBuild@1
-  inputs:  
-    solution: '$(solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
-
-- task: VSTest@2
+- task: DotNetCoreCLI@2
+  displayName: Build
   inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
-  env:
-      CONNECTIONSTRINGS_REDIS: redis:6379
+    command: build
+    projects: '**/*.csproj'
+    arguments: '--configuration $(buildConfiguration)' 
+
+- task: DotNetCoreCLI@2
+  displayName: Test
+  inputs:
+    command: test
+    projects: '**/*Tests/*.csproj'
+    arguments: '--configuration $(buildConfiguration)'
+
+# - task: VSBuild@1
+#   inputs:  
+#     solution: '$(solution)'
+#     msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
+#     platform: '$(buildPlatform)'
+#     configuration: '$(buildConfiguration)'
+
+# - task: VSTest@2
+#   inputs:
+#     platform: '$(buildPlatform)'
+#     configuration: '$(buildConfiguration)'
+#   env:
+#       CONNECTIONSTRINGS_REDIS: redis:6379
