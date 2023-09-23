@@ -37,6 +37,7 @@ steps:
       # Write your PowerShell commands here.
 
       docker pull redis
+      docker run -d --name my-redis redis
 
       dir "C:\Program Files\Azure Cosmos DB Emulator\"
       
