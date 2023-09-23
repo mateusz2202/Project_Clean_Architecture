@@ -14,7 +14,7 @@ resources:
 
     
 pool:
-  vmImage: 'windows-2022'
+  vmImage: 'ubuntu-lates'
 
 services:
   redis: redis 
