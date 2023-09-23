@@ -62,7 +62,7 @@ public class OperationController : ControllerBase
         var operation = await _operationService.GetAttributeByCoded(code);
         return Ok(operation);
     }
-    
+
     [HttpGet("id/{id}")]
     public async Task<IActionResult> GetOperationWithAttributeById([FromRoute] int id)
     {
@@ -80,8 +80,8 @@ public class OperationController : ControllerBase
     [HttpPost("operations")]
     public async Task<IActionResult> AddOperation(CreateOperationDTO dto)
     {
-        await _operationService.AddOperation(dto);
-        return NoContent();
+        var opertaion = await _operationService.AddOperation(dto);
+        return Created("GetOperationById", opertaion.Id);
     }
 
     [HttpPost("attributes")]

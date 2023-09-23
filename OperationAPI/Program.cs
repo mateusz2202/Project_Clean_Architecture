@@ -9,11 +9,16 @@ using OperationAPI.Models;
 using OperationAPI.Models.Validators;
 using OperationAPI.Services;
 using StackExchange.Redis;
+using System.Runtime.CompilerServices;
+
+[assembly:InternalsVisibleTo("OperationAPIOperationAPI_Test")]
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddNewtonsoftJson(options =>
+      options.SerializerSettings.ReferenceLoopHandling =
+        Newtonsoft.Json.ReferenceLoopHandling.Ignore); 
 
 // Add services to the container.
 builder.Services.AddFluentValidationAutoValidation();
@@ -68,3 +73,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+//public partial class Program { }
