@@ -14,7 +14,7 @@ resources:
 
     
 pool:
-  vmImage: 'ubuntu-lates'
+  vmImage: 'ubuntu-latest'
 
 services:
   redis: redis 
