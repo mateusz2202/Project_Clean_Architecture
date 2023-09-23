@@ -7,9 +7,7 @@ trigger:
 - main
 
 resources:
-  containers:  
-  - container: my_container
-    image: ubuntu:22.04
+  containers:   
   - container: redis
     image: redis
 
@@ -17,7 +15,7 @@ resources:
 pool:
   vmImage: 'ubuntu-latest'
 
-container: my_container
+container: redis
 
 services: 
   redis: redis  
