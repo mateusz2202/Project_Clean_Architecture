@@ -38,7 +38,7 @@ steps:
       # Write your PowerShell commands here.
 
       Import-Module  "$env:Program Files\Docker\Docker"      
-      $dockerCliPath "DockerCli.exe -SwitchDaemon"
+      $dockerCliPath = "DockerCli.exe -SwitchDaemon"
       Write-Host $dockerCliPath
       Invoke-Expression -Command $dockerCliPath
 
