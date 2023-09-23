@@ -9,7 +9,7 @@ trigger:
 resources:
   containers:  
   - container: my_container
-    image: ubuntu:20.04
+    image: ubuntu:22.04
   - container: redis
     image: redis
 
@@ -30,9 +30,7 @@ variables:
 
 steps:
 - script: |
-    sudo apt-get -s upgrade | grep -P "\d\K upgraded"
-    apt install redis-tools
-    redis-cli -h redis ping
+   redis-cli -h redis ping
 
 - task: UseDotNet@2
   displayName: 'Install .NET Core SDK'
