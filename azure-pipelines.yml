@@ -18,11 +18,6 @@ pool:
 
 services: 
   redis: redis  
-  options: >-
-          --health-cmd "redis-cli ping"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
 
 variables:
   solution: '**/*.sln'
@@ -31,6 +26,9 @@ variables:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
 
 steps:
+- script: |
+    apt install redis-tools
+    redis-cli -h redis ping
 - task: UseDotNet@2
   displayName: 'Install .NET Core SDK'
   inputs:
