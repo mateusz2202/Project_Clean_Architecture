@@ -32,8 +32,10 @@ jobs:
           # Maps port 6379 on service container to the host
           - 6379:6379
 
-    steps:
+    steps:   
     - uses: actions/checkout@v3
+    - name: Azure Cosmos DB Emulator 
+      uses: southpolesteve/cosmos-emulator-github-action@v1
     - name: Setup .NET
       uses: actions/setup-dotnet@v3      
       with:
