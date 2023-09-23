@@ -39,8 +39,8 @@ steps:
 
       # Import-Module  "$env:Program Files\Docker\Docker"      
       # $dockerCliPath = "DockerCli.exe -SwitchDaemon"
-      # Write-Host $dockerCliPath
-      Invoke-Expression -Command "$env:Program Files\Docker\Docker\DockerCli.exe -SwitchDaemon" 
+      # Write-Host $dockerCliPath   
+      Invoke-Expression -Command "$env:ProgramFiles\Docker\Docker\DockerCli.exe -SwitchDaemon"
 
       docker pull redis
      
