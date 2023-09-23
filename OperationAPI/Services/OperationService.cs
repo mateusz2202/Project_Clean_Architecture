@@ -154,7 +154,7 @@ public class OperationService : IOperationService
         var idOperation = (int?)((dynamic)item).id ?? throw new NotFoundException("Operation not found");
         var codeOperation = (string?)((dynamic)item).code ?? throw new NotFoundException("Operation not found");
 
-        if (!_dbContext.Operations.Any(x => x.Id == idOperation))
+        if (!_dbContext.Operations.Any(x => x.Id == idOperation && x.Code==codeOperation))
             throw new NotFoundException("Operation not found");
 
         var response = await container.ReadItemStreamAsync(idOperation.ToString(), new PartitionKey(codeOperation));
