@@ -31,10 +31,16 @@ variables:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
 
 steps:
-- task: BatchScript@1
+- task: CmdLine@2
   inputs:
-    filename: 'ProgramFiles\Docker\Docker\DockerCli.exe'
-    arguments: '-SwitchDaemon'
+    script: |
+      echo Write your commands here
+      
+      echo Hello world
+      
+      cd  $env:ProgramFiles\Docker\Docker
+      dir 
+
 - task: UseDotNet@2
   displayName: 'Install .NET Core SDK'
   inputs:
