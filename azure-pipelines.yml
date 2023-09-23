@@ -15,7 +15,6 @@ resources:
 pool:
   vmImage: 'ubuntu-latest'
 
-container: redis
 
 services: 
   redis: redis  
@@ -28,8 +27,8 @@ variables:
 
 steps:
 - script: |
-    apt install redis-tools
     redis-cli -h redis ping
+    
 - task: UseDotNet@2
   displayName: 'Install .NET Core SDK'
   inputs:
