@@ -7,20 +7,20 @@ trigger:
 - main
 
 
-resources:
-  containers: 
-  - container: nginx
-    image: nginx
-  - container: redis
-    image: redis
+# resources:
+#   containers: 
+#   - container: nginx
+#     image: nginx
+#   - container: redis
+#     image: redis
 
     
 pool:
   vmImage: 'windows-latest'
 
-services:
-  nginx: nginx
-  redis: redis  
+# services:
+#   nginx: nginx
+#   redis: redis  
 
 variables:
   solution: '**/*.sln'
@@ -29,43 +29,38 @@ variables:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
 
 steps:
-    - script: |
-    # Pull container images
-    docker pull nginx
-    docker pull redis
+ 
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      # Write your PowerShell commands here.
 
-    # Run containers
-    docker run -d --name my-nginx nginx
-    docker run -d --name my-redis redis
-# - task: PowerShell@2
-#   inputs:
-#     targetType: 'inline'
-#     script: |
-#       # Write your PowerShell commands here.
+      docker pull redis
+
+      dir "C:\Program Files\Azure Cosmos DB Emulator\"
       
-#       dir "C:\Program Files\Azure Cosmos DB Emulator\"
+      Import-Module "$env:ProgramFiles\Azure Cosmos DB Emulator\PSModules\Microsoft.Azure.CosmosDB.Emulator"
       
-#       Import-Module "$env:ProgramFiles\Azure Cosmos DB Emulator\PSModules\Microsoft.Azure.CosmosDB.Emulator"
+      $startEmulatorCmd = "Start-CosmosDbEmulator -NoFirewall -NoUI"
+      Write-Host $startEmulatorCmd
+      Invoke-Expression -Command $startEmulatorCmd
       
-#       $startEmulatorCmd = "Start-CosmosDbEmulator -NoFirewall -NoUI"
-#       Write-Host $startEmulatorCmd
-#       Invoke-Expression -Command $startEmulatorCmd
+      # Pipe an emulator info object to the output stream
       
-#       # Pipe an emulator info object to the output stream
+      $Emulator = Get-Item "$env:ProgramFiles\Azure Cosmos DB Emulator\Microsoft.Azure.Cosmos.Emulator.exe"
+      $IPAddress = Get-NetIPAddress -AddressFamily IPV4 -AddressState Preferred -PrefixOrigin Manual | Select-Object IPAddress
       
-#       $Emulator = Get-Item "$env:ProgramFiles\Azure Cosmos DB Emulator\Microsoft.Azure.Cosmos.Emulator.exe"
-#       $IPAddress = Get-NetIPAddress -AddressFamily IPV4 -AddressState Preferred -PrefixOrigin Manual | Select-Object IPAddress
-      
-#       New-Object PSObject @{
-#       Emulator = $Emulator.BaseName
-#       Version = $Emulator.VersionInfo.ProductVersion
-#       Endpoint = @($(hostname), $IPAddress.IPAddress) | ForEach-Object { "https://${_}:8081/" }
-#       MongoDBEndpoint = @($(hostname), $IPAddress.IPAddress) | ForEach-Object { "mongodb://${_}:10255/" }
-#       CassandraEndpoint = @($(hostname), $IPAddress.IPAddress) | ForEach-Object { "tcp://${_}:10350/" }
-#       GremlinEndpoint = @($(hostname), $IPAddress.IPAddress) | ForEach-Object { "http://${_}:8901/" }
-#       TableEndpoint = @($(hostname), $IPAddress.IPAddress) | ForEach-Object { "https://${_}:8902/" }
-#       IPAddress = $IPAddress.IPAddress
-#       }
+      New-Object PSObject @{
+      Emulator = $Emulator.BaseName
+      Version = $Emulator.VersionInfo.ProductVersion
+      Endpoint = @($(hostname), $IPAddress.IPAddress) | ForEach-Object { "https://${_}:8081/" }
+      MongoDBEndpoint = @($(hostname), $IPAddress.IPAddress) | ForEach-Object { "mongodb://${_}:10255/" }
+      CassandraEndpoint = @($(hostname), $IPAddress.IPAddress) | ForEach-Object { "tcp://${_}:10350/" }
+      GremlinEndpoint = @($(hostname), $IPAddress.IPAddress) | ForEach-Object { "http://${_}:8901/" }
+      TableEndpoint = @($(hostname), $IPAddress.IPAddress) | ForEach-Object { "https://${_}:8902/" }
+      IPAddress = $IPAddress.IPAddress
+      }
 - task: NuGetToolInstaller@1
 
 - task: NuGetCommand@2
