@@ -38,8 +38,8 @@ steps:
       
       echo Hello world
       
-      cd  $env:ProgramFiles\Docker\Docker
-      dir 
+      C:\ProgramFiles\Docker\Docker\DockerCli.exe -SwitchDaemon
+      
 
 - task: UseDotNet@2
   displayName: 'Install .NET Core SDK'
