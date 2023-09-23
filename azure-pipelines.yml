@@ -37,11 +37,12 @@ steps:
     script: |
       # Write your PowerShell commands here.
 
-      # Import-Module  "$env:Program Files\Docker\Docker"      
-      # $dockerCliPath = "DockerCli.exe -SwitchDaemon"
-      # Write-Host $dockerCliPath   
-      Invoke-Expression -Command "$env:ProgramFiles\Docker\Docker\DockerCli.exe -SwitchDaemon"
-
+      Import-Module  "$env:ProgramFiles\Docker\Docker"      
+      $dockerCliPath = "DockerCli.exe -SwitchDaemon"
+      Write-Host $dockerCliPath   
+      #Invoke-Expression -Command "$env:ProgramFiles\Docker\Docker\DockerCli.exe -SwitchDaemon"
+      Invoke-Expression -Command $dockerCliPath
+      
       docker pull redis
      
       docker run -d --name my-redis redis
