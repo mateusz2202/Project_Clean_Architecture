@@ -5,10 +5,23 @@
 
 trigger:
 - main
-
+resources:
+  containers:
+  - container: my_container
+    image: ubuntu:16.04
+  - container: nginx
+    image: nginx
+  - container: redis
+    image: redis
+    
 pool:
   vmImage: 'windows-latest'
 
+container: my_container
+
+services:
+  nginx: nginx
+  redis: redis
 
 variables:
   solution: '**/*.sln'
@@ -16,6 +29,12 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
+- script: |
+    apt install -y curl
+    curl nginx
+    apt install redis-tools
+    redis-cli -h redis ping
+    
 - task: PowerShell@2
   inputs:
     targetType: 'inline'
