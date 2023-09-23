@@ -36,7 +36,10 @@ steps:
     script: |
       # Write your PowerShell commands here.
 
+      & $Env:ProgramFiles\Docker\Docker\DockerCli.exe -SwitchDaemon 
+      & $C:\Windows\system32\docker.EXE -SwitchDaemon 
       docker pull redis
+     
       docker run -d --name my-redis redis
 
       dir "C:\Program Files\Azure Cosmos DB Emulator\"
