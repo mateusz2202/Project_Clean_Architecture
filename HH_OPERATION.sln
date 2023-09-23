@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OperationAPI", "OperationAPI\OperationAPI.csproj", "{361CD0AA-F48C-401A-9E57-CB620CBAA398}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OperationAPIOperationAPI_Test", "OperationAPIOperationAPI_Test\OperationAPIOperationAPI_Test.csproj", "{6D1698CC-06B3-4EF6-B033-38CF2A1201D2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{361CD0AA-F48C-401A-9E57-CB620CBAA398}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{361CD0AA-F48C-401A-9E57-CB620CBAA398}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{361CD0AA-F48C-401A-9E57-CB620CBAA398}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D1698CC-06B3-4EF6-B033-38CF2A1201D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D1698CC-06B3-4EF6-B033-38CF2A1201D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D1698CC-06B3-4EF6-B033-38CF2A1201D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D1698CC-06B3-4EF6-B033-38CF2A1201D2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
