@@ -37,8 +37,9 @@ steps:
     script: |
       # Write your PowerShell commands here.
 
-      $dockerCliPath = "$env:Program Files\Docker\Docker\DockerCli.exe -SwitchDaemon"      
-      
+      Import-Module  "$env:Program Files\Docker\Docker\DockerCli.exe"      
+      $dockerCliPath "-SwitchDaemon"
+      Write-Host $dockerCliPath
       Invoke-Expression -Command $dockerCliPath
 
       docker pull redis
