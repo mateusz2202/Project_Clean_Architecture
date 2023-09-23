@@ -8,7 +8,7 @@ trigger:
 resources:
   containers:
   - container: my_container
-    image: ubuntu:16.04
+    image: ubuntu-latest
   - container: nginx
     image: nginx
   - container: redis
