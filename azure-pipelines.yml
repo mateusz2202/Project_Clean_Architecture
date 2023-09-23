@@ -16,7 +16,7 @@ resources:
 
     
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: 'windows-latest'
 
 
 services:
