@@ -38,9 +38,9 @@ steps:
     includePreviewVersions: true 
 
 
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '$(solution)'
+# - task: NuGetCommand@2
+#   inputs:
+#     restoreSolution: '$(solution)'
 
 
 - task: DotNetCoreCLI@2
