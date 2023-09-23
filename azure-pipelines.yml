@@ -7,21 +7,21 @@ trigger:
 - main
 
 
-# resources:
-#   containers: 
-#   - container: nginx
-#     image: nginx
-#   - container: redis
-#     image: redis
+resources:
+  containers: 
+  - container: nginx
+    image: nginx
+  - container: redis
+    image: redis
 
     
 pool:
-  vmImage: 'windows-latest'
+  vmImage: 'ubuntu-latest'
 
 
-# services:
-#   nginx: nginx
-#   redis: redis  
+services:
+  nginx: nginx
+  redis: redis  
 
 variables:
   solution: '**/*.sln'
@@ -30,54 +30,27 @@ variables:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
 
 steps:
- 
-- task: PowerShell@2
+- task: BatchScript@1
   inputs:
-    targetType: 'inline'
-    script: |
-      # Write your PowerShell commands here.
+    filename: '$env:ProgramFiles\Docker\Docker\DockerCli.exe'
+    arguments: '-SwitchDaemon'
+- task: UseDotNet@2
+  displayName: 'Install .NET Core SDK'
+  inputs:
+    version: '7.x'
+    performMultiLevelLookup: true
+    includePreviewVersions: true 
 
-      Import-Module  "$env:ProgramFiles\Docker\Docker"      
-      $dockerCliPath = "DockerCli.exe -SwitchDaemon"
-      Write-Host $dockerCliPath   
-      #Invoke-Expression -Command "$env:ProgramFiles\Docker\Docker\DockerCli.exe -SwitchDaemon"
-      Invoke-Expression -Command $dockerCliPath
-      
-      docker pull redis
-     
-      docker run -d --name my-redis redis
 
-      dir "C:\Program Files\Azure Cosmos DB Emulator\"
-      
-      Import-Module "$env:ProgramFiles\Azure Cosmos DB Emulator\PSModules\Microsoft.Azure.CosmosDB.Emulator"
-      
-      $startEmulatorCmd = "Start-CosmosDbEmulator -NoFirewall -NoUI"
-      Write-Host $startEmulatorCmd
-      Invoke-Expression -Command $startEmulatorCmd
-      
-      # Pipe an emulator info object to the output stream
-      
-      $Emulator = Get-Item "$env:ProgramFiles\Azure Cosmos DB Emulator\Microsoft.Azure.Cosmos.Emulator.exe"
-      $IPAddress = Get-NetIPAddress -AddressFamily IPV4 -AddressState Preferred -PrefixOrigin Manual | Select-Object IPAddress
-      
-      New-Object PSObject @{
-      Emulator = $Emulator.BaseName
-      Version = $Emulator.VersionInfo.ProductVersion
-      Endpoint = @($(hostname), $IPAddress.IPAddress) | ForEach-Object { "https://${_}:8081/" }
-      MongoDBEndpoint = @($(hostname), $IPAddress.IPAddress) | ForEach-Object { "mongodb://${_}:10255/" }
-      CassandraEndpoint = @($(hostname), $IPAddress.IPAddress) | ForEach-Object { "tcp://${_}:10350/" }
-      GremlinEndpoint = @($(hostname), $IPAddress.IPAddress) | ForEach-Object { "http://${_}:8901/" }
-      TableEndpoint = @($(hostname), $IPAddress.IPAddress) | ForEach-Object { "https://${_}:8902/" }
-      IPAddress = $IPAddress.IPAddress
-      }
 - task: NuGetToolInstaller@1
 
 - task: NuGetCommand@2
   inputs:
     restoreSolution: '$(solution)'
 
+
 - task: VSBuild@1
-  inputs:
+  inputs:  
     solution: '$(solution)'
     msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
     platform: '$(buildPlatform)'
