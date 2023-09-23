@@ -44,14 +44,14 @@ steps:
   inputs:
     command: build
     projects: '**/*.csproj'
-    arguments: '--configuration $(buildConfiguration)' 
+    arguments: '--no-restore --configuration $(buildConfiguration)' 
 
 - task: DotNetCoreCLI@2
   displayName: Test
   inputs:
-    command: test
+    command: test 
     projects: '**/*Tests/*.csproj'
-    arguments: '--configuration $(buildConfiguration)'
+    arguments: '--no-build --verbosity normal --configuration $(buildConfiguration)'
 
 # - task: VSBuild@1
 #   inputs:  
