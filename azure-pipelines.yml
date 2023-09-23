@@ -5,22 +5,19 @@
 
 trigger:
 - main
+
+container: mcr.microsoft.com/dotnet/core/sdk:2.2
+
 resources:
   containers:
-  - container: my_container
-    image: ubuntu-latest
-  - container: nginx
-    image: nginx
   - container: redis
     image: redis
+
     
 pool:
   vmImage: 'windows-latest'
 
-container: my_container
-
 services:
-  nginx: nginx
   redis: redis
 
 variables:
@@ -29,11 +26,6 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- script: |
-    apt install -y curl
-    curl nginx
-    apt install redis-tools
-    redis-cli -h redis ping
     
 - task: PowerShell@2
   inputs:
@@ -81,3 +73,5 @@ steps:
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
+  env:
+      CONNECTIONSTRINGS_REDIS: redis:6379
