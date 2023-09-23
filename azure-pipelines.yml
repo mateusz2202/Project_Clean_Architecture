@@ -38,7 +38,13 @@ steps:
       
       echo Hello world
       
-      cd "C:\ProgramFiles\Docker\Docker"
+      cd ..
+      dir 
+      cd ..
+      dir 
+      cd ..
+      dir 
+      cd ..
       dir 
 
 - task: UseDotNet@2
