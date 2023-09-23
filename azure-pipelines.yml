@@ -6,7 +6,6 @@
 trigger:
 - main
 
-container: mcr.microsoft.com/dotnet/core/sdk:2.2
 
 resources:
   containers:
