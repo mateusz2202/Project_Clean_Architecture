@@ -30,6 +30,7 @@ variables:
 
 steps:
 - script: |
+    sudo apt-get -s upgrade | grep -P "\d\K upgraded"
     apt install redis-tools
     redis-cli -h redis ping
 
