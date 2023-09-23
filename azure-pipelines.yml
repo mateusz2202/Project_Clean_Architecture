@@ -33,7 +33,7 @@ variables:
 steps:
 - task: BatchScript@1
   inputs:
-    filename: '$env:ProgramFiles\Docker\Docker\DockerCli.exe'
+    filename: 'ProgramFiles\Docker\Docker\DockerCli.exe'
     arguments: '-SwitchDaemon'
 - task: UseDotNet@2
   displayName: 'Install .NET Core SDK'
