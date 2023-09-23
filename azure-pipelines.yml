@@ -9,6 +9,10 @@ trigger:
 
 resources:
   containers:
+  - container: my_container
+    image: ubuntu:16.04
+  - container: nginx
+    image: nginx
   - container: redis
     image: redis
 
@@ -17,10 +21,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 services:
-  redis: redis 
-  ports:
-          # Maps port 6379 on service container to the host
-          --6379:6379
+  redis: redis  
 
 variables:
   solution: '**/*.sln'
