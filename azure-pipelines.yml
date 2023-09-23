@@ -7,21 +7,22 @@ trigger:
 - main
 
 
-resources:
-  containers: 
-  - container: nginx
-    image: nginx
-  - container: redis
-    image: redis
+
+# resources:
+#   containers: 
+#   - container: nginx
+#     image: nginx
+#   - container: redis
+#     image: redis
 
     
 pool:
   vmImage: 'windows-latest'
 
 
-services:
-  nginx: nginx
-  redis: redis  
+# services:
+#   nginx: nginx
+#   redis: redis  
 
 variables:
   solution: '**/*.sln'
