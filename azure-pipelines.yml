@@ -16,7 +16,7 @@ resources:
 
     
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: 'windows-latest'
 
 services:
   nginx: nginx
@@ -29,7 +29,14 @@ variables:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
 
 steps:
-    
+    - script: |
+    # Pull container images
+    docker pull nginx
+    docker pull redis
+
+    # Run containers
+    docker run -d --name my-nginx nginx
+    docker run -d --name my-redis redis
 # - task: PowerShell@2
 #   inputs:
 #     targetType: 'inline'
