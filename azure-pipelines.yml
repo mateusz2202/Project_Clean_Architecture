@@ -21,6 +21,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 services:
+  nginx: nginx
   redis: redis  
 
 variables:
