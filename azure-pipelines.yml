@@ -37,7 +37,7 @@ steps:
     script: |
       # Write your PowerShell commands here.
 
-      $dockerCliPath = "& $Env:ProgramFiles\Docker\Docker\DockerCli.exe -SwitchDaemon "      
+      $dockerCliPath = "$env:Program Files\Docker\Docker\DockerCli.exe -SwitchDaemon"      
       
       Invoke-Expression -Command $dockerCliPath
 
