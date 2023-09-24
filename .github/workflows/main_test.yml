@@ -15,7 +15,7 @@ on:
 jobs:
   build:
     #runs-on: self-hosted
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
  # Service containers to run with `runner-job`
     services:
       # Label used to access the service container
