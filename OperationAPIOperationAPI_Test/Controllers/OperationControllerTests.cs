@@ -1,14 +1,11 @@
 ﻿using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Azure.Cosmos;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OperationAPI.Data;
 using OperationAPI.Entities;
 using OperationAPI.Models;
 using OperationAPIOperationAPI_Test;
-using StackExchange.Redis;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -36,30 +33,7 @@ public class OperationControllerTests
                     if (dbContextOption != null)
                         services.Remove(dbContextOption);
 
-                    services.AddDbContext<OperationDbContext>(options => options.UseInMemoryDatabase("OperationDb"));
-
-                    //cosmos db change connection
-                    var cosmos = services.SingleOrDefault(s => s.ServiceType == typeof(CosmosClient));
-                    
-                    if (cosmos != null)
-                        services.Remove(cosmos);
-
-                    services.AddSingleton<CosmosClient>((s) => new CosmosClient(conf.Configuration.GetConnectionString("CosmosDbConnectionString")));
-
-                    //redis change connection
-                    var redis = services.SingleOrDefault(s => s.ServiceType == typeof(IDatabase));
-                   
-                    if(redis != null)  
-                        services.Remove(redis);
-
-                    services.AddSingleton<IDatabase>(cfg =>
-                    {
-                        var redisConnection =
-                            ConnectionMultiplexer
-                                .Connect(conf.Configuration.GetConnectionString("RedisConnectionString") ??string.Empty);
-
-                        return redisConnection.GetDatabase();
-                    });
+                    services.AddDbContext<OperationDbContext>(options => options.UseInMemoryDatabase("OperationDb"));                  
 
                 });
             });
