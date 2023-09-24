@@ -15,11 +15,29 @@ on:
 jobs:
   build:
     #runs-on: self-hosted
-    runs-on: windows-latest
- # Service containers to run with `runner-job`
-   
-
+    runs-on: ubuntu-latest
+   # Service containers to run with `container-job`
+    services:
+      # Label used to access the service container
+      redis:
+        # Docker Hub image
+        image: redis
+        # Set health checks to wait until redis has started
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          # Maps port 6379 on service container to the host
+          - 6379:6379
+    
     steps:   
+    - uses: southpolesteve/cosmos-emulator-github-action@v1
+    - name: 'npm ci'
+      run: npm ci
+    - name: 'npm test'
+      run: npm test
     - uses: actions/checkout@v3 
     - name: Setup .NET
       uses: actions/setup-dotnet@v3      
