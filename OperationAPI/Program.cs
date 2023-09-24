@@ -11,14 +11,14 @@ using OperationAPI.Services;
 using StackExchange.Redis;
 using System.Runtime.CompilerServices;
 
-[assembly:InternalsVisibleTo("OperationAPIOperationAPI_Test")]
+[assembly: InternalsVisibleTo("OperationAPIOperationAPI_Test")]
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
       options.SerializerSettings.ReferenceLoopHandling =
-        Newtonsoft.Json.ReferenceLoopHandling.Ignore); 
+        Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
 // Add services to the container.
 builder.Services.AddFluentValidationAutoValidation();
@@ -27,7 +27,7 @@ builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddDbContext<OperationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnectionString")));
 
 //cosmos db
-builder.Services.AddSingleton((s) => new CosmosClient(builder.Configuration.GetConnectionString("CosmosDbConnectionString")));
+builder.Services.AddSingleton<CosmosClient>((s) => new CosmosClient(builder.Configuration.GetConnectionString("CosmosDbConnectionString")));
 
 //redis
 builder.Services.AddSingleton<IDatabase>(cfg =>
