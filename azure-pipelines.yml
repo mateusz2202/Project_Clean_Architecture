@@ -1,0 +1,72 @@
+# ASP.NET
+# Build and test ASP.NET projects.
+# Add steps that publish symbols, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
+
+trigger:
+- main
+
+resources:
+  containers:   
+  - container: redis
+    image: redis
+
+    
+pool:
+  vmImage: 'ubuntu-latest'
+
+container: redis
+
+services: 
+  redis: redis  
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+
+steps:
+- script: |
+   redis-cli -h redis ping
+
+- task: UseDotNet@2
+  displayName: 'Install .NET Core SDK'
+  inputs:
+    version: '7.x'
+    performMultiLevelLookup: true
+    includePreviewVersions: true 
+
+
+# - task: NuGetCommand@2
+#   inputs:
+#     restoreSolution: '$(solution)'
+
+
+- task: DotNetCoreCLI@2
+  displayName: Build
+  inputs:
+    command: build    
+    configuration: '$(buildConfiguration)' 
+    arguments: 
+
+- task: DotNetCoreCLI@2
+  displayName: Test
+  inputs:
+    command: test    
+    arguments: '--no-build --verbosity normal'
+  env:
+    CONNECTIONSTRINGS_REDIS: redis:6379
+# - task: VSBuild@1
+#   inputs:  
+#     solution: '$(solution)'
+#     msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
+#     platform: '$(buildPlatform)'
+#     configuration: '$(buildConfiguration)'
+
+# - task: VSTest@2
+#   inputs:
+#     platform: '$(buildPlatform)'
+#     configuration: '$(buildConfiguration)'
+#   env:
+#       CONNECTIONSTRINGS_REDIS: redis:6379
