@@ -17,6 +17,13 @@ namespace ViewerData_WPF_APP
         {
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddScoped<GirdDataViewModel>();
+            serviceCollection.Configure<RabbitMqConfiguration>(conf =>
+            {
+                conf.HostName="localhost";
+                conf.Username="guest";
+                conf.Password= "guest";
+            });
+            serviceCollection.AddScoped<IRabbitMqService, RabbitMqService>();
             serviceCollection.AddScoped<IOperationServices, OperationServices>();
 
             Ioc.Default.ConfigureServices(serviceCollection.BuildServiceProvider());
