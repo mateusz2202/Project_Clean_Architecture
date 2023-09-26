@@ -2,6 +2,7 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.Azure.Cosmos;
 using Microsoft.EntityFrameworkCore;
+using OperationAPI;
 using OperationAPI.Data;
 using OperationAPI.Interfaces;
 using OperationAPI.Middleware;
@@ -39,6 +40,10 @@ builder.Services.AddSingleton<IDatabase>(cfg =>
     return redisConnection.GetDatabase();
 });
 
+//rabbitMQ
+builder.Services.Configure<RabbitMqConfiguration>(conf => builder.Configuration.GetSection(nameof(RabbitMqConfiguration)).Bind(conf));
+builder.Services.AddSingleton<IRabbitMqService, RabbitMqService>();
+
 //services
 builder.Services.AddScoped<ICacheService, CacheService>();
 builder.Services.AddScoped<IOperationService, OperationService>();
@@ -74,4 +79,3 @@ app.MapControllers();
 
 app.Run();
 
-//public partial class Program { }

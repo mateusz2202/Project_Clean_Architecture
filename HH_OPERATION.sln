@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OperationAPI", "OperationAP
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OperationAPIOperationAPI_Test", "OperationAPIOperationAPI_Test\OperationAPIOperationAPI_Test.csproj", "{6D1698CC-06B3-4EF6-B033-38CF2A1201D2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViewerData_WPF_APP", "ViewerData_WPF_APP\ViewerData_WPF_APP.csproj", "{4CD6E0EF-A97E-4839-B47C-751357243F8B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViewerData_WPF_APP", "ViewerData_WPF_APP\ViewerData_WPF_APP.csproj", "{4CD6E0EF-A97E-4839-B47C-751357243F8B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
