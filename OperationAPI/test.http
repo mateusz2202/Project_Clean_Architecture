@@ -1,6 +1,6 @@
 
 @hostname=localhost
-@port=7056
+@port=5161
 
 @id= 15
 @code= xd9544
@@ -10,7 +10,7 @@
 GET https://{{hostname}}:{{port}}/Operation
 ###
 
-GET https://{{hostname}}:{{port}}/Operation/operations
+GET http://{{hostname}}:{{port}}/Operation/operations
 ###
 
 GET https://{{hostname}}:{{port}}/Operation/attributes

@@ -1,0 +1,23 @@
+﻿<Window x:Class="ViewerData_WPF_APP.Views.GirdDataView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:local="clr-namespace:ViewerData_WPF_APP.Views" 
+        xmlns:viewmodels="clr-namespace:ViewerData_WPF_APP.ViewModels" 
+        d:DataContext="{d:DesignInstance Type=viewmodels:GirdDataViewModel}"
+        mc:Ignorable="d"
+        Title="Sample_APP_WPF" Height="450" Width="800">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
+        </i:EventTrigger>
+        <i:EventTrigger EventName="Unloaded">
+            <i:InvokeCommandAction Command="{Binding UnloadedCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <Grid>
+        <DataGrid ItemsSource="{Binding GridData,UpdateSourceTrigger=PropertyChanged,IsAsync=True}"/>
+    </Grid>
+</Window>
