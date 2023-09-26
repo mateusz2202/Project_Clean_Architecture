@@ -7,8 +7,11 @@ using OperationAPI.Entities;
 using OperationAPI.Exceptions;
 using OperationAPI.Interfaces;
 using OperationAPI.Models;
+using RabbitMQ.Client;
 using System.Dynamic;
 using System.Net;
+using System.Text;
+using System.Threading.Channels;
 
 namespace OperationAPI.Services;
 
@@ -21,12 +24,18 @@ public class OperationService : IOperationService
     private readonly OperationDbContext _dbContext;
     private readonly CosmosClient _cosmosClient;
     private readonly ICacheService _cacheService;
+    private readonly IRabbitMqService _rabbitMqService;
 
-    public OperationService(OperationDbContext dbContext, CosmosClient cosmosClient, ICacheService cacheService)
+    public OperationService(
+        OperationDbContext dbContext,
+        CosmosClient cosmosClient,
+        ICacheService cacheService,
+        IRabbitMqService rabbitMqService)
     {
         _dbContext = dbContext;
         _cosmosClient = cosmosClient;
         _cacheService = cacheService;
+        _rabbitMqService = rabbitMqService;
     }
 
     public async Task<IEnumerable<Operation>> GetAllOperations()
@@ -144,6 +153,8 @@ public class OperationService : IOperationService
 
         await ClearCache();
 
+        SendInfoAddedOperation();
+
         return operation.Entity;
     }
 
@@ -154,7 +165,7 @@ public class OperationService : IOperationService
         var idOperation = (int?)((dynamic)item).id ?? throw new NotFoundException("Operation not found");
         var codeOperation = (string?)((dynamic)item).code ?? throw new NotFoundException("Operation not found");
 
-        if (!_dbContext.Operations.Any(x => x.Id == idOperation && x.Code==codeOperation))
+        if (!_dbContext.Operations.Any(x => x.Id == idOperation && x.Code == codeOperation))
             throw new NotFoundException("Operation not found");
 
         var response = await container.ReadItemStreamAsync(idOperation.ToString(), new PartitionKey(codeOperation));
@@ -290,4 +301,22 @@ public class OperationService : IOperationService
         await Task.CompletedTask;
     }
 
+    private void SendInfoAddedOperation()
+    {
+        using var connection = _rabbitMqService.CreateChannel();
+        using var channel = connection.CreateModel();
+
+        channel.QueueDeclare(queue: "hello",
+                     durable: false,
+                     exclusive: false,
+                     autoDelete: false,
+                     arguments: null);
+
+        var body = Encoding.UTF8.GetBytes("refresh_operation");
+
+        channel.BasicPublish(exchange: string.Empty,
+                        routingKey: "hello",
+                        basicProperties: null,
+                        body: body);
+    }
 }
