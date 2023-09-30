@@ -39,6 +39,10 @@ jobs:
         dotnet-version: 7.0.x
     - name: Restore dependencies ViewerData_WPF_APP
       run: dotnet restore ViewerData_WPF_APP/ViewerData_WPF_APP.csproj
+    - name: Restore dependencies ViewerData_MAUI_APP
+      run: dotnet restore ViewerData_MAUI_APP/ViewerData_MAUI_APP.csproj
     - name: Build ViewerData_WPF_APP
       run: dotnet build ViewerData_WPF_APP/ViewerData_WPF_APP.csproj
+    - name: Build ViewerData_MAUI_APP
+      run: dotnet build ViewerData_MAUI_APP/ViewerData_MAUI_APP.csproj
       
