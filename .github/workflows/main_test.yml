@@ -17,12 +17,16 @@ jobs:
       uses: actions/setup-dotnet@v3      
       with:
         dotnet-version: 7.0.x
-    - name: Restore dependencies
-      run: dotnet restore
+    - name: Restore dependencies OperationAPI
+      run: dotnet restore OperationAPI/OperationAPI.csproj
+    - name: Restore dependencies OperationAPIOperationAPI_Test
+      run: dotnet restore OperationAPIOperationAPI_Test/OperationAPIOperationAPI_Test.csproj
     - name: Build OperationAPI
       run: dotnet build OperationAPI/OperationAPI.csproj
+    - name: Build OperationAPIOperationAPI_Test
+      run: dotnet build OperationAPIOperationAPI_Test/OperationAPIOperationAPI_Test.csproj
     - name: Test      
-      run: dotnet test 
+      run: dotnet test OperationAPIOperationAPI_Test/OperationAPIOperationAPI_Test.csproj
       
   build-windows:
     runs-on: windows-latest
@@ -33,8 +37,8 @@ jobs:
       uses: actions/setup-dotnet@v3      
       with:
         dotnet-version: 7.0.x
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build OperationAPI
+    - name: Restore dependencies ViewerData_WPF_APP
+      run: dotnet restore ViewerData_WPF_APP/ViewerData_WPF_APP.csproj
+    - name: Build ViewerData_WPF_APP
       run: dotnet build ViewerData_WPF_APP/ViewerData_WPF_APP.csproj
       
