@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="ViewerData_MAUI_APP.Views.GridDataView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:viewmodels="clr-namespace:ViewerData_MAUI_APP.ViewModels">
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior Command="{Binding LoadedCommand}" EventName="Loaded" />
+        <toolkit:EventToCommandBehavior Command="{Binding UnloadedCommand}" EventName="Unloaded" />
+    </ContentPage.Behaviors>
+    <VerticalStackLayout>
+        <ListView ItemsSource="{Binding GridData}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Grid Padding="30">
+                            <StackLayout Grid.Column="0" Orientation="Horizontal">
+                                <Label Padding="5" Text="Kod:" />
+                                <Label
+                                    Padding="5"
+                                    FontAttributes="Bold"
+                                    Text="{Binding Code}" />
+                                <Label Padding="5" Text="Nazwa:" />
+                                <Label
+                                    Padding="5"
+                                    FontAttributes="Bold"
+                                    Text="{Binding Name}" />
+                            </StackLayout>
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </VerticalStackLayout>
+</ContentPage>
