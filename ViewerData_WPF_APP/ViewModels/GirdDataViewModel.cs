@@ -2,21 +2,20 @@
 using CommunityToolkit.Mvvm.Input;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using System;
 using System.Collections.ObjectModel;
 using System.Text;
-using System.Threading;
-using System.Threading.Channels;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using ViewerData_WPF_APP.Interfaces;
 using ViewerData_WPF_APP.Models;
-using ViewerData_WPF_APP.Services;
+
 
 namespace ViewerData_WPF_APP.ViewModels;
 
 public partial class GirdDataViewModel : ObservableObject
 {
+    private const string EXCHANGE_OPERATION = "EXCHANGE_OPERATION";
+
     private readonly IOperationServices _operationServices;
     private readonly IRabbitMqService _rabbitMqService;
     private readonly IModel _channel;
@@ -43,16 +42,18 @@ public partial class GirdDataViewModel : ObservableObject
     }
 
     private async Task SubscribeQueue()
-    {
-        _channel.QueueDeclare(queue: "hello",
-                     durable: false,
-                     exclusive: false,
-                     autoDelete: false,
-                     arguments: null);
+    { 
+        _channel.ExchangeDeclare(exchange: EXCHANGE_OPERATION, type: ExchangeType.Fanout);
+
+        var queueName = _channel.QueueDeclare().QueueName;
+        _channel.QueueBind(queue: queueName,
+                          exchange: EXCHANGE_OPERATION,
+                          routingKey: string.Empty);
+
         var consumer = new AsyncEventingBasicConsumer(_channel);
         consumer.Received += DoJobFromQueue;
 
-        _channel.BasicConsume(queue: "hello",
+        _channel.BasicConsume(queue: queueName,
                      autoAck: true,
                      consumer: consumer);
 
@@ -60,17 +61,13 @@ public partial class GirdDataViewModel : ObservableObject
     }
 
     private async Task DoJobFromQueue(object sender, BasicDeliverEventArgs @event)
-    {
+    {      
         var body = @event.Body.ToArray();
         var message = Encoding.UTF8.GetString(body);
         if (!string.IsNullOrEmpty(message) && message == "refresh_operation")
-            await LoadData();
+            await LoadData();       
     }
-
-    private void DoJobFromQueue(AsyncEventingBasicConsumer consumer)
-    {
-
-    }
+ 
 
     private async Task Unloaded()
     {
