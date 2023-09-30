@@ -11,7 +11,6 @@ using RabbitMQ.Client;
 using System.Dynamic;
 using System.Net;
 using System.Text;
-using System.Threading.Channels;
 
 namespace OperationAPI.Services;
 
@@ -20,6 +19,7 @@ public class OperationService : IOperationService
     private const string OPERATION_KEY = "operation";
     private const string OPERATIONATTRIBUTE_KEY = "operationAttribute";
     private const string OPERATIONWITHATTRIBUTE_KEY = "operationWithAttribute";
+    private const string EXCHANGE_OPERATION = "EXCHANGE_OPERATION";
 
     private readonly OperationDbContext _dbContext;
     private readonly CosmosClient _cosmosClient;
@@ -151,9 +151,7 @@ public class OperationService : IOperationService
         var operation = await _dbContext.Operations.AddAsync(new Entities.Operation() { Name = dto.Name, Code = dto.Code });
         await _dbContext.SaveChangesAsync();
 
-        await ClearCache();
-
-        SendInfoAddedOperation();
+        await ClearCache();     
 
         return operation.Entity;
     }
@@ -175,7 +173,7 @@ public class OperationService : IOperationService
         else
             await container.UpsertItemAsync(item);
 
-        await ClearCache();
+        await ClearCache();     
 
         await Task.CompletedTask;
     }
@@ -191,7 +189,7 @@ public class OperationService : IOperationService
         await AddAttributes(json);
 
         await ClearCache();
-
+  
         await Task.CompletedTask;
     }
 
@@ -204,7 +202,7 @@ public class OperationService : IOperationService
         _dbContext.Operations.Remove(operation);
         await _dbContext.SaveChangesAsync();
 
-        await ClearCache();
+        await ClearCache();      
 
         await Task.CompletedTask;
     }
@@ -219,7 +217,7 @@ public class OperationService : IOperationService
         await _dbContext.SaveChangesAsync();
 
         await ClearCache();
-
+      
         await Task.CompletedTask;
     }
 
@@ -229,7 +227,7 @@ public class OperationService : IOperationService
 
         await DeleteAttribute(operation.Id.ToString(), new PartitionKey(operation.Code));
 
-        await ClearCache();
+        await ClearCache();       
 
         await Task.CompletedTask;
     }
@@ -240,7 +238,7 @@ public class OperationService : IOperationService
 
         await DeleteAttribute(operation.Id.ToString(), new PartitionKey(operation.Code));
 
-        await ClearCache();
+        await ClearCache(); 
 
         await Task.CompletedTask;
     }
@@ -253,7 +251,7 @@ public class OperationService : IOperationService
         Container container = await GetContainer();
         await container.DeleteContainerAsync();
 
-        await ClearCache();
+        await ClearCache();      
 
         await Task.CompletedTask;
     }
@@ -263,6 +261,7 @@ public class OperationService : IOperationService
         await _cacheService.RemoveAsync(OPERATIONATTRIBUTE_KEY);
         await _cacheService.RemoveAsync(OPERATION_KEY);
         await _cacheService.RemoveAsync(OPERATIONWITHATTRIBUTE_KEY);
+        SendInfoAddedOperation();
     }
 
     private async Task<Container> GetContainer()
@@ -304,18 +303,14 @@ public class OperationService : IOperationService
     private void SendInfoAddedOperation()
     {
         using var connection = _rabbitMqService.CreateChannel();
-        using var channel = connection.CreateModel();
+        using var channel = connection.CreateModel();     
 
-        channel.QueueDeclare(queue: "hello",
-                     durable: false,
-                     exclusive: false,
-                     autoDelete: false,
-                     arguments: null);
+        channel.ExchangeDeclare(exchange: EXCHANGE_OPERATION, type: ExchangeType.Fanout); 
 
         var body = Encoding.UTF8.GetBytes("refresh_operation");
 
-        channel.BasicPublish(exchange: string.Empty,
-                        routingKey: "hello",
+        channel.BasicPublish(exchange: EXCHANGE_OPERATION,
+                        routingKey: string.Empty,
                         basicProperties: null,
                         body: body);
     }
