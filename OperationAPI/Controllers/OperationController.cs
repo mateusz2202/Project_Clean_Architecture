@@ -98,6 +98,13 @@ public class OperationController : ControllerBase
         return NoContent();
     }
 
+    [HttpPut("id/{id}")]
+    public async Task<IActionResult> UpdateOperationWithAttributes([FromRoute] int id, CreateOperationWithAttributeDTO dto)
+    {
+        await _operationService.UpdateOperationWithAttributes(id,dto);
+        return Ok();
+    }
+
     [HttpDelete("id/{id}")]
     public async Task<IActionResult> DeleteOperationById([FromRoute] int id)
     {

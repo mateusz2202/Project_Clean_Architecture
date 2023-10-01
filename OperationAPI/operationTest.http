@@ -2,8 +2,8 @@
 @hostname=localhost
 @port=5161
 
-@id= 15
-@code= xd9544
+@id= 37
+@code= mat56
 @name = fdg
 
 
@@ -74,6 +74,26 @@ Accept-Language: en-US,en;q=0.5
   "afsdfd1":"adasd3"
   }
 } 
+###
+
+PUT https://{{hostname}}:{{port}}/Operation/id{{id}}
+Content-Type: application/json
+Accept-Language: en-US,en;q=0.5
+
+{ 
+  "createOperationDTO":{
+  "Code":"{{code}}",
+  "Name":"{{name}}"
+  },
+  "attributes":
+   {
+  "id":"{{id}}",
+  "code":"{{code}}",
+  "test":"tes334",
+  "afsdfd1":"adasd3"
+  }
+} 
+
 ###
 
 DELETE https://{{hostname}}:{{port}}/Operation/id/{{id}}
