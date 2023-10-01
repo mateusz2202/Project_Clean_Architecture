@@ -5,7 +5,7 @@
 }
 
 <h2>Operacje</h2>
-
+<hr />
 <p>
     <a asp-action="Create" class="btn btn-primary">Dodaj operacje do słownika</a>
 </p>
@@ -41,3 +41,21 @@
         }
     </tbody>
 </table>
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+@* <script src="~/js/chat.js"></script> *@
+<script>
+   
+    var connection = new signalR.HubConnectionBuilder().withUrl("/rabbitmqHub").build();
+
+    connection.start().then(function () {
+        console.log("SignalR connected.");       
+    }).catch(function (err) {
+        return console.error(err.toString());
+    });   
+
+    connection.on("refresh_operation", function (message) {      
+        location.reload();
+        console.log("Received message: " + message);
+    });    
+
+</script>

@@ -1,4 +1,5 @@
-﻿using HH_ASP_APP.Interfaces;
+﻿using HH_ASP_APP.Hubs;
+using HH_ASP_APP.Interfaces;
 using HH_ASP_APP.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,16 +7,16 @@ namespace HH_ASP_APP.Controllers;
 
 public class OperationController : Controller
 {
-    private readonly IOperationServices _operationServices;
+    private readonly IOperationServices _operationServices;   
 
     public OperationController(IOperationServices operationServices)
     {
-        _operationServices = operationServices;      
+        _operationServices = operationServices;     
     }
 
     public async Task<IActionResult> Index()
     {
-        var operations = await _operationServices.GetOperations();
+        var operations = await _operationServices.GetOperations();      
         return View(operations);
     }
 

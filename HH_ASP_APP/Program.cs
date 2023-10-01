@@ -1,4 +1,5 @@
 using HH_ASP_APP;
+using HH_ASP_APP.Hubs;
 using HH_ASP_APP.Interfaces;
 using HH_ASP_APP.Middleware;
 using HH_ASP_APP.Services;
@@ -7,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddSignalR();
 
 builder.Services.Configure<RabbitMqConfiguration>(conf =>
 {
@@ -15,12 +17,18 @@ builder.Services.Configure<RabbitMqConfiguration>(conf =>
     conf.Password = "guest";
 });
 
-builder.Services.AddScoped<IRabbitMqService, RabbitMqService>();
+builder.Services.AddSingleton<IRabbitMqService, RabbitMqService>();
 builder.Services.AddScoped<IOperationServices, OperationServices>();
 
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 
 var app = builder.Build();
+
+app.Lifetime.ApplicationStarted.Register(() =>
+{  
+    var rabbit = new RabbitMQInitializer(app.Services);
+    rabbit.Initialize();  
+});
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
 // Configure the HTTP request pipeline.
@@ -41,5 +49,7 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapHub<RabbitMQHub>("/rabbitmqHub");
 
 app.Run();
