@@ -17,14 +17,21 @@ jobs:
       uses: actions/setup-dotnet@v3      
       with:
         dotnet-version: 7.0.x
+   #restore
+    - name: Restore dependencies HH_ASP_APP
+      run: dotnet restore HH_ASP_APP/HH_ASP_APP.csproj
     - name: Restore dependencies OperationAPI
       run: dotnet restore OperationAPI/OperationAPI.csproj
     - name: Restore dependencies OperationAPIOperationAPI_Test
       run: dotnet restore OperationAPIOperationAPI_Test/OperationAPIOperationAPI_Test.csproj
+   #build    
+    - name: Build HH_ASP_APP
+      run: dotnet build HH_ASP_APP/HH_ASP_APP.csproj
     - name: Build OperationAPI
       run: dotnet build OperationAPI/OperationAPI.csproj
     - name: Build OperationAPIOperationAPI_Test
       run: dotnet build OperationAPIOperationAPI_Test/OperationAPIOperationAPI_Test.csproj
+   #test    
     - name: Test      
       run: dotnet test OperationAPIOperationAPI_Test/OperationAPIOperationAPI_Test.csproj
       
@@ -37,10 +44,12 @@ jobs:
       uses: actions/setup-dotnet@v3      
       with:
         dotnet-version: 7.0.x
+   #restore
     - name: Restore dependencies ViewerData_WPF_APP
       run: dotnet restore ViewerData_WPF_APP/ViewerData_WPF_APP.csproj
     - name: Restore dependencies ViewerData_MAUI_APP
       run: dotnet restore ViewerData_MAUI_APP/ViewerData_MAUI_APP.csproj
+   #build
     - name: Build ViewerData_WPF_APP
       run: dotnet build ViewerData_WPF_APP/ViewerData_WPF_APP.csproj
     - name: Build ViewerData_MAUI_APP
