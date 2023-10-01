@@ -1,5 +1,4 @@
-﻿using HH_ASP_APP.Hubs;
-using HH_ASP_APP.Interfaces;
+﻿using HH_ASP_APP.Interfaces;
 using HH_ASP_APP.Models;
 using Microsoft.AspNetCore.Mvc;
 
