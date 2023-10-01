@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using OperationAPI.Controllers;
+using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,7 +26,7 @@ public class OperationControllerTests
         _factory = new WebApplicationFactory<Program>()
             .WithWebHostBuilder(builder =>
             {
-                builder.ConfigureServices((conf,services) =>
+                builder.ConfigureServices((conf, services) =>
                 {
                     //sql server change to memoryDatabase
                     var dbContextOption = services.SingleOrDefault(s => s.ServiceType == typeof(DbContextOptions<OperationDbContext>));
@@ -33,7 +34,7 @@ public class OperationControllerTests
                     if (dbContextOption != null)
                         services.Remove(dbContextOption);
 
-                    services.AddDbContext<OperationDbContext>(options => options.UseInMemoryDatabase("OperationDb"));                  
+                    services.AddDbContext<OperationDbContext>(options => options.UseInMemoryDatabase("OperationDb"));
 
                 });
             });
@@ -182,5 +183,37 @@ public class OperationControllerTests
         });
 
         return operation ?? new Operation();
+    }
+
+    [Fact]
+    public async void UpdateOperationWithAttributesTest()
+    {
+        var createdOperation = await CreateOperation();
+
+        createdOperation.Code = "teeeeest1";
+        createdOperation.Name = "teeeeest2";
+
+        var attribute = new
+        {
+            id = createdOperation.Id.ToString(),
+            code = createdOperation.Code,
+            height = "test1",
+            width = "test2",
+            weight = "test3",
+        };
+
+        var updateOperation = new { createOperationDTO = createdOperation, attributes = attribute };
+
+        var responseCreatedAttribute = await _client.PutAsJsonAsync($"/Operation/id/{createdOperation.Id}", updateOperation);
+        responseCreatedAttribute.EnsureSuccessStatusCode();
+
+        var updatedObject= await _client.GetFromJsonAsync<Operation>($"/Operation/operations/id/{createdOperation.Id}");
+       
+        updatedObject.Should().NotBeNull();
+        updatedObject.Should().BeEquivalentTo(createdOperation);
+
+        var responseDelete = await _client.DeleteAsync($"/Operation/id/{createdOperation.Id}");
+
+        responseDelete.StatusCode.Should().Be(System.Net.HttpStatusCode.NoContent);
     }
 }

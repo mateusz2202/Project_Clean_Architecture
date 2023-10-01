@@ -16,23 +16,21 @@ public partial class GirdDataViewModel : ObservableObject
 {
     private const string EXCHANGE_OPERATION = "EXCHANGE_OPERATION";
 
-    private readonly IOperationServices _operationServices;
-    private readonly IRabbitMqService _rabbitMqService;
+    private readonly IOperationServices _operationServices;    
     private readonly IModel _channel;
     public GirdDataViewModel(IOperationServices operationServices, IRabbitMqService rabbitMqService)
     {
         LoadedCommand = new AsyncRelayCommand(Loaded);
         UnloadedCommand = new AsyncRelayCommand(Unloaded);
-        _operationServices = operationServices;
-        _rabbitMqService = rabbitMqService;
-        _channel = _rabbitMqService.CreateChannel().CreateModel();
+        _operationServices = operationServices; 
+        _channel = rabbitMqService.CreateChannel().CreateModel();
     }
 
     public ICommand LoadedCommand { get; set; }
     public ICommand UnloadedCommand { get; set; }
 
     [ObservableProperty]
-    private ObservableCollection<Operation> gridData; 
+    private ObservableCollection<Operation>? gridData; 
 
     private async Task Loaded()
     {

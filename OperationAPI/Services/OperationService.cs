@@ -193,6 +193,31 @@ public class OperationService : IOperationService
         await Task.CompletedTask;
     }
 
+    public async Task UpdateOperationWithAttributes(int id, CreateOperationWithAttributeDTO dto)
+    {
+        Operation operationToUpdate = await GetOperationById(id);
+        string oldCode = operationToUpdate.Code;
+        operationToUpdate.Code=dto.CreateOperationDTO.Code;
+        operationToUpdate.Name=dto.CreateOperationDTO.Name;
+        await _dbContext.SaveChangesAsync();
+      
+        var item = JsonConvert.DeserializeObject<dynamic>(dto?.Attributes?.ToString());
+        ((dynamic)item).id = operationToUpdate.Id.ToString();
+        ((dynamic)item).code = operationToUpdate.Code;
+
+        Container container = await GetContainer();
+        var response = await container.ReadItemStreamAsync(operationToUpdate.Id.ToString(), new PartitionKey(oldCode));
+        
+        if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            await container.CreateItemAsync(item);
+        else
+            await container.UpsertItemAsync(item);
+
+        await ClearCache();
+
+        await Task.CompletedTask;
+    }
+
     public async Task DeleteOperationById(int id)
     {
         var operation = await GetOperationById(id);

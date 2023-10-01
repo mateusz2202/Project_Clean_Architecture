@@ -37,6 +37,21 @@ public class OperationController : Controller
         var operation = await _operationServices.GetOperationById(id);
         return View(operation);
     }
+
+   
+    public async Task<IActionResult> Edit(int id)
+    {
+        var operation = await _operationServices.GetOperationById(id);
+        return View(operation);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Edit(int id, Operation operation)
+    {        
+        await _operationServices.UpdateOperationById(id, operation);
+        return RedirectToAction(nameof(Index));
+    }
+
     public async Task<IActionResult> Delete(int id)
     {
         var operation = await _operationServices.GetOperationById(id);

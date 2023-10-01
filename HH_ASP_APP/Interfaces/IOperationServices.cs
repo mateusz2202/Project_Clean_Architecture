@@ -6,6 +6,7 @@ public interface IOperationServices
 {
     public Task<IEnumerable<Operation>> GetOperations();
     public Task<Operation> GetOperationById(int operationId);
+    public Task UpdateOperationById(int operationId, Operation operation);
     public Task DeleteOperationById(int operationId);
     public Task CreateOperation(Operation operation);
 }

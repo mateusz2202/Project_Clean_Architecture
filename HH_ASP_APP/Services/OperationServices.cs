@@ -21,6 +21,15 @@ public class OperationServices : IOperationServices
         => await $"{BASE_URL}/Operation/operations/id/{operationId}"
                  .GetJsonAsync<Operation>();
 
+    public async Task UpdateOperationById(int operationId, Operation operation)
+    {
+        await $"{BASE_URL}/Operation/id/{operationId}"
+                 .PutAsync(new StringContent(
+                     JsonConvert.SerializeObject(new { createOperationDTO = operation, attributes = new { id = "", code = "" } }),
+                     Encoding.UTF8, "application/json")
+                 );
+    }
+
     public async Task DeleteOperationById(int operationId)
         => await $"{BASE_URL}/Operation/id/{operationId}"
                  .DeleteAsync();
@@ -28,7 +37,5 @@ public class OperationServices : IOperationServices
     public async Task CreateOperation(Operation operation)
         => await $"{BASE_URL}/Operation/operations"
                  .PostAsync(new StringContent(JsonConvert.SerializeObject(new { operation.Code, operation.Name }), Encoding.UTF8, "application/json"));
-
-   
 
 }
