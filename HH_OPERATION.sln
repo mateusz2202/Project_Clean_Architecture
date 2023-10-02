@@ -16,7 +16,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViewerData_MAUI_APP", "ViewerData_MAUI_APP\ViewerData_MAUI_APP.csproj", "{339CE575-0C13-404A-8A3B-62C26C60D600}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HH_ASP_APP", "HH_ASP_APP\HH_ASP_APP.csproj", "{1206DABC-D1C6-4443-BF2F-A7AA340B567F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HH_ASP_APP", "HH_ASP_APP\HH_ASP_APP.csproj", "{1206DABC-D1C6-4443-BF2F-A7AA340B567F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API_Gateway", "API_Gateway\API_Gateway.csproj", "{47015493-0F1A-4539-A3E6-FF729B15B341}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API_Identity", "API_Identity\API_Identity.csproj", "{D474B672-3F63-45C2-BC49-B0B40DD30CCA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -46,6 +50,14 @@ Global
 		{1206DABC-D1C6-4443-BF2F-A7AA340B567F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1206DABC-D1C6-4443-BF2F-A7AA340B567F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1206DABC-D1C6-4443-BF2F-A7AA340B567F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47015493-0F1A-4539-A3E6-FF729B15B341}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47015493-0F1A-4539-A3E6-FF729B15B341}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47015493-0F1A-4539-A3E6-FF729B15B341}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47015493-0F1A-4539-A3E6-FF729B15B341}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D474B672-3F63-45C2-BC49-B0B40DD30CCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D474B672-3F63-45C2-BC49-B0B40DD30CCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D474B672-3F63-45C2-BC49-B0B40DD30CCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D474B672-3F63-45C2-BC49-B0B40DD30CCA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
