@@ -1,0 +1,27 @@
+﻿{
+  "SwaggerEndPoints": [
+    {
+      "Key": "apigw",
+      "TransformByOcelotConfig": false,
+      "Config": [
+        {
+          "Name": "API_Gateway",
+          "Version": "1.0",
+          "Url": "http://localhost:5205/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "Operation.API",
+      "TransformByOcelotConfig": true,
+      "Config": [
+        {
+          "Name": "OperationApi",
+          "Version": "1.0",
+          "Url": "http://localhost:5205/operation/swagger/v1/swagger.json"
+        }
+      ]
+    }
+   
+  ]
+}
