@@ -5,18 +5,18 @@
       "TransformByOcelotConfig": false,
       "Config": [
         {
-          "Name": "API_Gateway",
+          "Name": "API_GW",
           "Version": "1.0",
           "Url": "http://localhost:5205/swagger/v1/swagger.json"
         }
       ]
     },
     {
-      "Key": "Operation.API",
+      "Key": "operation",
       "TransformByOcelotConfig": true,
       "Config": [
         {
-          "Name": "OperationApi",
+          "Name": "Operation.Api",
           "Version": "1.0",
           "Url": "http://localhost:5205/operation/swagger/v1/swagger.json"
         }

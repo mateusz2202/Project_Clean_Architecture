@@ -3,7 +3,7 @@
     {
       "DownstreamPathTemplate": "/{everything}",
       "DownstreamScheme": "https",
-      "SwaggerKey": "Operation.API",
+      "SwaggerKey": "operation",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
