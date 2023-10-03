@@ -1,0 +1,42 @@
+﻿--CREATE DATABASE AA_Indentity
+USE AA_Indentity
+
+PRINT N'Create Table [Users]'
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Users]') AND type in (N'U'))
+BEGIN
+CREATE TABLE [Users](
+	Id int IDENTITY(1,1) NOT NULL,	
+    Email VARCHAR(250) NOT NULL,
+	[Name] VARCHAR(250) NOT NULL,
+	[IsActive] bit NOT NULL,
+	[Password] VARCHAR(250) NOT NULL,	
+    CreateDate DateTime2 NOT NULL
+CONSTRAINT [PK_Users] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+END
+
+
+PRINT N'Create Table [Roles]'
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Roles]') AND type in (N'U'))
+BEGIN
+CREATE TABLE  [Roles](
+	Id int IDENTITY(1,1) NOT NULL,
+	[Name] VARCHAR(60) NOT NULL,	
+	[Value] int NOT NULL,	
+    CreateDate DateTime2 NOT NULL
+CONSTRAINT [PK_Roles] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+END
+
+insert into Roles ([Name],[Value],CreateDate) values('Admin',10,GETDATE())
+insert into Roles ([Name],[Value],CreateDate) values('User',20,GETDATE())
