@@ -48,7 +48,7 @@ builder.Services.AddSingleton<IRabbitMqService, RabbitMqService>();
 builder.Services.AddScoped<ICacheService, CacheService>();
 builder.Services.AddScoped<IOperationService, OperationService>();
 
-////validator
+//validator
 builder.Services.AddScoped<IValidator<CreateOperationDTO>, CreateOperationDTOValidator>();
 builder.Services.AddScoped<IValidator<CreateOperationWithAttributeDTO>, CreateOperationWithAttributeDTOValidator>();
 
