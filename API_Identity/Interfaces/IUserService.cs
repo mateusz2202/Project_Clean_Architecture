@@ -6,6 +6,6 @@ public interface IUserService
 {  
     public Task<string> GetToken(LoginDTO dto);
     public Task RegisterUser(RegisterUserDTO dto);
-    public Task ChangePassword(string email, UpdatePasswordDTO dto);
+    public Task ChangePassword(UpdatePasswordDTO dto);
 
 }

@@ -34,9 +34,9 @@ public class AccountController : ControllerBase
 
 
     [HttpPut("changepassword")]
-    public async Task<IActionResult> ChangePassword([FromQuery] string email, [FromBody] UpdatePasswordDTO dto)
+    public async Task<IActionResult> ChangePassword([FromBody] UpdatePasswordDTO dto)
     {
-        await _userService.ChangePassword(email, dto);
+        await _userService.ChangePassword(dto);
         return Ok();
     }
 

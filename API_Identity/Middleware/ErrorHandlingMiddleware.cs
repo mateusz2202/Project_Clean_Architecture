@@ -17,6 +17,12 @@ public class ErrorHandlingMiddleware : IMiddleware
         {
             await next.Invoke(context);
         }
+        catch (BadRequestException e)
+        {
+            _logger.LogError(e, e.Message);
+            context.Response.StatusCode = 400;
+            await context.Response.WriteAsync(e.Message);
+        }
         catch (CreateResourceException e)
         {
             _logger.LogError(e, e.Message);

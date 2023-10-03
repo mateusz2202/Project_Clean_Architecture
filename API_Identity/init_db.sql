@@ -11,6 +11,7 @@ CREATE TABLE [Users](
     Email VARCHAR(250) NOT NULL,
 	[Name] VARCHAR(250) NOT NULL,
 	[IsActive] bit NOT NULL,
+	RoleId INT NOT NULL,
 	[Password] VARCHAR(250) NOT NULL,	
     CreateDate DateTime2 NOT NULL
 CONSTRAINT [PK_Users] PRIMARY KEY CLUSTERED 
@@ -37,6 +38,11 @@ CONSTRAINT [PK_Roles] PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 END
+
+
+ALTER TABLE [Users]
+ADD CONSTRAINT FK_Users_Roles FOREIGN KEY (RoleId) REFERENCES [Roles] (Id);
+
 
 insert into Roles ([Name],[Value],CreateDate) values('Admin',10,GETDATE())
 insert into Roles ([Name],[Value],CreateDate) values('User',20,GETDATE())
