@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OperationAPI.Interfaces;
 using OperationAPI.Models;
 
@@ -6,6 +7,7 @@ namespace OperationAPI.Controllers;
 
 [Route("[controller]")]
 [ApiController]
+[Authorize]
 public class OperationController : ControllerBase
 {
     private readonly IOperationService _operationService;
