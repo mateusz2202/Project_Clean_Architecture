@@ -29,14 +29,14 @@ public class UserService : IUserService
 
     public async Task<string> GetToken(LoginDTO dto)
     {
-        var user = await _indentityDbContext.Users.FirstOrDefaultAsync(x => x.Email.ToLower() == dto.Email.ToLower())
-                     ?? throw new BadRequestException("Incorect email or password");
+        var user = await GetUser(dto.Email ?? string.Empty);
         var result = _passwordHasher.VerifyHashedPassword(user, user.Password, dto.Password);
         if (result == PasswordVerificationResult.Failed) throw new BadRequestException("Incorect email or password");
         var claims = new List<Claim>()
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Name),
                 new Claim(ClaimTypes.Email,user.Email),
+                new Claim(ClaimTypes.Role,user.Role.Name),
                 new Claim("EmailConfirmed", "true")
             };
         if (_authenticationSettings.JwtKey == null) throw new Exception();
@@ -54,13 +54,13 @@ public class UserService : IUserService
 
     public async Task RegisterUser(RegisterUserDTO dto)
     {
-        var role = _indentityDbContext.Roles.FirstOrDefault(x => x.Value == (int)RoleInSystem.User);
+        var role = await GetRole(RoleInSystem.User);
         var user = new User()
         {
             Name = dto.Name,
             Email = dto.Email,
             IsActive = true,
-            Role= role,
+            Role = role,
             CreateDate = DateTime.Now,
         };
         var hashedPassword = _passwordHasher.HashPassword(user, dto?.Password);
@@ -69,10 +69,11 @@ public class UserService : IUserService
         await _indentityDbContext.SaveChangesAsync();
     }
 
+
+
     public async Task ChangePassword(UpdatePasswordDTO dto)
     {
-        var user = await _indentityDbContext.Users.FirstOrDefaultAsync(x => x.Email.ToLower() == dto.Email.ToLower())
-                    ?? throw new BadRequestException("Incorect email or password");
+        var user = await GetUser(dto.Email ?? string.Empty);
         var result = _passwordHasher.VerifyHashedPassword(user, user.Password, dto?.OldPassword);
         if (result == PasswordVerificationResult.Failed) throw new BadRequestException("Incorect email or password");
         var hashedPassword = _passwordHasher.HashPassword(user, dto.Password);
@@ -80,5 +81,18 @@ public class UserService : IUserService
         _indentityDbContext.Users.Update(user);
         await _indentityDbContext.SaveChangesAsync();
     }
+
+    private async Task<User> GetUser(string email)
+        => await _indentityDbContext
+                 .Users
+                 .Include(x => x.Role)
+                 .FirstOrDefaultAsync(x => x.Email.ToLower() == email.ToLower())
+                  ?? throw new BadRequestException("Incorect email or password");
+
+    private async Task<Role> GetRole(RoleInSystem roleInSystem)
+        => await _indentityDbContext
+                 .Roles
+                 .FirstOrDefaultAsync(x => x.Value == (int)roleInSystem)
+                  ?? throw new NotFoundException("Not found role");
 
 }
