@@ -1,5 +1,4 @@
-﻿using OperationAPI.Controllers;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +12,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Xunit;
+using Microsoft.AspNetCore.Authorization.Policy;
 
 namespace OperationAPI.Controllers.Tests;
 
@@ -28,6 +28,9 @@ public class OperationControllerTests
             {
                 builder.ConfigureServices((conf, services) =>
                 {
+                    services.AddMvc(options=>options.Filters.Add(new FakeUserFilter()));
+                    services.AddSingleton<IPolicyEvaluator, FakePolicyEvaluator>();
+
                     //sql server change to memoryDatabase
                     var dbContextOption = services.SingleOrDefault(s => s.ServiceType == typeof(DbContextOptions<OperationDbContext>));
 

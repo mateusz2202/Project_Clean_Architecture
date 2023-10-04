@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
@@ -92,6 +93,7 @@ builder.Services.AddSwaggerGen(options =>
                  Array.Empty<string>()
          }
      });
+    options.OperationFilter<AppendAuthorizeToSummaryOperationFilter>();
 });
 
 var app = builder.Build();
