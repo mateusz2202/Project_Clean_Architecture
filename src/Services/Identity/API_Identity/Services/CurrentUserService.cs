@@ -1,7 +1,7 @@
 ﻿using Identity.Application.Common.Interfaces;
 using System.Security.Claims;
 
-namespace API_Identity.Services;
+namespace Identity.API.Services;
 
 public class CurrentUserService : ICurrentUserService
 {

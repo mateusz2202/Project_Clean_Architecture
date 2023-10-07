@@ -1,4 +1,4 @@
-using API_Identity;
+using Identity.API;
 
 var builder = WebApplication.CreateBuilder(args);
 

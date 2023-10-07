@@ -3,7 +3,7 @@ using Identity.Application.Models.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace API_Identity.Controllers;
+namespace Identity.API.Controllers;
 
 [Route("[controller]")]
 [ApiController]

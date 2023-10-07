@@ -31,7 +31,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Identity", "Identity", "{C6
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Operation", "Operation", "{E3F5A2EF-7295-4359-9AC7-3CC2D9E70573}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API_Identity", "src\Services\Identity\API_Identity\API_Identity.csproj", "{82D41338-AE14-4231-B6BE-91B30B815377}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.API", "src\Services\Identity\API_Identity\Identity.API.csproj", "{82D41338-AE14-4231-B6BE-91B30B815377}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OperationAPI", "src\Services\Operation\OperationAPI\OperationAPI.csproj", "{2EA801EA-BA6C-42A7-80C4-98A48D3576A0}"
 EndProject

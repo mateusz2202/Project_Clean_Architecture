@@ -1,12 +1,12 @@
-﻿using API_Identity.Middleware;
-using API_Identity.Services;
+﻿using Identity.API.Middleware;
+using Identity.API.Services;
 using Identity.Application.Common.Interfaces;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using Identity.Application;
 using Identity.Infrastructure;
 
-namespace API_Identity;
+namespace Identity.API;
 
 public static class StartupExtensions
 {

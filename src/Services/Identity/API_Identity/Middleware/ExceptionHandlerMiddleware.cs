@@ -2,7 +2,7 @@
 using System.Net;
 using System.Text.Json;
 
-namespace API_Identity.Middleware;
+namespace Identity.API.Middleware;
 
 public class ExceptionHandlerMiddleware : IMiddleware
 {
