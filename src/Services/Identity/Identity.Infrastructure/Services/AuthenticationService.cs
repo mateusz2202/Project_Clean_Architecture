@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 
@@ -75,12 +76,12 @@ public class AuthenticationService : IAuthenticationService
             if (result.Succeeded)            
                 return new RegistrationResponse() { UserId = user.Id };            
             else            
-                throw new Exception($"{result.Errors}");
+                throw new ValidationException(result.Errors);
             
         }
         else
         {
-            throw new Exception($"Email {request.Email} already exists.");
+            throw new BadRequestException($"Email {request.Email} already exists.");
         }
     }
 
