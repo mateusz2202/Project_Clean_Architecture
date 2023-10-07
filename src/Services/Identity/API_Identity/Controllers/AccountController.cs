@@ -1,5 +1,5 @@
-﻿using API_Identity.Interfaces;
-using API_Identity.Models;
+﻿using Identity.Application.Common.Interfaces;
+using Identity.Application.Models.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,34 +10,21 @@ namespace API_Identity.Controllers;
 [Authorize]
 public class AccountController : ControllerBase
 {
-    private readonly IUserService _userService;
-    public AccountController(IUserService userService)
+    private readonly IAuthenticationService _authenticationService;
+    public AccountController(IAuthenticationService authenticationService)
     {
-        _userService = userService;
+        _authenticationService = authenticationService;
     }
 
     [AllowAnonymous]
-    [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginDTO dto)
-    {
-        var token = await _userService.GetToken(dto);
-        return Ok(token);
-    }
+    [HttpPost("authenticate")]
+    public async Task<ActionResult<AuthenticationResponse>> Login(AuthenticationRequest request)
+        => Ok(await _authenticationService.AuthenticateAsync(request));
+
 
     [AllowAnonymous]
-    [HttpPost("registeruser")]
-    public async Task<IActionResult> RegisterUser([FromBody] RegisterUserDTO dto)
-    {
-        await _userService.RegisterUser(dto);
-        return Ok();
-    }
-
-
-    [HttpPut("changepassword")]
-    public async Task<IActionResult> ChangePassword([FromBody] UpdatePasswordDTO dto)
-    {
-        await _userService.ChangePassword(dto);
-        return Ok();
-    }
+    [HttpPost("register")]
+    public async Task<ActionResult<RegistrationResponse>> RegisterUser(RegistrationRequest request)
+        => Ok(await _authenticationService.RegisterAsync(request));   
 
 }

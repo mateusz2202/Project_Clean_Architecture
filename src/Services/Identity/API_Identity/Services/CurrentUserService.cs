@@ -1,13 +1,13 @@
-﻿using API_Identity.Interfaces;
+﻿using Identity.Application.Common.Interfaces;
 using System.Security.Claims;
 
 namespace API_Identity.Services;
 
-public class UserContextService : IUserContextService
+public class CurrentUserService : ICurrentUserService
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public UserContextService(IHttpContextAccessor contextAccessor)
+    public CurrentUserService(IHttpContextAccessor contextAccessor)
     {
         _httpContextAccessor = contextAccessor;
     }

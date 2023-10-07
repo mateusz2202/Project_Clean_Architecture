@@ -1,4 +1,4 @@
-﻿namespace API_Identity.Exceptions;
+﻿namespace Identity.Application.Common.Exceptions;
 
 public class ForbidException : Exception
 {
