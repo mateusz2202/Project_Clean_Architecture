@@ -32,7 +32,7 @@ builder.Services.AddDbContext<IndentityDbContext>(options => options.UseSqlServe
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserContextService, UserContextService>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
-builder.Services.AddScoped<ErrorHandlingMiddleware>();
+builder.Services.AddScoped<ExceptionHandlerMiddleware>();
 
 
 builder.Services.AddScoped<IValidator<LoginDTO>, LoginDTOValidator>();
@@ -98,7 +98,7 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
-app.UseMiddleware<ErrorHandlingMiddleware>();
+app.UseCustomExceptionHandler();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
