@@ -1,7 +1,8 @@
-﻿using API_Identity.Exceptions;
+﻿using Identity.Application.Common.Exceptions;
 using System.Net;
+using System.Text.Json;
 
-namespace API_Identity.Middleware;
+namespace Identity.API.Middleware;
 
 public class ExceptionHandlerMiddleware : IMiddleware
 {
@@ -28,8 +29,14 @@ public class ExceptionHandlerMiddleware : IMiddleware
     {
         HttpStatusCode httpStatusCode = HttpStatusCode.InternalServerError;
 
+        var result = string.Empty;
+
         switch (exception)
         {
+            case ValidationException validationException:
+                httpStatusCode = HttpStatusCode.BadRequest;
+                result = JsonSerializer.Serialize(validationException.Errors);
+                break;
             case BadRequestException:
                 _logger.LogError(exception, exception.Message);
                 httpStatusCode = HttpStatusCode.BadRequest;
@@ -48,9 +55,14 @@ public class ExceptionHandlerMiddleware : IMiddleware
                 break;
         }
 
+        if (result == string.Empty)
+        {
+            result = JsonSerializer.Serialize(new { error = exception.Message });
+        }
+
         context.Response.StatusCode = (int)httpStatusCode;
 
-        return context.Response.WriteAsync(exception.Message);
+        return context.Response.WriteAsync(result);
     }
 
 

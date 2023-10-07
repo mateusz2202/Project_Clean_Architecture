@@ -1,5 +1,6 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Azure.Cosmos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -15,6 +16,7 @@ using StackExchange.Redis;
 using Swashbuckle.AspNetCore.Filters;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.Json;
 
 [assembly: InternalsVisibleTo("OperationAPIOperationAPI_Test")]
 
@@ -60,22 +62,52 @@ builder.Services.AddScoped<IValidator<CreateOperationWithAttributeDTO>, CreateOp
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 
 //Authentication
-builder.Services.AddAuthentication(option =>
+builder.Services.AddAuthentication(options =>
 {
-    option.DefaultAuthenticateScheme = "Bearer";
-    option.DefaultScheme = "Bearer";
-    option.DefaultChallengeScheme = "Bearer";
-}).AddJwtBearer(cfg =>
-{
-    cfg.RequireHttpsMetadata = false;
-    cfg.SaveToken = true;
-    cfg.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidIssuer = builder.Configuration[$"{nameof(AuthenticationSettings)}:JwtIssuer"],
-        ValidAudience = builder.Configuration[$"{nameof(AuthenticationSettings)}:JwtIssuer"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration[$"{nameof(AuthenticationSettings)}:JwtKey"] ?? string.Empty))
-    };
-});
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(o =>
+           {
+               o.RequireHttpsMetadata = false;
+               o.SaveToken = false;
+               o.TokenValidationParameters = new TokenValidationParameters
+               {
+                   ValidateIssuerSigningKey = true,
+                   ValidateIssuer = true,
+                   ValidateAudience = true,
+                   ValidateLifetime = true,
+                   ClockSkew = TimeSpan.Zero,
+                   ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+                   ValidAudience = builder.Configuration["JwtSettings:Audience"],
+                   IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"] ?? string.Empty))
+               };
+
+               o.Events = new JwtBearerEvents()
+               {
+                   OnAuthenticationFailed = c =>
+                   {
+                       c.NoResult();
+                       c.Response.StatusCode = 500;
+                       c.Response.ContentType = "text/plain";
+                       return c.Response.WriteAsync(c.Exception.ToString());
+                   },
+                   OnChallenge = context =>
+                   {
+                       context.HandleResponse();
+                       context.Response.StatusCode = 401;
+                       context.Response.ContentType = "application/json";
+                       var result = JsonSerializer.Serialize("401 Not authorized");
+                       return context.Response.WriteAsync(result);
+                   },
+                   OnForbidden = context =>
+                   {
+                       context.Response.StatusCode = 403;
+                       context.Response.ContentType = "application/json";
+                       var result = JsonSerializer.Serialize("403 Not authorized");
+                       return context.Response.WriteAsync(result);
+                   }
+               };
+           });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
