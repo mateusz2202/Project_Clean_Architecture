@@ -27,7 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OperationAPI\OperationAPI.csproj" />
+    <ProjectReference Include="..\..\src\Services\Operation\OperationAPI\OperationAPI.csproj" />
   </ItemGroup>
 
 </Project>
