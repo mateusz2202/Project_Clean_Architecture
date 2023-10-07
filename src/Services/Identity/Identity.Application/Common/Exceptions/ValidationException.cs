@@ -1,5 +1,4 @@
-﻿using FluentValidation.Results;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace Identity.Application.Common.Exceptions;
 
@@ -10,14 +9,7 @@ public class ValidationException : Exception
     {
         Errors = new Dictionary<string, string[]>();
     }
-
-    public ValidationException(IEnumerable<ValidationFailure> failures)
-        : this()
-    {
-        Errors = failures
-            .GroupBy(e => e.PropertyName, e => e.ErrorMessage)
-            .ToDictionary(failureGroup => failureGroup.Key, failureGroup => failureGroup.ToArray());
-    }
+    
     public ValidationException(IEnumerable<IdentityError> failures)
       : this()
     {
