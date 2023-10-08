@@ -6,11 +6,7 @@ using Operation.Shared.Wrapper;
 
 namespace Operation.Application.Features.Operation.Queries.GetById;
 
-
-public class GetOperationByCodeQuery : IRequest<Result<GetOperationResponse>>
-{
-    public string Code { get; set; } = string.Empty;
-}
+public record GetOperationByCodeQuery(string Code) : IRequest<Result<GetOperationResponse>>;
 
 internal class GetOperationByCodeQueryHandler : IRequestHandler<GetOperationByCodeQuery, Result<GetOperationResponse>>
 {

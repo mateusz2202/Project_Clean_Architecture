@@ -26,7 +26,7 @@ public class OperationController : ControllerBase
     {
         _mediator = mediator;
     }
-    
+
     [HttpGet()]
     public async Task<IActionResult> GetAllOperationsWithAtrributes()
         => Ok(await _mediator.Send(new GetAllOperationsWithAtrributesQuery()));
@@ -41,27 +41,27 @@ public class OperationController : ControllerBase
 
     [HttpGet("id/{id}")]
     public async Task<IActionResult> GetOperationWithAttributeById([FromRoute] int id)
-       => Ok(await _mediator.Send(new GetOperationWithAttributeByIdQuery() { Id = id }));
+       => Ok(await _mediator.Send(new GetOperationWithAttributeByIdQuery(id)));
 
     [HttpGet("code/{code}")]
     public async Task<IActionResult> GetOperationWithAttributeByCoded([FromRoute] string code)
-        => Ok(await _mediator.Send(new GetOperationWithAttributeByCodeQuery() { Code = code }));
+        => Ok(await _mediator.Send(new GetOperationWithAttributeByCodeQuery(code)));
 
     [HttpGet("operations/id/{id}")]
     public async Task<IActionResult> GetOperationById([FromRoute] int id)
-        => Ok(await _mediator.Send(new GetOperationByIdQuery() { Id = id }));
+        => Ok(await _mediator.Send(new GetOperationByIdQuery(id)));
 
     [HttpGet("operations/code/{code}")]
     public async Task<IActionResult> GetOperationByCode([FromRoute] string code)
-        => Ok(await _mediator.Send(new GetOperationByCodeQuery() { Code = code }));
+        => Ok(await _mediator.Send(new GetOperationByCodeQuery(code)));
 
     [HttpGet("attributes/id/{id}")]
     public async Task<IActionResult> GetAttributeById([FromRoute] int id)
-         => Ok(await _mediator.Send(new GetAttributeByIddQuery() { Id = id }));
+         => Ok(await _mediator.Send(new GetAttributeByIddQuery(id)));
 
     [HttpGet("attributes/code/{code}")]
     public async Task<IActionResult> GetAttributeByCoded([FromRoute] string code)
-        => Ok(await _mediator.Send(new GetAttributeByCodeQuery() { Code = code }));
+        => Ok(await _mediator.Send(new GetAttributeByCodeQuery(code)));
 
     [HttpPost("operations")]
     public async Task<IActionResult> AddOperation(AddOperationCommand addOperationCommand)
@@ -91,28 +91,28 @@ public class OperationController : ControllerBase
     [HttpDelete("id/{id}")]
     public async Task<IActionResult> DeleteOperationById([FromRoute] int id)
     {
-        await _mediator.Send(new DeleteOperationByIdCommand() { Id = id });
+        await _mediator.Send(new DeleteOperationByIdCommand(id));
         return NoContent();
     }
 
     [HttpDelete("code/{code}")]
     public async Task<IActionResult> DeleteOperationByCode([FromRoute] string code)
     {
-        await _mediator.Send(new DeleteOperationByCodeCommand() { Code = code });
+        await _mediator.Send(new DeleteOperationByCodeCommand(code));
         return NoContent();
     }
 
     [HttpDelete("attributes/id/{id}")]
     public async Task<IActionResult> DeleteAttributeById([FromRoute] int id)
     {
-        await _mediator.Send(new DeleteAttributeByIdCommand() { Id = id });
+        await _mediator.Send(new DeleteAttributeByIdCommand(id));
         return NoContent();
     }
 
     [HttpDelete("attributes/code/{code}")]
     public async Task<IActionResult> DeleteAttributeByCode([FromRoute] string code)
     {
-        await _mediator.Send(new DeleteAttributeByCodeCommand() { Code = code });
+        await _mediator.Send(new DeleteAttributeByCodeCommand(code));
         return NoContent();
     }
 

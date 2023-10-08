@@ -15,6 +15,7 @@ using Serilog.Sinks.Elasticsearch;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Swashbuckle.AspNetCore.Filters;
+using Operation.API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,6 +44,7 @@ builder.Services
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSingleton<ICurrentUserService, CurrentUserService>();
+builder.Services.AddScoped<ExceptionHandlerMiddleware>();
 
 builder.Services.AddFluentValidationAutoValidation();
 
@@ -83,7 +85,7 @@ builder.Services.AddAuthentication(options =>
                    ValidAudience = builder.Configuration["JwtSettings:Audience"],
                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"] ?? string.Empty))
                };
-               
+
                o.Events = new JwtBearerEvents()
                {
                    OnAuthenticationFailed = c =>
@@ -150,6 +152,8 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 var app = builder.Build();
+
+app.UseCustomExceptionHandler();
 
 app.UseRequestLocalization();
 

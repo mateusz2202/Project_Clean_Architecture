@@ -1,12 +1,11 @@
 ﻿using MediatR;
-using Microsoft.Extensions.Localization;
 using Operation.Application.Contracts.Services;
 using Operation.Shared.Constans;
 using Operation.Shared.Wrapper;
 
 namespace Operation.Application.Features.Operation.Commands.ClearCache;
 
-public record ClearCahceCommand : IRequest<Result> { }
+public record ClearCahceCommand : IRequest<Result>;
 
 public class ClearCahceCommandHandler : IRequestHandler<ClearCahceCommand, Result>
 {   
