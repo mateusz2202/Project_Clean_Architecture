@@ -11,17 +11,17 @@ public record DeleteOperationByCodeCommand(string Code) : IRequest<Result>;
 
 public class DeleteOperationByCodeCommandCommandHandler : IRequestHandler<DeleteOperationByCodeCommand, Result>
 {
-    private readonly IOperationService _operationService;
+    private readonly ICosmosService _cosmosService;
     private readonly IUnitOfWork<int> _unitOfWork;
     private readonly IOperationRepository _operationRepository;
-    public DeleteOperationByCodeCommandCommandHandler(    
-        IOperationService operationService,
+    public DeleteOperationByCodeCommandCommandHandler(   
         IUnitOfWork<int> unitOfWork,
-        IOperationRepository operationRepository)
-    {        
-        _operationService = operationService;
+        IOperationRepository operationRepository,
+        ICosmosService cosmosService)
+    {       
         _unitOfWork = unitOfWork;
         _operationRepository = operationRepository;
+        _cosmosService = cosmosService;
     }
 
     public async Task<Result> Handle(DeleteOperationByCodeCommand request, CancellationToken cancellationToken)
@@ -31,7 +31,12 @@ public class DeleteOperationByCodeCommandCommandHandler : IRequestHandler<Delete
         if(operationToDelete == null) 
             return (Result)await Result.FailAsync();
 
-        await _operationService.DeleteAttribute(operationToDelete.Id.ToString(), new PartitionKey(operationToDelete.Code), cancellationToken);
+        await _cosmosService
+                .Delete(
+                     containerName: ApplicationConstants.CosmosDB.CONTAINER_OPERATION,
+                     id: operationToDelete.Id.ToString(),
+                     partitionKey: new PartitionKey(operationToDelete.Code),
+                     cancellationToken: cancellationToken);
 
         await _unitOfWork.Repository<Domain.Entities.Operation>().DeleteAsync(operationToDelete);
 

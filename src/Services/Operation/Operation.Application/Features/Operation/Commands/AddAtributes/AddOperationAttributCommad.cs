@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using Operation.Application.Common.Exceptions;
 using Operation.Application.Contracts.Repositories;
 using Operation.Application.Contracts.Services;
+using Operation.Shared.Constans;
 using Operation.Shared.Wrapper;
 
 namespace Operation.Application.Features.Operation.Commands.AddAtributes;
@@ -14,12 +15,15 @@ public class AddOperationAttributCommaddHandler : IRequestHandler<AddOperationAt
 {
     private readonly IOperationService _operationService;
     private readonly IOperationRepository _operationRepository;
+    private readonly ICosmosService _cosmosService;
     public AddOperationAttributCommaddHandler(
         IOperationRepository operationRepository,
-        IOperationService operationService)
+        IOperationService operationService,
+        ICosmosService cosmosService)
     {
         _operationRepository = operationRepository;
         _operationService = operationService;
+        _cosmosService = cosmosService;
     }
 
     public async Task<Result> Handle(AddOperationAttributCommad request, CancellationToken cancellationToken)
@@ -28,9 +32,9 @@ public class AddOperationAttributCommaddHandler : IRequestHandler<AddOperationAt
         var item = JsonConvert.DeserializeObject<dynamic>(request.Attributes.ToString());
 
         var idOperation = (int?)((dynamic)item).id ?? throw new NotFoundException("not found operation");
-        
+
         var codeOperation = (string?)((dynamic)item).code;
-        
+
         if (string.IsNullOrEmpty(codeOperation))
             throw new NotFoundException("not found operation");
 
@@ -38,7 +42,12 @@ public class AddOperationAttributCommaddHandler : IRequestHandler<AddOperationAt
         if (!existOperation)
             throw new NotFoundException("not found operation");
 
-        await _operationService.AddOrEditAtributes(idOperation.ToString(), new PartitionKey(codeOperation), item, cancellationToken);
+        await _cosmosService
+                .AddOrEdit(containerName: ApplicationConstants.CosmosDB.CONTAINER_OPERATION,
+                           id: idOperation.ToString(),
+                           partitionKey: new PartitionKey(codeOperation),
+                           item: item,
+                           cancellationToken: cancellationToken);
 
         _operationService.SendInfoAddedOperation();
 

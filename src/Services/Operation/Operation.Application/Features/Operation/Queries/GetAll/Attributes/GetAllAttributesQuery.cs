@@ -1,7 +1,4 @@
 ﻿using MediatR;
-using Microsoft.Azure.Cosmos;
-using Microsoft.Azure.Cosmos.Linq;
-using Newtonsoft.Json;
 using Operation.Application.Contracts.Services;
 using Operation.Shared.Constans;
 using Operation.Shared.Wrapper;
@@ -16,7 +13,7 @@ public class GetAllAttributesQueryHandler : IRequestHandler<GetAllAttributesQuer
     private readonly ICosmosService _cosmosService;
 
     public GetAllAttributesQueryHandler(ICacheService cache, ICosmosService cosmosService)
-    {     
+    {
         _cache = cache;
         _cosmosService = cosmosService;
     }
@@ -27,22 +24,7 @@ public class GetAllAttributesQueryHandler : IRequestHandler<GetAllAttributesQuer
         if (cacheData != null && cacheData.Any())
             return await Result<List<ExpandoObject>>.SuccessAsync(cacheData.ToList());
 
-        Microsoft.Azure.Cosmos.Container container = await _cosmosService.GetContainerOperation();
-        using FeedIterator<object> setIterator = container
-            .GetItemLinqQueryable<object>()
-            .ToFeedIterator<object>();
-
-        var result = new List<ExpandoObject>();
-
-        while (setIterator.HasMoreResults)
-        {
-            foreach (var item in await setIterator.ReadNextAsync(cancellationToken))
-            {
-                var stringJson = JsonConvert.SerializeObject(item);
-                var obj = JsonConvert.DeserializeObject<ExpandoObject>(stringJson);
-                result.Add(obj);
-            }
-        }
+        var result = await _cosmosService.GetAll(ApplicationConstants.CosmosDB.CONTAINER_OPERATION, cancellationToken);
 
         await _cache.SetAsync(ApplicationConstants.Cache.OPERATIONATTRIBUTE_KEY, result, DateTimeOffset.Now.AddMinutes(30));
 

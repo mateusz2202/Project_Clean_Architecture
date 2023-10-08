@@ -2,11 +2,15 @@
 
 public static class ApplicationConstants
 {
+    public static class CosmosDB
+    {
+        public const string CONTAINER_OPERATION = "Operation";
+    }
+
     public static class RabbitMq
     {
         public const string EXCHANGE_OPERATION = "EXCHANGE_OPERATION";
     }
-
 
     public static class Cache
     {

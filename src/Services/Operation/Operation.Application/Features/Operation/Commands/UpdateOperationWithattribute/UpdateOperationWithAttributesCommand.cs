@@ -19,17 +19,17 @@ public record UpdateOperationWithAttributesCommand
 
 public class UpdateOperationWithAttributesCommandHandler : IRequestHandler<UpdateOperationWithAttributesCommand, Result>
 {
-    private readonly IOperationService _operationService;
+    private readonly ICosmosService _cosmosService;
     private readonly IMediator _mediator;
     private readonly IUnitOfWork<int> _unitOfWork;
     public UpdateOperationWithAttributesCommandHandler(
-        IOperationService operationService,
         IMediator mediator,
-        IUnitOfWork<int> unitOfWork)
+        IUnitOfWork<int> unitOfWork,
+        ICosmosService cosmosService)
     {
-        _operationService = operationService;
         _mediator = mediator;
         _unitOfWork = unitOfWork;
+        _cosmosService = cosmosService;
     }
 
     public async Task<Result> Handle(UpdateOperationWithAttributesCommand request, CancellationToken cancellationToken)
@@ -54,7 +54,13 @@ public class UpdateOperationWithAttributesCommandHandler : IRequestHandler<Updat
         ((dynamic)item).id = operationToUpdate.Id.ToString();
         ((dynamic)item).code = operationToUpdate.Code;
 
-        await _operationService.AddOrEditAtributes(operationToUpdate.Id.ToString(), new PartitionKey(oldCode), item, cancellationToken);
+        await _cosmosService
+                .AddOrEdit
+                    (containerName: ApplicationConstants.CosmosDB.CONTAINER_OPERATION,
+                    id: operationToUpdate.Id.ToString(),
+                    partitionKey: new PartitionKey(oldCode),
+                    item: item,
+                    cancellationToken: cancellationToken);
 
         return await Result<int>.SuccessAsync();
     }
