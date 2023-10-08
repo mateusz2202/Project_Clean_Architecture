@@ -11,6 +11,11 @@ using Operation.Application.Features.Operation.Commands.AddOperation;
 using Operation.Application.Features.Operation.Queries.GetById;
 using Operation.Shared.Wrapper;
 using Operation.Application.Features.Operation.Queries.GetAll.Operations;
+using Operation.Application.Features.Operation.Commands.AddAtributes;
+using System;
+using System.Dynamic;
+using Operation.Application.Features.Operation.Commands.AddOperationWithAtribute;
+using Operation.Application.Features.Operation.Commands.UpdateOperationWithattribute;
 
 namespace Operation.API.Controllers.Tests;
 
@@ -57,16 +62,21 @@ public class OperationControllerTests
             weight = "something",
         };
 
-        var responseCreatedAttribute = await _client.PostAsJsonAsync("/Operation/attributes", attribute);
+        var addOperationAttributCommad = new AddOperationAttributCommad()
+        {
+            Attribues = attribute
+        };
+
+        var responseCreatedAttribute = await _client.PostAsJsonAsync("/Operation/attributes", addOperationAttributCommad);
         responseCreatedAttribute.EnsureSuccessStatusCode();
 
         var response = await _client.GetAsync("/Operation");
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
 
-        var operations = await response.Content.ReadFromJsonAsync<IEnumerable<object>>();
+        var operations = await response.Content.ReadFromJsonAsync<Result<List<ExpandoObject>>>();
 
-        operations.Should().NotBeNull();
-        operations.Should().HaveCountGreaterThan(0);
+        operations.Data.Should().NotBeNull();
+        operations.Data.Should().HaveCountGreaterThan(0);
 
         await Task.CompletedTask;
     }
@@ -101,16 +111,21 @@ public class OperationControllerTests
             weight = "something",
         };
 
-        var responseCreatedAttribute = await _client.PostAsJsonAsync("/Operation/attributes", attribute);
+        var addOperationAttributCommad = new AddOperationAttributCommad()
+        {
+            Attribues = attribute
+        };
+
+        var responseCreatedAttribute = await _client.PostAsJsonAsync("/Operation/attributes", addOperationAttributCommad);
         responseCreatedAttribute.EnsureSuccessStatusCode();
 
         var response = await _client.GetAsync("/Operation/attributes");
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
 
-        var operations = await response.Content.ReadFromJsonAsync<IEnumerable<object>>();
+        var operations = await response.Content.ReadFromJsonAsync<Result<List<ExpandoObject>>>();
 
-        operations.Should().NotBeNull();
-        operations.Should().HaveCountGreaterThan(0);
+        operations.Data.Should().NotBeNull();
+        operations.Data.Should().HaveCountGreaterThan(0);
 
         await Task.CompletedTask;
     }
@@ -191,28 +206,36 @@ public class OperationControllerTests
     public async void UpdateOperationWithAttributesTest()
     {
         var createdOperation = await CreateOperation();
-
-        createdOperation.Code = "teeeeest1";
-        createdOperation.Name = "teeeeest2";
-
+        var newCode = RandomGenerator.RandomString(6);
         var attribute = new
         {
             id = createdOperation.Id.ToString(),
-            code = createdOperation.Code,
+            code = newCode,
             height = "test1",
             width = "test2",
             weight = "test3",
         };
 
-        var updateOperation = new { createOperationDTO = createdOperation, attributes = attribute };
+        var updateOperationWithAttributesCommand = new UpdateOperationWithAttributesCommand()
+        {
+            Id = createdOperation.Id,
+            AddOperationCommand = new AddOperationCommand()
+            {
+                Code = newCode,
+                Name = createdOperation.Name,
+            },
+            Attributes = attribute
 
-        var responseCreatedAttribute = await _client.PutAsJsonAsync($"/Operation/id/{createdOperation.Id}", updateOperation);
+        };     
+
+        var responseCreatedAttribute = await _client.PutAsJsonAsync($"/Operation/", updateOperationWithAttributesCommand);
         responseCreatedAttribute.EnsureSuccessStatusCode();
 
-        var updatedObject = await _client.GetFromJsonAsync<Domain.Entities.Operation>($"/Operation/operations/id/{createdOperation.Id}");
+        var updatedObject = await _client.GetFromJsonAsync<Result<GetOperationResponse>>($"/Operation/operations/id/{createdOperation.Id}");
 
-        updatedObject.Should().NotBeNull();
-        updatedObject.Should().BeEquivalentTo(createdOperation);
+        updatedObject.Data.Should().NotBeNull();
+        createdOperation.Code = newCode;
+        updatedObject.Data.Should().BeEquivalentTo(createdOperation);
 
         var responseDelete = await _client.DeleteAsync($"/Operation/id/{createdOperation.Id}");
 

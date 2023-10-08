@@ -4,8 +4,6 @@ namespace Operation.Domain.Entities;
 
 public partial class Operation : AuditableEntity<int>
 {
-    public int Id { get; set; }
-
     public string Code { get; set; } = null!;
 
     public string Name { get; set; } = null!;

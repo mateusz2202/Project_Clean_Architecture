@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.Azure.Cosmos;
 using Newtonsoft.Json;
+using Operation.Application.Common.Exceptions;
 using Operation.Application.Contracts.Repositories;
 using Operation.Application.Contracts.Services;
 using Operation.Shared.Wrapper;
@@ -33,17 +34,17 @@ public class AddOperationAttributCommaddHandler : IRequestHandler<AddOperationAt
         var item = JsonConvert.DeserializeObject<dynamic>(request.Attribues.ToString());
 
         var idOperation = (int?)((dynamic)item).id;
+
         if (idOperation == null)
-            return await Result<int>.FailAsync();
+            throw new NotFoundException("not found operation");
 
         var codeOperation = (string?)((dynamic)item).code;
         if (string.IsNullOrEmpty(codeOperation))
-            return await Result<int>.FailAsync();
+            throw new NotFoundException("not found operation");
 
         var existOperation = await _operationRepository.Any(x => x.Id == idOperation && x.Code == codeOperation);
         if (!existOperation)
-            return await Result<int>.FailAsync();
-
+            throw new NotFoundException("not found operation");
 
         await _operationService.AddOrEditAtributes(idOperation.ToString(), new PartitionKey(codeOperation), item, cancellationToken);
 

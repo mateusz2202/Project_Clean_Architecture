@@ -37,11 +37,14 @@ public class UpdateOperationWithAttributesCommandHandler : IRequestHandler<Updat
     public async Task<Result> Handle(UpdateOperationWithAttributesCommand request, CancellationToken cancellationToken)
     {
 
-        var operationToUpdate = (await _mediator.Send(new GetOperationByIdQuery() { Id = request.Id }, cancellationToken)).Data;
+        var operationToUpdate =await _unitOfWork.Repository<Domain.Entities.Operation>().GetByIdAsync(request.Id);
 
         string oldCode = operationToUpdate.Code;
         operationToUpdate.Code = request.AddOperationCommand.Code;
         operationToUpdate.Name = request.AddOperationCommand.Name;
+
+
+        await _unitOfWork.Repository<Domain.Entities.Operation>().UpdateAsync(operationToUpdate);
         await _unitOfWork.CommitAndRemoveCache(cancellationToken,
                                    new string[]
                                    {    ApplicationConstants.Cache.OPERATION_KEY ,
@@ -51,7 +54,7 @@ public class UpdateOperationWithAttributesCommandHandler : IRequestHandler<Updat
 
         var item = JsonConvert.DeserializeObject<dynamic>(request.Attributes.ToString());
         ((dynamic)item).id = operationToUpdate.Id.ToString();
-        ((dynamic)item).code = operationToUpdate.Code;
+        ((dynamic)item).code = operationToUpdate.Code;   
 
         await _operationService.AddOrEditAtributes(operationToUpdate.Id.ToString(), new PartitionKey(oldCode), item, cancellationToken);
         
