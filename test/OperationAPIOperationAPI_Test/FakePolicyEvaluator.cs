@@ -7,7 +7,7 @@ using System.Net.Sockets;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace OperationAPIOperationAPI_Test;
+namespace Operation.APIOperation.API_Test;
 
 public class FakePolicyEvaluator : IPolicyEvaluator
 {

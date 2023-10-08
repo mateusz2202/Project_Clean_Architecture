@@ -1,9 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
-
+    <ImplicitUsings>enable</ImplicitUsings>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
@@ -27,7 +27,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Services\Operation\OperationAPI\OperationAPI.csproj" />
+    <ProjectReference Include="..\..\src\Services\Operation\Operation.Application\Operation.Application.csproj" />
+    <ProjectReference Include="..\..\src\Services\Operation\Operation.Domain\Operation.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Services\Operation\Operation.Infrastructure\Operation.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Services\Operation\Operation.Presentation\Operation.Persistence.csproj" />
+    <ProjectReference Include="..\..\src\Services\Operation\OperationAPI\Operation.API.csproj" />
   </ItemGroup>
+
+ 
 
 </Project>

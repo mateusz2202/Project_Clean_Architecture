@@ -1,6 +1,6 @@
-﻿using OperationAPI.Exceptions;
+﻿using Operation.API.Exceptions;
 
-namespace OperationAPI.Middleware;
+namespace Operation.API.Middleware;
 
 public class ErrorHandlingMiddleware : IMiddleware
 {
