@@ -2,19 +2,17 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using OperationAPI.Data;
-using OperationAPI.Entities;
-using OperationAPI.Models;
-using OperationAPIOperationAPI_Test;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
+using Operation.APIOperation.API_Test;
 using System.Net.Http.Json;
-using System.Threading.Tasks;
 using Xunit;
 using Microsoft.AspNetCore.Authorization.Policy;
+using Operation.Persistence;
+using Operation.Application.Features.Operation.Commands.AddOperation;
+using Operation.Application.Features.Operation.Queries.GetById;
+using Operation.Shared.Wrapper;
+using Operation.Application.Features.Operation.Queries.GetAll.Operations;
 
-namespace OperationAPI.Controllers.Tests;
+namespace Operation.API.Controllers.Tests;
 
 public class OperationControllerTests
 {
@@ -28,7 +26,7 @@ public class OperationControllerTests
             {
                 builder.ConfigureServices((conf, services) =>
                 {
-                    services.AddMvc(options=>options.Filters.Add(new FakeUserFilter()));
+                    services.AddMvc(options => options.Filters.Add(new FakeUserFilter()));
                     services.AddSingleton<IPolicyEvaluator, FakePolicyEvaluator>();
 
                     //sql server change to memoryDatabase
@@ -81,10 +79,10 @@ public class OperationControllerTests
 
         var response = await _client.GetAsync("/Operation/operations");
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
-        var operations = await response.Content.ReadFromJsonAsync<IEnumerable<Operation>>();
+        var operations = (await response.Content.ReadFromJsonAsync<Result<List<GetAllOperationsResponse>>>());
 
-        operations.Should().NotBeNull();
-        operations.Should().HaveCountGreaterThan(9);
+        operations.Data.Should().NotBeNull();
+        operations.Data.Should().HaveCountGreaterThan(9);
 
         await Task.CompletedTask;
     }
@@ -136,10 +134,10 @@ public class OperationControllerTests
         var response = await _client.GetAsync($"/Operation/operations/id/{createdOperation.Id}");
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
 
-        var operation = await response.Content.ReadFromJsonAsync<Operation>();
+        var operation = await response.Content.ReadFromJsonAsync<Result<GetOperationResponse>>();
 
-        operation.Should().NotBeNull();
-        operation.Should().BeEquivalentTo(createdOperation);
+        operation.Data.Should().NotBeNull();
+        operation.Data.Should().BeEquivalentTo(createdOperation);
 
         await Task.CompletedTask;
     }
@@ -159,11 +157,11 @@ public class OperationControllerTests
 
     }
 
-    private async Task<Operation> CreateOperation()
+    private async Task<GetOperationResponse> CreateOperation()
     {
         var ranodmCode = RandomGenerator.RandomString(4);
 
-        var createdOperation = new CreateOperationDTO()
+        var createdOperation = new AddOperationCommand()
         {
             Code = ranodmCode,
             Name = "testName",
@@ -171,21 +169,22 @@ public class OperationControllerTests
         var responseCreated = await _client.PostAsJsonAsync("/Operation/operations", createdOperation);
         responseCreated.EnsureSuccessStatusCode();
 
-        var createdOperationId = await responseCreated.Content.ReadAsStringAsync();
+        var createdOperationResult = await responseCreated.Content.ReadFromJsonAsync<Result<int>>();
 
-        var response = await _client.GetAsync($"/Operation/operations/id/{createdOperationId}");
+        var response = await _client.GetAsync($"/Operation/operations/id/{createdOperationResult.Data}");
         response.EnsureSuccessStatusCode();
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
-        var operation = await response.Content.ReadFromJsonAsync<Operation>();
 
-        operation.Should().NotBeNull();
-        operation.Should().BeEquivalentTo(new
+        var operation = await response.Content.ReadFromJsonAsync<Result<GetOperationResponse>>();
+
+        operation.Data.Should().NotBeNull();
+        operation.Data.Should().BeEquivalentTo(new
         {
             Code = ranodmCode,
             Name = "testName"
         });
 
-        return operation ?? new Operation();
+        return operation.Data ?? new GetOperationResponse();
     }
 
     [Fact]
@@ -210,8 +209,8 @@ public class OperationControllerTests
         var responseCreatedAttribute = await _client.PutAsJsonAsync($"/Operation/id/{createdOperation.Id}", updateOperation);
         responseCreatedAttribute.EnsureSuccessStatusCode();
 
-        var updatedObject= await _client.GetFromJsonAsync<Operation>($"/Operation/operations/id/{createdOperation.Id}");
-       
+        var updatedObject = await _client.GetFromJsonAsync<Domain.Entities.Operation>($"/Operation/operations/id/{createdOperation.Id}");
+
         updatedObject.Should().NotBeNull();
         updatedObject.Should().BeEquivalentTo(createdOperation);
 

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text;
 
-namespace OperationAPIOperationAPI_Test;
+namespace Operation.APIOperation.API_Test;
 
 public static class RandomGenerator
 {

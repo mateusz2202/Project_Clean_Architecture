@@ -1,151 +1,133 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using OperationAPI.Interfaces;
-using OperationAPI.Models;
+using Operation.Application.Features.Operation.Commands.AddAtributes;
+using Operation.Application.Features.Operation.Commands.AddOperation;
+using Operation.Application.Features.Operation.Commands.AddOperationWithAtribute;
+using Operation.Application.Features.Operation.Commands.ClearCache;
+using Operation.Application.Features.Operation.Commands.DeleteAll;
+using Operation.Application.Features.Operation.Commands.DeleteAttribute;
+using Operation.Application.Features.Operation.Commands.DeleteOperation;
+using Operation.Application.Features.Operation.Commands.UpdateOperationWithattribute;
+using Operation.Application.Features.Operation.Queries.GetAll.Attributes;
+using Operation.Application.Features.Operation.Queries.GetAll.Operations;
+using Operation.Application.Features.Operation.Queries.GetAll.OperationsWithAtrributes;
+using Operation.Application.Features.Operation.Queries.GetById;
 
-namespace OperationAPI.Controllers;
+namespace Operation.API.Controllers;
 
 [Route("[controller]")]
 [ApiController]
 [Authorize]
 public class OperationController : ControllerBase
 {
-    private readonly IOperationService _operationService;
-    public OperationController(IOperationService operationService)
+    private readonly IMediator _mediator;
+    public OperationController(IMediator mediator)
     {
-        _operationService = operationService;
+        _mediator = mediator;
     }
+    
+    [HttpGet()]
+    public async Task<IActionResult> GetAllOperationsWithAtrributes()
+        => Ok(await _mediator.Send(new GetAllOperationsWithAtrributesQuery()));
 
     [HttpGet("operations")]
     public async Task<IActionResult> GetAllOperations()
-    {
-        var operations = await _operationService.GetAllOperations();
-        return Ok(operations);
-    }
+        => Ok(await _mediator.Send(new GetAllOperationsQuery()));
 
     [HttpGet("attributes")]
     public async Task<IActionResult> GetAllAttributes()
-    {
-        var result = await _operationService.GetAllAttributes();
-        return Ok(result);
-    }
-
-    [HttpGet()]
-    public async Task<IActionResult> GetAllOperationsWithAtrributes()
-    {
-        var operations = await _operationService.GetAllOperationsWithAtrributes();
-        return Ok(operations);
-    }
-
-    [HttpGet("operations/id/{id}")]
-    public async Task<IActionResult> GetOperationById([FromRoute] int id)
-    {
-        var operation = await _operationService.GetOperationById(id);
-        return Ok(operation);
-    }
-
-    [HttpGet("operations/code/{code}")]
-    public async Task<IActionResult> GetOperationByCode([FromRoute] string code)
-    {
-        var operation = await _operationService.GetOperationByCode(code);
-        return Ok(operation);
-    }
-
-    [HttpGet("attributes/id/{id}")]
-    public async Task<IActionResult> GetAttributeById([FromRoute] int id)
-    {
-        var operation = await _operationService.GetAttributeById(id);
-        return Ok(operation);
-    }
-
-    [HttpGet("attributes/code/{code}")]
-    public async Task<IActionResult> GetAttributeByCoded([FromRoute] string code)
-    {
-        var operation = await _operationService.GetAttributeByCoded(code);
-        return Ok(operation);
-    }
+       => Ok(await _mediator.Send(new GetAllAttributesQuery()));
 
     [HttpGet("id/{id}")]
     public async Task<IActionResult> GetOperationWithAttributeById([FromRoute] int id)
-    {
-        var operation = await _operationService.GetOperationWithAttributeById(id);
-        return Ok(operation);
-    }
+       => Ok(await _mediator.Send(new GetOperationWithAttributeByIdQuery() { Id = id }));
 
     [HttpGet("code/{code}")]
     public async Task<IActionResult> GetOperationWithAttributeByCoded([FromRoute] string code)
-    {
-        var operation = await _operationService.GetOperationWithAttributeByCoded(code);
-        return Ok(operation);
-    }
+        => Ok(await _mediator.Send(new GetOperationWithAttributeByCodeQuery() { Code = code }));
+
+    [HttpGet("operations/id/{id}")]
+    public async Task<IActionResult> GetOperationById([FromRoute] int id)
+        => Ok(await _mediator.Send(new GetOperationByIdQuery() { Id = id }));
+
+    [HttpGet("operations/code/{code}")]
+    public async Task<IActionResult> GetOperationByCode([FromRoute] string code)
+        => Ok(await _mediator.Send(new GetOperationByCodeQuery() { Code = code }));
+
+    [HttpGet("attributes/id/{id}")]
+    public async Task<IActionResult> GetAttributeById([FromRoute] int id)
+         => Ok(await _mediator.Send(new GetAttributeByIddQuery() { Id = id }));
+
+    [HttpGet("attributes/code/{code}")]
+    public async Task<IActionResult> GetAttributeByCoded([FromRoute] string code)
+        => Ok(await _mediator.Send(new GetAttributeByCodeQuery() { Code = code }));
 
     [HttpPost("operations")]
-    public async Task<IActionResult> AddOperation(CreateOperationDTO dto)
-    {
-        var opertaion = await _operationService.AddOperation(dto);
-        return Created("GetOperationById", opertaion.Id);
-    }
+    public async Task<IActionResult> AddOperation(AddOperationCommand addOperationCommand)
+        => Ok(await _mediator.Send(addOperationCommand));
 
     [HttpPost("attributes")]
-    public async Task<IActionResult> AddOperationAttributs([FromBody] object attributes)
+    public async Task<IActionResult> AddOperationAttributs(AddOperationAttributCommad attributes)
     {
-        await _operationService.AddAttributes(attributes);
+        await _mediator.Send(attributes);
         return NoContent();
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddOperationWithAttributes(CreateOperationWithAttributeDTO dto)
+    public async Task<IActionResult> AddOperationWithAttributes(AddOperationWithAttributCommad addOperationWithAttributCommad)
     {
-        await _operationService.AddOperationWithAttributes(dto);
+        await _mediator.Send(addOperationWithAttributCommad);
         return NoContent();
     }
 
-    [HttpPut("id/{id}")]
-    public async Task<IActionResult> UpdateOperationWithAttributes([FromRoute] int id, CreateOperationWithAttributeDTO dto)
+    [HttpPut]
+    public async Task<IActionResult> UpdateOperationWithAttributes(UpdateOperationWithAttributesCommand operationWithAttributesCommand)
     {
-        await _operationService.UpdateOperationWithAttributes(id,dto);
+        await _mediator.Send(operationWithAttributesCommand);
         return Ok();
     }
 
     [HttpDelete("id/{id}")]
     public async Task<IActionResult> DeleteOperationById([FromRoute] int id)
     {
-        await _operationService.DeleteOperationById(id);
+        await _mediator.Send(new DeleteOperationByIdCommand() { Id = id });
         return NoContent();
     }
 
     [HttpDelete("code/{code}")]
     public async Task<IActionResult> DeleteOperationByCode([FromRoute] string code)
     {
-        await _operationService.DeleteOperationByCode(code);
+        await _mediator.Send(new DeleteOperationByCodeCommand() { Code = code });
         return NoContent();
     }
 
     [HttpDelete("attributes/id/{id}")]
     public async Task<IActionResult> DeleteAttributeById([FromRoute] int id)
     {
-        await _operationService.DeleteAttributeById(id);
+        await _mediator.Send(new DeleteAttributeByIdCommand() { Id = id });
         return NoContent();
     }
 
     [HttpDelete("attributes/code/{code}")]
     public async Task<IActionResult> DeleteAttributeByCode([FromRoute] string code)
     {
-        await _operationService.DeleteAttributeByCode(code);
+        await _mediator.Send(new DeleteAttributeByCodeCommand() { Code = code });
         return NoContent();
     }
 
     [HttpDelete()]
     public async Task<IActionResult> DeleteAll()
     {
-        await _operationService.DeleteAll();
+        await _mediator.Send(new DeleteAllCommand());
         return NoContent();
     }
 
     [HttpDelete("cache")]
     public async Task<IActionResult> ClearCache()
     {
-        await _operationService.ClearCache();
+        await _mediator.Send(new ClearCahceCommand());
         return NoContent();
     }
+
 }
