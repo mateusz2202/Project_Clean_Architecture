@@ -7,21 +7,18 @@ using Operation.Shared.Wrapper;
 
 namespace Operation.Application.Features.Operation.Commands.DeleteOperation;
 
-public record DeleteOperationByIdCommand : IRequest<Result>
-{
-    public int Id { get; set; }
-}
+public record DeleteOperationByIdCommand(int Id) : IRequest<Result>;
 
 public class DeleteOperationByIdCommandHandler : IRequestHandler<DeleteOperationByIdCommand, Result>
 {
-    private readonly IOperationService _operationService;
+    private readonly ICosmosService _cosmosService;
     private readonly IUnitOfWork<int> _unitOfWork;
-    public DeleteOperationByIdCommandHandler( 
-        IOperationService operationService,
-        IUnitOfWork<int> unitOfWork)
-    {      
-        _operationService = operationService;
+    public DeleteOperationByIdCommandHandler(
+        IUnitOfWork<int> unitOfWork,
+        ICosmosService cosmosService)
+    {
         _unitOfWork = unitOfWork;
+        _cosmosService = cosmosService;
     }
 
     public async Task<Result> Handle(DeleteOperationByIdCommand request, CancellationToken cancellationToken)
@@ -29,7 +26,11 @@ public class DeleteOperationByIdCommandHandler : IRequestHandler<DeleteOperation
 
         var operationToDelete = await _unitOfWork.Repository<Domain.Entities.Operation>().GetByIdAsync(request.Id);
 
-        await _operationService.DeleteAttribute(operationToDelete.Id.ToString(), new PartitionKey(operationToDelete.Code), cancellationToken);
+        await _cosmosService
+                .Delete(containerName: ApplicationConstants.CosmosDB.CONTAINER_OPERATION,
+                        id: operationToDelete.Id.ToString(),
+                        partitionKey: new PartitionKey(operationToDelete.Code),
+                        cancellationToken: cancellationToken);
 
         await _unitOfWork.Repository<Domain.Entities.Operation>().DeleteAsync(operationToDelete);
 

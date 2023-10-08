@@ -12,9 +12,7 @@ using Operation.Application.Features.Operation.Queries.GetById;
 using Operation.Shared.Wrapper;
 using Operation.Application.Features.Operation.Queries.GetAll.Operations;
 using Operation.Application.Features.Operation.Commands.AddAtributes;
-using System;
 using System.Dynamic;
-using Operation.Application.Features.Operation.Commands.AddOperationWithAtribute;
 using Operation.Application.Features.Operation.Commands.UpdateOperationWithattribute;
 
 namespace Operation.API.Controllers.Tests;
@@ -62,10 +60,8 @@ public class OperationControllerTests
             weight = "something",
         };
 
-        var addOperationAttributCommad = new AddOperationAttributCommad()
-        {
-            Attribues = attribute
-        };
+        var addOperationAttributCommad = new AddOperationAttributCommad(attribute);
+
 
         var responseCreatedAttribute = await _client.PostAsJsonAsync("/Operation/attributes", addOperationAttributCommad);
         responseCreatedAttribute.EnsureSuccessStatusCode();
@@ -111,10 +107,7 @@ public class OperationControllerTests
             weight = "something",
         };
 
-        var addOperationAttributCommad = new AddOperationAttributCommad()
-        {
-            Attribues = attribute
-        };
+        var addOperationAttributCommad = new AddOperationAttributCommad(attribute);
 
         var responseCreatedAttribute = await _client.PostAsJsonAsync("/Operation/attributes", addOperationAttributCommad);
         responseCreatedAttribute.EnsureSuccessStatusCode();
@@ -176,11 +169,8 @@ public class OperationControllerTests
     {
         var ranodmCode = RandomGenerator.RandomString(4);
 
-        var createdOperation = new AddOperationCommand()
-        {
-            Code = ranodmCode,
-            Name = "testName",
-        };
+        var createdOperation = new AddOperationCommand(ranodmCode, "testName");
+
         var responseCreated = await _client.PostAsJsonAsync("/Operation/operations", createdOperation);
         responseCreated.EnsureSuccessStatusCode();
 
@@ -199,7 +189,7 @@ public class OperationControllerTests
             Name = "testName"
         });
 
-        return operation.Data ?? new GetOperationResponse();
+        return operation.Data;
     }
 
     [Fact]
@@ -216,26 +206,23 @@ public class OperationControllerTests
             weight = "test3",
         };
 
-        var updateOperationWithAttributesCommand = new UpdateOperationWithAttributesCommand()
-        {
-            Id = createdOperation.Id,
-            AddOperationCommand = new AddOperationCommand()
-            {
-                Code = newCode,
-                Name = createdOperation.Name,
-            },
-            Attributes = attribute
-
-        };     
+        var updateOperationWithAttributesCommand = new UpdateOperationWithAttributesCommand
+            (
+                createdOperation.Id,
+                new AddOperationCommand(newCode, createdOperation.Name),
+                attribute
+            );
 
         var responseCreatedAttribute = await _client.PutAsJsonAsync($"/Operation/", updateOperationWithAttributesCommand);
         responseCreatedAttribute.EnsureSuccessStatusCode();
 
         var updatedObject = await _client.GetFromJsonAsync<Result<GetOperationResponse>>($"/Operation/operations/id/{createdOperation.Id}");
 
-        updatedObject.Data.Should().NotBeNull();
-        createdOperation.Code = newCode;
-        updatedObject.Data.Should().BeEquivalentTo(createdOperation);
+        updatedObject.Data.Should().NotBeNull();  
+     
+        updatedObject.Data
+            .Should()
+            .BeEquivalentTo(new GetOperationResponse(createdOperation.Id, createdOperation.Name, newCode));
 
         var responseDelete = await _client.DeleteAsync($"/Operation/id/{createdOperation.Id}");
 

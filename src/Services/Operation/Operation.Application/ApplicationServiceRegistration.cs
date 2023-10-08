@@ -16,6 +16,4 @@ public static class ApplicationServiceRegistration
             .AddTransient(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehaviour<,>))
             .AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>))
             .AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
-
-
 }
