@@ -41,27 +41,27 @@ public class OperationController : ControllerBase
 
     [HttpGet("id/{id}")]
     public async Task<IActionResult> GetOperationWithAttributeById([FromRoute] int id)
-       => Ok(await _mediator.Send(new GetOperationWithAttributeByIdQuery() { Id = id }));
+       => Ok(await _mediator.Send(new GetOperationWithAttributeByIdQuery(id)));
 
     [HttpGet("code/{code}")]
     public async Task<IActionResult> GetOperationWithAttributeByCoded([FromRoute] string code)
-        => Ok(await _mediator.Send(new GetOperationWithAttributeByCodeQuery() { Code = code }));
+        => Ok(await _mediator.Send(new GetOperationWithAttributeByCodeQuery(code)));
 
     [HttpGet("operations/id/{id}")]
     public async Task<IActionResult> GetOperationById([FromRoute] int id)
-        => Ok(await _mediator.Send(new GetOperationByIdQuery() { Id = id }));
+        => Ok(await _mediator.Send(new GetOperationByIdQuery(id)));
 
     [HttpGet("operations/code/{code}")]
     public async Task<IActionResult> GetOperationByCode([FromRoute] string code)
-        => Ok(await _mediator.Send(new GetOperationByCodeQuery() { Code = code }));
+        => Ok(await _mediator.Send(new GetOperationByCodeQuery(code)));
 
     [HttpGet("attributes/id/{id}")]
     public async Task<IActionResult> GetAttributeById([FromRoute] int id)
-         => Ok(await _mediator.Send(new GetAttributeByIddQuery() { Id = id }));
+         => Ok(await _mediator.Send(new GetAttributeByIddQuery(id)));
 
     [HttpGet("attributes/code/{code}")]
     public async Task<IActionResult> GetAttributeByCoded([FromRoute] string code)
-        => Ok(await _mediator.Send(new GetAttributeByCodeQuery() { Code = code }));
+        => Ok(await _mediator.Send(new GetAttributeByCodeQuery(code)));
 
     [HttpPost("operations")]
     public async Task<IActionResult> AddOperation(AddOperationCommand addOperationCommand)

@@ -5,10 +5,7 @@ using System.Dynamic;
 
 namespace Operation.Application.Features.Operation.Queries.GetById;
 
-public record GetOperationWithAttributeByIdQuery : IRequest<Result<ExpandoObject>>
-{
-    public int Id { get; set; }
-}
+public record GetOperationWithAttributeByIdQuery(int Id) : IRequest<Result<ExpandoObject>>;
 
 internal class GetOperationWithAttributeByIdQueryHandler : IRequestHandler<GetOperationWithAttributeByIdQuery, Result<ExpandoObject>>
 {   
@@ -21,8 +18,8 @@ internal class GetOperationWithAttributeByIdQueryHandler : IRequestHandler<GetOp
 
     public async Task<Result<ExpandoObject>> Handle(GetOperationWithAttributeByIdQuery query, CancellationToken cancellationToken)
     {
-        var operation = await _mediator.Send(new GetOperationByIdQuery() { Id = query.Id }, cancellationToken);
-        var attribute = await _mediator.Send(new GetAttributeByIddQuery() { Id = query.Id }, cancellationToken);
+        var operation = await _mediator.Send(new GetOperationByIdQuery(query.Id), cancellationToken);
+        var attribute = await _mediator.Send(new GetAttributeByIddQuery(query.Id), cancellationToken);
 
         var result = new { Operation = operation, Attribute = attribute };
 

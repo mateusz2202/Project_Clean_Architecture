@@ -189,7 +189,7 @@ public class OperationControllerTests
             Name = "testName"
         });
 
-        return operation.Data ?? new GetOperationResponse();
+        return operation.Data;
     }
 
     [Fact]
@@ -218,9 +218,11 @@ public class OperationControllerTests
 
         var updatedObject = await _client.GetFromJsonAsync<Result<GetOperationResponse>>($"/Operation/operations/id/{createdOperation.Id}");
 
-        updatedObject.Data.Should().NotBeNull();
-        createdOperation.Code = newCode;
-        updatedObject.Data.Should().BeEquivalentTo(createdOperation);
+        updatedObject.Data.Should().NotBeNull();  
+     
+        updatedObject.Data
+            .Should()
+            .BeEquivalentTo(new GetOperationResponse(createdOperation.Id, createdOperation.Name, newCode));
 
         var responseDelete = await _client.DeleteAsync($"/Operation/id/{createdOperation.Id}");
 

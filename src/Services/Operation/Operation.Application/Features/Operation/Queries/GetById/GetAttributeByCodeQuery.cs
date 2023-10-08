@@ -8,11 +8,7 @@ using System.Dynamic;
 
 namespace Operation.Application.Features.Operation.Queries.GetById;
 
-
-public record GetAttributeByCodeQuery : IRequest<Result<ExpandoObject>>
-{
-    public string Code { get; set; } = string.Empty;
-}
+public record GetAttributeByCodeQuery(string Code) : IRequest<Result<ExpandoObject>>;
 
 internal class GetAttributeByCodeQueryHandler : IRequestHandler<GetAttributeByCodeQuery, Result<ExpandoObject>>
 {
