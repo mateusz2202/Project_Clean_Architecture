@@ -8,12 +8,7 @@ using Operation.Shared.Wrapper;
 
 namespace Operation.Application.Features.Operation.Commands.AddOperationWithAtribute;
 
-public record AddOperationWithAttributCommad : IRequest<Result>
-{
-    public AddOperationCommand AddOperationCommand { get; set; } = null!;
-    public object Attributes { get; set; } = null!;
-}
-
+public record AddOperationWithAttributCommad(AddOperationCommand AddOperationCommand,object Attributes) : IRequest<Result>;
 
 public class AddOperationWithAttributCommadHandler : IRequestHandler<AddOperationWithAttributCommad, Result>
 {

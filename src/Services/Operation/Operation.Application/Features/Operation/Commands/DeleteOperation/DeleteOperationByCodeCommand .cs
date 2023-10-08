@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.Azure.Cosmos;
-using Microsoft.Extensions.Localization;
 using Operation.Application.Contracts.Repositories;
 using Operation.Application.Contracts.Services;
 using Operation.Shared.Constans;
@@ -8,10 +7,7 @@ using Operation.Shared.Wrapper;
 
 namespace Operation.Application.Features.Operation.Commands.DeleteOperation;
 
-public record DeleteOperationByCodeCommand : IRequest<Result>
-{
-    public string Code { get; set; } = string.Empty;
-}
+public record DeleteOperationByCodeCommand(string Code) : IRequest<Result>;
 
 public class DeleteOperationByCodeCommandCommandHandler : IRequestHandler<DeleteOperationByCodeCommand, Result>
 {

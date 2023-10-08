@@ -7,10 +7,7 @@ using Operation.Shared.Wrapper;
 
 namespace Operation.Application.Features.Operation.Commands.DeleteOperation;
 
-public record DeleteOperationByIdCommand : IRequest<Result>
-{
-    public int Id { get; set; }
-}
+public record DeleteOperationByIdCommand(int Id) : IRequest<Result>;
 
 public class DeleteOperationByIdCommandHandler : IRequestHandler<DeleteOperationByIdCommand, Result>
 {

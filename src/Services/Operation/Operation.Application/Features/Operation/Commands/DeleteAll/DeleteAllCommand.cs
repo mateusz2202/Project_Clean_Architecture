@@ -1,12 +1,11 @@
 ﻿using MediatR;
-using Microsoft.Extensions.Localization;
 using Operation.Application.Contracts.Repositories;
 using Operation.Application.Contracts.Services;
 using Operation.Shared.Wrapper;
 
 namespace Operation.Application.Features.Operation.Commands.DeleteAll;
 
-public record DeleteAllCommand : IRequest<Result> { }
+public record DeleteAllCommand : IRequest<Result>;
 
 public class DeleteAllCommandHandler : IRequestHandler<DeleteAllCommand, Result>
 {    

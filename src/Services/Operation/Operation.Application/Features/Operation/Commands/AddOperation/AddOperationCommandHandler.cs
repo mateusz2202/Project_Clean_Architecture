@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.Extensions.Localization;
 using Operation.Application.Contracts.Repositories;
 using Operation.Application.Contracts.Services;
 using Operation.Shared.Constans;
 using Operation.Shared.Wrapper;
 
 namespace Operation.Application.Features.Operation.Commands.AddOperation;
+
+public record AddOperationCommand(string Code,string Name) : IRequest<Result<int>>;
 
 public class AddOperationCommandHandler : IRequestHandler<AddOperationCommand, Result<int>>
 {

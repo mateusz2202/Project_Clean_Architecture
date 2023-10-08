@@ -6,10 +6,7 @@ using Operation.Shared.Wrapper;
 
 namespace Operation.Application.Features.Operation.Commands.DeleteAttribute;
 
-public record DeleteAttributeByIdCommand : IRequest<Result>
-{
-    public int Id { get; set; }
-}
+public record DeleteAttributeByIdCommand(int Id) : IRequest<Result>;
 
 public class DeleteAttributeByIdCommandHandler : IRequestHandler<DeleteAttributeByIdCommand, Result>
 {

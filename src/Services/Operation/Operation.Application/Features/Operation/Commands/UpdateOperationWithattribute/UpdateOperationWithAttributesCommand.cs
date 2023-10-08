@@ -1,34 +1,32 @@
 ﻿using MediatR;
 using Microsoft.Azure.Cosmos;
-using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
 using Operation.Application.Contracts.Repositories;
 using Operation.Application.Contracts.Services;
 using Operation.Application.Features.Operation.Commands.AddOperation;
-using Operation.Application.Features.Operation.Queries.GetById;
 using Operation.Shared.Constans;
 using Operation.Shared.Wrapper;
 
-
 namespace Operation.Application.Features.Operation.Commands.UpdateOperationWithattribute;
 
-public record UpdateOperationWithAttributesCommand : IRequest<Result>
-{
-    public int Id { get; set; }
-    public AddOperationCommand AddOperationCommand { get; set; } = null!;
-    public object Attributes { get; set; } = null!;
-}
+public record UpdateOperationWithAttributesCommand
+    (
+        int Id,
+        AddOperationCommand AddOperationCommand,
+        object Attributes
+    ) : IRequest<Result>;
+
 
 public class UpdateOperationWithAttributesCommandHandler : IRequestHandler<UpdateOperationWithAttributesCommand, Result>
 {
     private readonly IOperationService _operationService;
     private readonly IMediator _mediator;
     private readonly IUnitOfWork<int> _unitOfWork;
-    public UpdateOperationWithAttributesCommandHandler(   
+    public UpdateOperationWithAttributesCommandHandler(
         IOperationService operationService,
         IMediator mediator,
         IUnitOfWork<int> unitOfWork)
-    {      
+    {
         _operationService = operationService;
         _mediator = mediator;
         _unitOfWork = unitOfWork;
@@ -37,7 +35,7 @@ public class UpdateOperationWithAttributesCommandHandler : IRequestHandler<Updat
     public async Task<Result> Handle(UpdateOperationWithAttributesCommand request, CancellationToken cancellationToken)
     {
 
-        var operationToUpdate =await _unitOfWork.Repository<Domain.Entities.Operation>().GetByIdAsync(request.Id);
+        var operationToUpdate = await _unitOfWork.Repository<Domain.Entities.Operation>().GetByIdAsync(request.Id);
 
         string oldCode = operationToUpdate.Code;
         operationToUpdate.Code = request.AddOperationCommand.Code;
@@ -54,10 +52,10 @@ public class UpdateOperationWithAttributesCommandHandler : IRequestHandler<Updat
 
         var item = JsonConvert.DeserializeObject<dynamic>(request.Attributes.ToString());
         ((dynamic)item).id = operationToUpdate.Id.ToString();
-        ((dynamic)item).code = operationToUpdate.Code;   
+        ((dynamic)item).code = operationToUpdate.Code;
 
         await _operationService.AddOrEditAtributes(operationToUpdate.Id.ToString(), new PartitionKey(oldCode), item, cancellationToken);
-        
+
         return await Result<int>.SuccessAsync();
     }
 
