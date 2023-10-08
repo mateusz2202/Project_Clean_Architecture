@@ -1,4 +1,4 @@
-﻿namespace OperationAPI.Exceptions;
+﻿namespace Operation.API.Exceptions;
 
 public class CreateResourceException : Exception
 {

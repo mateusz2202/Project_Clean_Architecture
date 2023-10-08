@@ -1,4 +1,4 @@
-﻿namespace API_Identity.Middleware;
+﻿namespace Identity.API.Middleware;
 
 public static class MiddlewareExtensions
 {

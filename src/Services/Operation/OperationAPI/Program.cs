@@ -1,84 +1,126 @@
-using FluentValidation;
+using Operation.Application.Contracts.Services;
+using Operation.API.Services;
+using Operation.Application;
+using Operation.Infrastructure;
+using Operation.Persistence;
+using Operation.API.Filters;
+using System.Reflection;
+using Serilog;
 using FluentValidation.AspNetCore;
-using Microsoft.Azure.Cosmos;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
-using OperationAPI;
-using OperationAPI.Data;
-using OperationAPI.Interfaces;
-using OperationAPI.Middleware;
-using OperationAPI.Models;
-using OperationAPI.Models.Validators;
-using OperationAPI.Services;
-using StackExchange.Redis;
-using Swashbuckle.AspNetCore.Filters;
-using System.Runtime.CompilerServices;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using Serilog.Sinks.Elasticsearch;
+using Microsoft.IdentityModel.Tokens;
 using System.Text;
-
-[assembly: InternalsVisibleTo("OperationAPIOperationAPI_Test")]
+using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddControllers().AddNewtonsoftJson(options =>
-      options.SerializerSettings.ReferenceLoopHandling =
-        Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+builder.Configuration.SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{environment}.json", optional: true)
+    .AddEnvironmentVariables();
 
-// Add services to the container.
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(builder.Configuration["ElasticConfiguration:Uri"] ?? string.Empty))
+    {
+        AutoRegisterTemplate = true,
+        IndexFormat = $"{Assembly.GetExecutingAssembly().GetName().Name?.ToLower().Replace(".", "-")}-{environment?.ToLower().Replace(".", "-")}-{DateTime.UtcNow:yyyy-MM}"
+    })
+    .ReadFrom.Configuration(builder.Configuration)
+    .CreateLogger();
+
+
+builder.Services
+        .AddApplication()
+        .AddInfrastructure(builder.Configuration)
+        .AddPersistence(builder.Configuration);
+
+
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddSingleton<ICurrentUserService, CurrentUserService>();
+
 builder.Services.AddFluentValidationAutoValidation();
 
-//sql server
-builder.Services.AddDbContext<OperationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnectionString")));
-
-//cosmos db
-builder.Services.AddSingleton<CosmosClient>((s) => new CosmosClient(builder.Configuration.GetConnectionString("CosmosDbConnectionString")));
-
-//redis
-builder.Services.AddSingleton<IDatabase>(cfg =>
-{
-    var redisConnection =
-        ConnectionMultiplexer
-            .Connect(builder.Configuration.GetConnectionString("RedisConnectionString") ?? string.Empty);
-
-    return redisConnection.GetDatabase();
-});
-
-//rabbitMQ
-builder.Services.Configure<RabbitMqConfiguration>(conf => builder.Configuration.GetSection(nameof(RabbitMqConfiguration)).Bind(conf));
-builder.Services.AddSingleton<IRabbitMqService, RabbitMqService>();
-
-//services
-builder.Services.AddScoped<ICacheService, CacheService>();
-builder.Services.AddScoped<IOperationService, OperationService>();
-
-//validator
-builder.Services.AddScoped<IValidator<CreateOperationDTO>, CreateOperationDTOValidator>();
-builder.Services.AddScoped<IValidator<CreateOperationWithAttributeDTO>, CreateOperationWithAttributeDTOValidator>();
-
-//midleware
-builder.Services.AddScoped<ErrorHandlingMiddleware>();
-
-//Authentication
-builder.Services.AddAuthentication(option =>
-{
-    option.DefaultAuthenticateScheme = "Bearer";
-    option.DefaultScheme = "Bearer";
-    option.DefaultChallengeScheme = "Bearer";
-}).AddJwtBearer(cfg =>
-{
-    cfg.RequireHttpsMetadata = false;
-    cfg.SaveToken = true;
-    cfg.TokenValidationParameters = new TokenValidationParameters
+builder.Services.AddControllers(options =>
+        options.Filters.Add<ApiExceptionFilterAttribute>()
+    )
+    .ConfigureApiBehaviorOptions(opt =>
     {
-        ValidIssuer = builder.Configuration[$"{nameof(AuthenticationSettings)}:JwtIssuer"],
-        ValidAudience = builder.Configuration[$"{nameof(AuthenticationSettings)}:JwtIssuer"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration[$"{nameof(AuthenticationSettings)}:JwtKey"] ?? string.Empty))
-    };
+        opt.SuppressModelStateInvalidFilter = true;
+    })
+    .AddJsonOptions(jsonOptions =>
+    {
+        jsonOptions.JsonSerializerOptions.PropertyNamingPolicy = null;
+    })
+    .AddNewtonsoftJson(opt =>
+    {
+        opt.SerializerSettings.ContractResolver = new DefaultContractResolver();
+        opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+    });
+
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(o =>
+           {
+               o.RequireHttpsMetadata = false;
+               o.SaveToken = false;
+               o.TokenValidationParameters = new TokenValidationParameters
+               {
+                   ValidateIssuerSigningKey = true,
+                   ValidateIssuer = true,
+                   ValidateAudience = true,
+                   ValidateLifetime = true,
+                   ClockSkew = TimeSpan.Zero,
+                   ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+                   ValidAudience = builder.Configuration["JwtSettings:Audience"],
+                   IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"] ?? string.Empty))
+               };
+               
+               o.Events = new JwtBearerEvents()
+               {
+                   OnAuthenticationFailed = c =>
+                   {
+                       c.NoResult();
+                       c.Response.StatusCode = 500;
+                       c.Response.ContentType = "text/plain";
+                       return c.Response.WriteAsync(c.Exception.ToString());
+                   },
+                   OnChallenge = context =>
+                   {
+                       context.HandleResponse();
+                       context.Response.StatusCode = 401;
+                       context.Response.ContentType = "application/json";
+                       var result = JsonConvert.SerializeObject("401 Not authorized");
+                       return context.Response.WriteAsync(result);
+                   },
+                   OnForbidden = context =>
+                   {
+                       context.Response.StatusCode = 403;
+                       context.Response.ContentType = "application/json";
+                       var result = JsonConvert.SerializeObject("403 Not authorized");
+                       return context.Response.WriteAsync(result);
+                   }
+               };
+           });
+
+//Enable CORS//Cross site resource sharing
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy",
+        b => b.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+    );
 });
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
@@ -109,20 +151,30 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
-app.UseMiddleware<ErrorHandlingMiddleware>();
+app.UseRequestLocalization();
 
 // Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
+
+app.UseHttpsRedirection();
+app.UseRouting();
+//Must be between app.UseRouting() and app.UseEndPoints()
+app.UseCors("CorsPolicy");
+app.UseAuthentication();
+app.UseAuthorization();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
+
+public partial class Program { }
 
