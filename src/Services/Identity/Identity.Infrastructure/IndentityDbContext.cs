@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Identity.Infrastructure;
 
-public class IndentityDbContext : IdentityDbContext<ApplicationUser>
+public class IndentityDbContext : IdentityDbContext<ApplicationUser,ApplicationRole,string>
 {
     public IndentityDbContext()
     {

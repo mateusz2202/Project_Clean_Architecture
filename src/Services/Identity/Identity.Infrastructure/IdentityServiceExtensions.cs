@@ -22,12 +22,12 @@ public static class IdentityServiceExtensions
         services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
 
         services.AddDbContext<IndentityDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DbConnectionString"),
-            b => b.MigrationsAssembly(typeof(IndentityDbContext).Assembly.FullName)));
+            b => b.MigrationsAssembly(typeof(IndentityDbContext).Assembly.FullName)))
+            .AddTransient<IDatabaseSeeder, DatabaseSeeder>();
 
-    
-
-        services.AddIdentity<ApplicationUser, IdentityRole>()
-            .AddEntityFrameworkStores<IndentityDbContext>().AddDefaultTokenProviders();
+        services.AddIdentity<ApplicationUser, ApplicationRole>()
+            .AddEntityFrameworkStores<IndentityDbContext>()
+            .AddDefaultTokenProviders();
 
         services.AddTransient<IAuthenticationService, AuthenticationService>();
 

@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Identity.Application\Identity.Application.csproj" />
+    <ProjectReference Include="..\Identity.Shared\Identity.Shared.csproj" />
   </ItemGroup>
 
 </Project>

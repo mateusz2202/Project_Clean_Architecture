@@ -2,6 +2,7 @@
 using Identity.Application.Common.Interfaces;
 using Identity.Application.Models.Authentication;
 using Identity.Infrastructure.Models;
+using Identity.Shared;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -33,18 +34,18 @@ public class AuthenticationService : IAuthenticationService
 
         if (!user.EmailConfirmed)
             throw new BadRequestException("E-Mail not confirmed");
-        
+
         var passwordValid = await _userManager.CheckPasswordAsync(user, request.Password);
-       
-        if (!passwordValid)        
-            throw new BadRequestException("Invalid Credentials");           
-        
+
+        if (!passwordValid)
+            throw new BadRequestException("Invalid Credentials");
+
 
         var result = await _signInManager.PasswordSignInAsync(user.UserName ?? string.Empty, request.Password, false, lockoutOnFailure: false);
 
         if (!result.Succeeded)
             throw new Exception($"Credentials for '{request.Email} aren't valid'.");
-     
+
 
         JwtSecurityToken jwtSecurityToken = await GenerateToken(user);
 
@@ -83,7 +84,10 @@ public class AuthenticationService : IAuthenticationService
             var result = await _userManager.CreateAsync(user, request.Password);
 
             if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(user, ApplicationConstans.RoleConstants.BasicRole);
                 return new RegistrationResponse() { UserId = user.Id };
+            }
             else
                 throw new ValidationException(result.Errors);
 

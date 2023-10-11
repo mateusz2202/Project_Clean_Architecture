@@ -65,6 +65,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "src\Frontends\Web
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "src\Frontends\Web\Shared\Shared.csproj", "{D8BE7EA5-ECD1-4B77-92B9-B3B1DC4DBDD4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Identity.Shared", "src\Services\Identity\Identity.Shared\Identity.Shared.csproj", "{36E94EAF-9525-49F0-A79C-2C369F85A81D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -157,6 +159,10 @@ Global
 		{D8BE7EA5-ECD1-4B77-92B9-B3B1DC4DBDD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D8BE7EA5-ECD1-4B77-92B9-B3B1DC4DBDD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D8BE7EA5-ECD1-4B77-92B9-B3B1DC4DBDD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36E94EAF-9525-49F0-A79C-2C369F85A81D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36E94EAF-9525-49F0-A79C-2C369F85A81D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36E94EAF-9525-49F0-A79C-2C369F85A81D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36E94EAF-9525-49F0-A79C-2C369F85A81D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -191,6 +197,7 @@ Global
 		{2F927105-C3B5-42D7-AC22-92E06E99AAAE} = {77379EE5-EC3B-4836-B383-F38D8EC61249}
 		{B239C23D-F4BB-413E-A019-A2BA64F01F56} = {77379EE5-EC3B-4836-B383-F38D8EC61249}
 		{D8BE7EA5-ECD1-4B77-92B9-B3B1DC4DBDD4} = {77379EE5-EC3B-4836-B383-F38D8EC61249}
+		{36E94EAF-9525-49F0-A79C-2C369F85A81D} = {C67A4E14-1661-4094-A516-D34375501C41}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BB08503F-91D3-402A-B4EF-7DD99B482135}

@@ -48,20 +48,14 @@ namespace BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Identity.A
         public async Task<IResult> Login(TokenRequest model)
         {
             /*
-             https://localhost:7251/Account/authenticate
-            {
-              "email": "xd@xd.pl",
-              "password": "Xd!12345678"
-            }
+             https://localhost:7251/Account/authenticate           
              */
-            var fakeModel = new TokenRequest();
-            fakeModel.Email = "xd@xd.pl";
-            fakeModel.Password = "Xd!12345678";
+            
             var xd = new HttpClient();
             xd.BaseAddress = new Uri("http://localhost:5025/");
 
 
-            var response = await xd.PostAsJsonAsync("/Account/authenticate", fakeModel);
+            var response = await xd.PostAsJsonAsync("/Account/authenticate", model);
             var responseO = await _httpClient.PostAsJsonAsync(TokenEndpoints.Get, model);
             var resultO = await responseO.ToResult<TokenResponse>();
             var responseAsString = await response.Content.ReadAsStringAsync();
