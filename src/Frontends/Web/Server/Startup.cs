@@ -2,7 +2,6 @@ using BlazorHero.CleanArchitecture.Application.Extensions;
 using BlazorHero.CleanArchitecture.Infrastructure.Extensions;
 using BlazorHero.CleanArchitecture.Server.Extensions;
 using BlazorHero.CleanArchitecture.Server.Middlewares;
-using Hangfire;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -11,7 +10,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
-using BlazorHero.CleanArchitecture.Server.Filters;
 using BlazorHero.CleanArchitecture.Server.Managers.Preferences;
 using Microsoft.Extensions.Localization;
 
@@ -51,9 +49,7 @@ namespace BlazorHero.CleanArchitecture.Server
             services.AddExtendedAttributesUnitOfWork();
             services.AddSharedInfrastructure(_configuration);
             services.RegisterSwagger();
-            services.AddInfrastructureMappings();
-            services.AddHangfire(x => x.UseSqlServerStorage(_configuration.GetConnectionString("DefaultConnection")));
-            services.AddHangfireServer();
+            services.AddInfrastructureMappings();         
             services.AddControllers().AddValidators();
             services.AddExtendedAttributesValidators();
             services.AddExtendedAttributesHandlers();
@@ -83,12 +79,7 @@ namespace BlazorHero.CleanArchitecture.Server
             app.UseRequestLocalizationByCulture();
             app.UseRouting();
             app.UseAuthentication();
-            app.UseAuthorization();
-            app.UseHangfireDashboard("/jobs", new DashboardOptions
-            {
-                DashboardTitle = localizer["BlazorHero Jobs"],
-                Authorization = new[] { new HangfireAuthorizationFilter() }
-            });
+            app.UseAuthorization();          
             app.UseEndpoints();
             app.ConfigureSwagger();
             app.Initialize(_configuration);

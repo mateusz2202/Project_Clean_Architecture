@@ -17,7 +17,6 @@ using BlazorHero.CleanArchitecture.Infrastructure.Models.Identity;
 using BlazorHero.CleanArchitecture.Infrastructure.Specifications;
 using BlazorHero.CleanArchitecture.Shared.Constants.Role;
 using BlazorHero.CleanArchitecture.Shared.Wrapper;
-using Hangfire;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
@@ -103,8 +102,7 @@ namespace BlazorHero.CleanArchitecture.Infrastructure.Services.Identity
                             To = user.Email,
                             Body = string.Format(_localizer["Please confirm your account by <a href='{0}'>clicking here</a>."], verificationUri),
                             Subject = _localizer["Confirm Registration"]
-                        };
-                        BackgroundJob.Enqueue(() => _mailService.SendAsync(mailRequest));
+                        };                     
                         return await Result<string>.SuccessAsync(user.Id, string.Format(_localizer["User {0} Registered. Please check your Mailbox to verify!"], user.UserName));
                     }
                     return await Result<string>.SuccessAsync(user.Id, string.Format(_localizer["User {0} Registered."], user.UserName));
@@ -244,8 +242,7 @@ namespace BlazorHero.CleanArchitecture.Infrastructure.Services.Identity
                 Body = string.Format(_localizer["Please reset your password by <a href='{0}'>clicking here</a>."], HtmlEncoder.Default.Encode(passwordResetURL)),
                 Subject = _localizer["Reset Password"],
                 To = request.Email
-            };
-            BackgroundJob.Enqueue(() => _mailService.SendAsync(mailRequest));
+            };        
             return await Result.SuccessAsync(_localizer["Password Reset Mail has been sent to your authorized Email."]);
         }
 
