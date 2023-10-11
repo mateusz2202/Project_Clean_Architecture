@@ -15,16 +15,19 @@ namespace Identity.Infrastructure.Services;
 public class AuthenticationService : IAuthenticationService
 {
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly RoleManager<ApplicationRole> _roleManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly JwtSettings _jwtSettings;
 
     public AuthenticationService(UserManager<ApplicationUser> userManager,
         IOptions<JwtSettings> jwtSettings,
-        SignInManager<ApplicationUser> signInManager)
+        SignInManager<ApplicationUser> signInManager,
+        RoleManager<ApplicationRole> roleManager)
     {
         _userManager = userManager;
         _jwtSettings = jwtSettings.Value;
         _signInManager = signInManager;
+        _roleManager = roleManager;
     }
 
     public async Task<AuthenticationResponse> AuthenticateAsync(AuthenticationRequest request)
@@ -102,18 +105,26 @@ public class AuthenticationService : IAuthenticationService
     {
         var userClaims = await _userManager.GetClaimsAsync(user);
         var roles = await _userManager.GetRolesAsync(user);
-
-        var roleClaims = roles.Select(x => new Claim("roles", x));
-
-        var claims = new[]
+        var roleClaims = new List<Claim>();
+        var permissionClaims = new List<Claim>();
+        foreach (var role in roles)
         {
-                new Claim(JwtRegisteredClaimNames.Sub, user?.UserName ?? string.Empty),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, user?.Email ?? string.Empty),
-                new Claim("uid", user?.Id ?? string.Empty)
+            roleClaims.Add(new Claim(ClaimTypes.Role, role));
+            var thisRole = await _roleManager.FindByNameAsync(role);
+            var allPermissionsForThisRoles = await _roleManager.GetClaimsAsync(thisRole);
+            permissionClaims.AddRange(allPermissionsForThisRoles);
         }
+        var claims = new List<Claim>
+            {
+                new(ClaimTypes.NameIdentifier, user.Id),
+                new(ClaimTypes.Email, user.Email??string.Empty),
+                new(ClaimTypes.Name, user.FirstName),
+                new(ClaimTypes.Surname, user.LastName),
+                new(ClaimTypes.MobilePhone, user.PhoneNumber ?? string.Empty)
+            }
         .Union(userClaims)
-        .Union(roleClaims);
+        .Union(roleClaims)
+        .Union(permissionClaims);
 
         var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
         var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);

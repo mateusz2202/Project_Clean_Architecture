@@ -68,8 +68,8 @@ namespace BlazorHero.CleanArchitecture.Client.Extensions
                     client.DefaultRequestHeaders.AcceptLanguage.Clear();
                     client.DefaultRequestHeaders.AcceptLanguage.ParseAdd(CultureInfo.DefaultThreadCurrentCulture?.TwoLetterISOLanguageName);
                     client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
-                });
-                //.AddHttpMessageHandler<AuthenticationHeaderHandler>();
+                })
+                .AddHttpMessageHandler<AuthenticationHeaderHandler>();
             builder.Services.AddHttpClientInterceptor();
             return builder;
         }

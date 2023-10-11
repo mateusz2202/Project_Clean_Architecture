@@ -57,7 +57,7 @@ namespace BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Identity.A
 
             var response = await xd.PostAsJsonAsync("/Account/authenticate", model);
             var responseO = await _httpClient.PostAsJsonAsync(TokenEndpoints.Get, model);
-            var resultO = await responseO.ToResult<TokenResponse>();
+           // var result = await responseO.ToResult<TokenResponse>();
             var responseAsString = await response.Content.ReadAsStringAsync();
             var result = new Result<AuthenticationResponse>()
             {
@@ -69,6 +69,8 @@ namespace BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Identity.A
                 Messages = new System.Collections.Generic.List<string>(),
                 Succeeded = true,
             };
+
+
             var randomNumber = new byte[32];
             using var rng = RandomNumberGenerator.Create();
             rng.GetBytes(randomNumber);
@@ -77,7 +79,7 @@ namespace BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Identity.A
             if (result.Succeeded)
             {
                 var token = result.Data.Token;
-               
+
                 //var userImageURL = result.Data.UserImageURL;
                 await _localStorage.SetItemAsync(StorageConstants.Local.AuthToken, token);
                 await _localStorage.SetItemAsync(StorageConstants.Local.RefreshToken, refreshToken);
