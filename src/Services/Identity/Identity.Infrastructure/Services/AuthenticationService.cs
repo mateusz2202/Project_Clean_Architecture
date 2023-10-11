@@ -31,10 +31,20 @@ public class AuthenticationService : IAuthenticationService
         ApplicationUser user = await _userManager.FindByEmailAsync(request.Email)
                                ?? throw new NotFoundException($"User with {request.Email} not found.");
 
+        if (!user.EmailConfirmed)
+            throw new BadRequestException("E-Mail not confirmed");
+        
+        var passwordValid = await _userManager.CheckPasswordAsync(user, request.Password);
+       
+        if (!passwordValid)        
+            throw new BadRequestException("Invalid Credentials");           
+        
+
         var result = await _signInManager.PasswordSignInAsync(user.UserName ?? string.Empty, request.Password, false, lockoutOnFailure: false);
 
-        if (!result.Succeeded)        
-            throw new Exception($"Credentials for '{request.Email} aren't valid'.");        
+        if (!result.Succeeded)
+            throw new Exception($"Credentials for '{request.Email} aren't valid'.");
+     
 
         JwtSecurityToken jwtSecurityToken = await GenerateToken(user);
 
@@ -53,9 +63,9 @@ public class AuthenticationService : IAuthenticationService
     {
         var existingUser = await _userManager.FindByNameAsync(request.UserName);
 
-        if (existingUser != null)        
+        if (existingUser != null)
             throw new Exception($"Username '{request.UserName}' already exists.");
-        
+
 
         var user = new ApplicationUser
         {
@@ -63,7 +73,7 @@ public class AuthenticationService : IAuthenticationService
             FirstName = request.FirstName,
             LastName = request.LastName,
             UserName = request.UserName,
-            EmailConfirmed = true
+            EmailConfirmed = false
         };
 
         var existingEmail = await _userManager.FindByEmailAsync(request.Email);
@@ -72,11 +82,11 @@ public class AuthenticationService : IAuthenticationService
         {
             var result = await _userManager.CreateAsync(user, request.Password);
 
-            if (result.Succeeded)            
-                return new RegistrationResponse() { UserId = user.Id };            
-            else            
+            if (result.Succeeded)
+                return new RegistrationResponse() { UserId = user.Id };
+            else
                 throw new ValidationException(result.Errors);
-            
+
         }
         else
         {

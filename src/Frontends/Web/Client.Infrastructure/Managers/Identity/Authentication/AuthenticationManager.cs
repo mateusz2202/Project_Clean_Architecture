@@ -13,7 +13,10 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Security.Claims;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 using System.Threading.Tasks;
+using System.Security.Cryptography;
 
 namespace BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Identity.Authentication
 {
@@ -44,19 +47,50 @@ namespace BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Identity.A
 
         public async Task<IResult> Login(TokenRequest model)
         {
-            var response = await _httpClient.PostAsJsonAsync(TokenEndpoints.Get, model);
-            var result = await response.ToResult<TokenResponse>();
+            /*
+             https://localhost:7251/Account/authenticate
+            {
+              "email": "xd@xd.pl",
+              "password": "Xd!12345678"
+            }
+             */
+            var fakeModel = new TokenRequest();
+            fakeModel.Email = "xd@xd.pl";
+            fakeModel.Password = "Xd!12345678";
+            var xd = new HttpClient();
+            xd.BaseAddress = new Uri("http://localhost:5025/");
+
+
+            var response = await xd.PostAsJsonAsync("/Account/authenticate", fakeModel);
+            var responseO = await _httpClient.PostAsJsonAsync(TokenEndpoints.Get, model);
+            var resultO = await responseO.ToResult<TokenResponse>();
+            var responseAsString = await response.Content.ReadAsStringAsync();
+            var result = new Result<AuthenticationResponse>()
+            {
+                Data = JsonSerializer.Deserialize<AuthenticationResponse>(responseAsString, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true,
+                    ReferenceHandler = ReferenceHandler.Preserve
+                }),
+                Messages = new System.Collections.Generic.List<string>(),
+                Succeeded = true,
+            };
+            var randomNumber = new byte[32];
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(randomNumber);
+            
+            var refreshToken = Convert.ToBase64String(randomNumber);
             if (result.Succeeded)
             {
                 var token = result.Data.Token;
-                var refreshToken = result.Data.RefreshToken;
-                var userImageURL = result.Data.UserImageURL;
+               
+                //var userImageURL = result.Data.UserImageURL;
                 await _localStorage.SetItemAsync(StorageConstants.Local.AuthToken, token);
                 await _localStorage.SetItemAsync(StorageConstants.Local.RefreshToken, refreshToken);
-                if (!string.IsNullOrEmpty(userImageURL))
-                {
-                    await _localStorage.SetItemAsync(StorageConstants.Local.UserImageURL, userImageURL);
-                }
+                //if (!string.IsNullOrEmpty(userImageURL))
+                //{
+                //    await _localStorage.SetItemAsync(StorageConstants.Local.UserImageURL, userImageURL);
+                //}
 
                 await ((BlazorHeroStateProvider)this._authenticationStateProvider).StateChangedAsync();
 
@@ -103,8 +137,7 @@ namespace BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Identity.A
         }
 
         public async Task<string> TryRefreshToken()
-        {
-            //check if token exists
+        {          
             var availableToken = await _localStorage.GetItemAsync<string>(StorageConstants.Local.RefreshToken);
             if (string.IsNullOrEmpty(availableToken)) return string.Empty;
             var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
