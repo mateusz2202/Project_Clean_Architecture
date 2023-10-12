@@ -27,16 +27,28 @@ namespace BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Identity.U
 
         public async Task<IResult<UserResponse>> GetAsync(string userId)
         {
-            var xd = _httpClient.BaseAddress;
-            _httpClient.BaseAddress = new Uri("https://localhost:5025/");
-            var response = await _httpClient.GetAsync(Routes.UserEndpoints.Get(userId));
-            _httpClient.BaseAddress = xd;
+            var xd = new HttpClient();
+            xd.BaseAddress = new Uri("https://localhost:5025/");
+            var response = await xd.GetAsync(Routes.UserEndpoints.Get(userId));
+          
             return await response.ToResult<UserResponse>();
         }
 
         public async Task<IResult> RegisterUserAsync(RegisterRequest request)
         {
-            var response = await _httpClient.PostAsJsonAsync(Routes.UserEndpoints.Register, request);
+            RegisterRequestOWN registerRequestOWN = new RegisterRequestOWN()
+            {
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                Email = request.Email,
+                UserName = request.UserName,
+                Password = request.Password,
+                ConfirmPassword = request.ConfirmPassword,
+                PhoneNumber = request.PhoneNumber
+            };
+            var xd = new HttpClient();
+            xd.BaseAddress = new Uri("https://localhost:5025/");
+            var response = await xd.PostAsJsonAsync("/Account/register", registerRequestOWN);
             return await response.ToResult();
         }
 
