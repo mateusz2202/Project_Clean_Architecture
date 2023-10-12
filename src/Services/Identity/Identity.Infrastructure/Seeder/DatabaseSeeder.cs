@@ -1,12 +1,10 @@
-﻿using Identity.Application.Common.Interfaces;
-using Identity.Infrastructure.Extensions;
-using Identity.Infrastructure.Models;
+﻿using Identity.Infrastructure.Extensions;
 using Identity.Shared;
+using Identity.Shared.Models;
 using Identity.Shared.Permissions;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
 
-namespace Identity.Infrastructure;
+namespace Identity.Infrastructure.Seeder;
 
 public class DatabaseSeeder : IDatabaseSeeder
 {
@@ -21,7 +19,7 @@ public class DatabaseSeeder : IDatabaseSeeder
     {
         _userManager = userManager;
         _roleManager = roleManager;
-        _db = db;     
+        _db = db;
     }
 
     public void Initialize()
@@ -43,7 +41,7 @@ public class DatabaseSeeder : IDatabaseSeeder
             if (adminRoleInDb == null)
             {
                 await _roleManager.CreateAsync(adminRole);
-                adminRoleInDb = await _roleManager.FindByNameAsync(ApplicationConstans.RoleConstants.AdministratorRole);             
+                adminRoleInDb = await _roleManager.FindByNameAsync(ApplicationConstans.RoleConstants.AdministratorRole);
             }
 
             var superUser = new ApplicationUser
@@ -59,7 +57,7 @@ public class DatabaseSeeder : IDatabaseSeeder
             if (superUserInDb == null)
             {
                 await _userManager.CreateAsync(superUser, ApplicationConstans.UserConstants.DefaultPassword);
-                var result = await _userManager.AddToRoleAsync(superUser, ApplicationConstans.RoleConstants.AdministratorRole);                
+                var result = await _userManager.AddToRoleAsync(superUser, ApplicationConstans.RoleConstants.AdministratorRole);
             }
             foreach (var permission in Permissions.GetRegisteredPermissions())
             {
@@ -79,7 +77,7 @@ public class DatabaseSeeder : IDatabaseSeeder
             var basicRoleInDb = await _roleManager.FindByNameAsync(ApplicationConstans.RoleConstants.BasicRole);
             if (basicRoleInDb == null)
             {
-                await _roleManager.CreateAsync(basicRole);                
+                await _roleManager.CreateAsync(basicRole);
             }
 
             var basicUser = new ApplicationUser
@@ -95,7 +93,7 @@ public class DatabaseSeeder : IDatabaseSeeder
             if (basicUserInDb == null)
             {
                 await _userManager.CreateAsync(basicUser, ApplicationConstans.UserConstants.DefaultPassword);
-                await _userManager.AddToRoleAsync(basicUser, ApplicationConstans.RoleConstants.BasicRole);            
+                await _userManager.AddToRoleAsync(basicUser, ApplicationConstans.RoleConstants.BasicRole);
             }
         }).GetAwaiter().GetResult();
     }

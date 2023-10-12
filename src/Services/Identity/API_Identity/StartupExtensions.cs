@@ -5,6 +5,7 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using Identity.Application;
 using Identity.Infrastructure;
+using Identity.Infrastructure.Seeder;
 
 namespace Identity.API;
 

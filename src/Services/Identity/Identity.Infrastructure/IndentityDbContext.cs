@@ -1,4 +1,4 @@
-﻿using Identity.Infrastructure.Models;
+﻿using Identity.Shared.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

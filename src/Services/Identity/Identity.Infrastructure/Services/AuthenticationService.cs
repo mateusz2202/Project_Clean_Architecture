@@ -1,7 +1,7 @@
 ﻿using Identity.Application.Common.Exceptions;
 using Identity.Application.Common.Interfaces;
 using Identity.Application.Models.Authentication;
-using Identity.Infrastructure.Models;
+using Identity.Shared.Models;
 using Identity.Shared;
 using Identity.Shared.Wrapper;
 using Microsoft.AspNetCore.Identity;

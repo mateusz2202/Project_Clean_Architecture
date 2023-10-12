@@ -1,7 +1,8 @@
 ﻿using Identity.Application.Common.Interfaces;
 using Identity.Application.Models.Authentication;
-using Identity.Infrastructure.Models;
+using Identity.Infrastructure.Seeder;
 using Identity.Infrastructure.Services;
+using Identity.Shared.Models;
 using Identity.Shared.Permissions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
@@ -16,8 +17,7 @@ using System.Text;
 using System.Text.Json;
 
 namespace Identity.Infrastructure;
-
-public static class IdentityServiceExtensions
+public static class DependencyInjection
 {
     public static void AddIdentity(this IServiceCollection services, IConfiguration configuration)
     {
@@ -35,10 +35,10 @@ public static class IdentityServiceExtensions
         services.AddTransient<IUserService, UserService>();
 
         services.AddAuthentication(authentication =>
-            {
-                authentication.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                authentication.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
+        {
+            authentication.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            authentication.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
             .AddJwtBearer(bearer =>
             {
                 bearer.RequireHttpsMetadata = false;
@@ -48,9 +48,9 @@ public static class IdentityServiceExtensions
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSettings:Key"] ?? string.Empty)),
                     ValidateIssuer = false,
-                    ValidateAudience = false,                 
+                    ValidateAudience = false,
                     RoleClaimType = ClaimTypes.Role,
-                    ClockSkew = TimeSpan.Zero,                     
+                    ClockSkew = TimeSpan.Zero,
                 };
 
                 bearer.Events = new JwtBearerEvents()
@@ -80,18 +80,19 @@ public static class IdentityServiceExtensions
                 };
             });
 
-            services.AddAuthorization(options =>
+        services.AddAuthorization(options =>
+        {
+            // Here I stored necessary permissions/roles in a constant
+            foreach (var prop in typeof(Permissions).GetNestedTypes().SelectMany(c => c.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)))
             {
-                // Here I stored necessary permissions/roles in a constant
-                foreach (var prop in typeof(Permissions).GetNestedTypes().SelectMany(c => c.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)))
+                var propertyValue = prop.GetValue(null);
+                if (propertyValue is not null)
                 {
-                    var propertyValue = prop.GetValue(null);
-                    if (propertyValue is not null)
-                    {
-                        options.AddPolicy(propertyValue.ToString(), policy => policy.RequireClaim(ApplicationClaimTypes.Permission, propertyValue.ToString()));
-                    }
+                    options.AddPolicy(propertyValue.ToString(), policy => policy.RequireClaim(ApplicationClaimTypes.Permission, propertyValue.ToString()));
                 }
-            });
-       
+            }
+        });
+
     }
+
 }

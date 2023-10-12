@@ -1,6 +1,7 @@
-﻿namespace Identity.Application.Common.Interfaces;
+﻿namespace Identity.Infrastructure.Seeder;
 
 public interface IDatabaseSeeder
 {
     void Initialize();
 }
+

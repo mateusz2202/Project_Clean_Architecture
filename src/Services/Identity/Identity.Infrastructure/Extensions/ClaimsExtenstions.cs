@@ -1,4 +1,4 @@
-﻿using Identity.Infrastructure.Models;
+﻿using Identity.Shared.Models;
 using Identity.Shared.Permissions;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;

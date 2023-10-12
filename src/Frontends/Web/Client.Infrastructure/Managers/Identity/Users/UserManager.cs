@@ -2,6 +2,7 @@
 using BlazorHero.CleanArchitecture.Application.Responses.Identity;
 using BlazorHero.CleanArchitecture.Client.Infrastructure.Extensions;
 using BlazorHero.CleanArchitecture.Shared.Wrapper;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -26,7 +27,10 @@ namespace BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Identity.U
 
         public async Task<IResult<UserResponse>> GetAsync(string userId)
         {
+            var xd = _httpClient.BaseAddress;
+            _httpClient.BaseAddress = new Uri("https://localhost:5025/");
             var response = await _httpClient.GetAsync(Routes.UserEndpoints.Get(userId));
+            _httpClient.BaseAddress = xd;
             return await response.ToResult<UserResponse>();
         }
 
