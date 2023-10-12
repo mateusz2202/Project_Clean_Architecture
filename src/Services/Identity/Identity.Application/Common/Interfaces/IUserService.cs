@@ -8,11 +8,7 @@ public interface IUserService
 {
     Task<Result<List<UserResponse>>> GetAllAsync();
 
-    Task<int> GetCountAsync();
-
-    Task<IResult<UserResponse>> GetAsync(string userId);
-
-    Task<IResult> RegisterAsync(RegisterRequest request, string origin);
+    Task<IResult<UserResponse>> GetAsync(string userId);  
 
     Task<IResult> ToggleUserStatusAsync(ToggleUserStatusRequest request);
 
@@ -20,9 +16,7 @@ public interface IUserService
 
     Task<IResult> UpdateRolesAsync(UpdateUserRolesRequest request);
 
-    Task<IResult<string>> ConfirmEmailAsync(string userId, string code);
-
-    Task<IResult> ForgotPasswordAsync(ForgotPasswordRequest request, string origin);
+    Task<IResult<string>> ConfirmEmailAsync(string userId, string code);  
 
     Task<IResult> ResetPasswordAsync(ResetPasswordRequest request);
 }

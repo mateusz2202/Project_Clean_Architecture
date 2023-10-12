@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Identity.API.Controllers;
 
-[Route("[controller]")]
+[Route("api/identity/account")]
 [ApiController]
 [Authorize]
 public class AccountController : ControllerBase

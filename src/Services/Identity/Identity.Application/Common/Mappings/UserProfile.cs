@@ -9,6 +9,5 @@ public class UserProfile : Profile
     public UserProfile()
     {
         CreateMap<UserResponse, ApplicationUser>().ReverseMap();
-
     }
 }
