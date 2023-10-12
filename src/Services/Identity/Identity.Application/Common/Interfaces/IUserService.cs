@@ -19,4 +19,12 @@ public interface IUserService
     Task<IResult<string>> ConfirmEmailAsync(string userId, string code);  
 
     Task<IResult> ResetPasswordAsync(ResetPasswordRequest request);
+
+    Task<IResult<string>> GetProfilePictureAsync(string userId);
+
+    Task<IResult<string>> UpdateProfilePictureAsync(UpdateProfilePictureRequest request);
+
+    Task<IResult> ChangePasswordAsync(ChangePasswordRequest model);
+
+    Task<IResult> UpdateProfileAsync(UpdateProfileRequest request);
 }

@@ -17,19 +17,25 @@ public class UserService : IUserService
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<ApplicationRole> _roleManager;
+    private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly ICurrentUserService _currentUserService;
+    private readonly IUploadService _uploadService;
     private readonly IMapper _mapper;
 
     public UserService(
         UserManager<ApplicationUser> userManager,
         RoleManager<ApplicationRole> roleManager,
         ICurrentUserService currentUserService,
-        IMapper mapper)
+        IUploadService uploadService,
+        IMapper mapper,
+        SignInManager<ApplicationUser> signInManager)
     {
         _userManager = userManager;
         _mapper = mapper;
         _roleManager = roleManager;
         _currentUserService = currentUserService;
+        _uploadService = uploadService;
+        _signInManager = signInManager;
     }
 
     public async Task<Result<List<UserResponse>>> GetAllAsync()
@@ -86,6 +92,16 @@ public class UserService : IUserService
         var result = new UserRolesResponse { UserRoles = viewModel };
 
         return await Result<UserRolesResponse>.SuccessAsync(result);
+    }
+
+    public async Task<IResult<string>> GetProfilePictureAsync(string userId)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user == null)
+        {
+            return await Result<string>.FailAsync("User Not Found");
+        }
+        return await Result<string>.SuccessAsync(data: user.ProfilePictureDataUrl);
     }
 
     public async Task<IResult> UpdateRolesAsync(UpdateUserRolesRequest request)
@@ -149,6 +165,70 @@ public class UserService : IUserService
         else        
             return await Result.FailAsync("An Error has occured!");
         
+    }
+
+    public async Task<IResult<string>> UpdateProfilePictureAsync(UpdateProfilePictureRequest request)
+    {
+        var user = await _userManager.FindByIdAsync(_currentUserService.UserId);
+        if (user == null) 
+            return await Result<string>.FailAsync(message: "User Not Found");
+        var filePath = _uploadService.UploadAsync(request);
+        user.ProfilePictureDataUrl = filePath;
+        var identityResult = await _userManager.UpdateAsync(user);
+        var errors = identityResult.Errors.Select(e => e.Description.ToString()).ToList();
+        return identityResult.Succeeded ? await Result<string>.SuccessAsync(data: filePath) : await Result<string>.FailAsync(errors);
+    }
+
+    public async Task<IResult> ChangePasswordAsync(ChangePasswordRequest model)
+    {
+        var user = await this._userManager.FindByIdAsync(_currentUserService.UserId);
+        if (user == null)        
+            return await Result.FailAsync("User Not Found.");        
+
+        var identityResult = await this._userManager.ChangePasswordAsync(
+            user,
+            model.Password,
+            model.NewPassword);
+        var errors = identityResult.Errors.Select(e => e.Description.ToString()).ToList();
+        return identityResult.Succeeded ? await Result.SuccessAsync() : await Result.FailAsync(errors);
+    }
+
+    public async Task<IResult> UpdateProfileAsync(UpdateProfileRequest request)
+    {
+        if (!string.IsNullOrWhiteSpace(request.PhoneNumber))
+        {
+            var userWithSamePhoneNumber = await _userManager.Users.FirstOrDefaultAsync(x => x.PhoneNumber == request.PhoneNumber);
+            if (userWithSamePhoneNumber != null)
+            {
+                return await Result.FailAsync(string.Format("Phone number {0} is already used.", request.PhoneNumber));
+            }
+        }
+
+        var userWithSameEmail = await _userManager.FindByEmailAsync(request.Email);
+        if (userWithSameEmail == null || userWithSameEmail.Id == _currentUserService.UserId)
+        {
+            var user = await _userManager.FindByIdAsync(_currentUserService.UserId);
+            if (user == null)
+            {
+                return await Result.FailAsync("User Not Found.");
+            }
+            user.FirstName = request.FirstName;
+            user.LastName = request.LastName;
+            user.PhoneNumber = request.PhoneNumber;
+            var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+            if (request.PhoneNumber != phoneNumber)
+            {
+                var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, request.PhoneNumber);
+            }
+            var identityResult = await _userManager.UpdateAsync(user);
+            var errors = identityResult.Errors.Select(e => e.Description.ToString()).ToList();
+            await _signInManager.RefreshSignInAsync(user);
+            return identityResult.Succeeded ? await Result.SuccessAsync() : await Result.FailAsync(errors);
+        }
+        else
+        {
+            return await Result.FailAsync(string.Format("Email {0} is already used.", request.Email));
+        }
     }
 
 

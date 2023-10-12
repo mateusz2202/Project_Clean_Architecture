@@ -33,6 +33,7 @@ public static class DependencyInjection
 
         services.AddTransient<IAuthenticationService, AuthenticationService>();
         services.AddTransient<IUserService, UserService>();
+        services.AddTransient<IUploadService, UploadService>();
 
         services.AddAuthentication(authentication =>
         {

@@ -42,11 +42,32 @@ public class UserController : ControllerBase
 
     [HttpPost("toggle-status")]
     public async Task<IActionResult> ToggleUserStatusAsync(ToggleUserStatusRequest request)
-        => Ok(await _userService.ToggleUserStatusAsync(request));  
+        => Ok(await _userService.ToggleUserStatusAsync(request));
 
-  
+
     [HttpPost("reset-password")]
     public async Task<IActionResult> ResetPasswordAsync(ResetPasswordRequest request)
-        => Ok(await _userService.ResetPasswordAsync(request));    
+        => Ok(await _userService.ResetPasswordAsync(request));
+
+
+    [HttpGet("profile-picture/{userId}")]
+    [ResponseCache(NoStore = false, Location = ResponseCacheLocation.Client, Duration = 60)]
+    public async Task<IActionResult> GetProfilePictureAsync(string userId)
+        => Ok(await _userService.GetProfilePictureAsync(userId));
+
+
+    [HttpPost("profile-picture/{userId}")]
+    public async Task<IActionResult> UpdateProfilePictureAsync(UpdateProfilePictureRequest request)
+        => Ok(await _userService.UpdateProfilePictureAsync(request));
+
+
+    [HttpPut(nameof(ChangePassword))]
+    public async Task<ActionResult> ChangePassword(ChangePasswordRequest request)
+        => Ok(await _userService.ChangePasswordAsync(request));
+
+
+    [HttpPut(nameof(UpdateProfile))]
+    public async Task<ActionResult> UpdateProfile(UpdateProfileRequest request)
+        => Ok(await _userService.UpdateProfileAsync(request));
 
 }

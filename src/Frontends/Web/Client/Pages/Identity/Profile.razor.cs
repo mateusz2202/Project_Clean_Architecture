@@ -108,7 +108,7 @@ namespace BlazorHero.CleanArchitecture.Client.Pages.Identity
             var result = await dialog.Result;
             if (!result.Cancelled)
             {
-                var request = new UpdateProfilePictureRequest { Data = null, FileName = string.Empty, UploadType = Application.Enums.UploadType.ProfilePicture };
+                var request = new UpdateProfilePictureRequest { Data = null, UploadType = Application.Enums.UploadType.ProfilePicture };
                 var data = await _accountManager.UpdateProfilePictureAsync(request, UserId);
                 if (data.Succeeded)
                 {
