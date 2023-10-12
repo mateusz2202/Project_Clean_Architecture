@@ -21,8 +21,6 @@ namespace BlazorHero.CleanArchitecture.Infrastructure.Services.Identity
 {
     public class IdentityService : ITokenService
     {
-        private const string InvalidErrorMessage = "Invalid email or password.";
-
         private readonly UserManager<BlazorHeroUser> _userManager;
         private readonly RoleManager<BlazorHeroRole> _roleManager;
         private readonly AppConfiguration _appConfig;

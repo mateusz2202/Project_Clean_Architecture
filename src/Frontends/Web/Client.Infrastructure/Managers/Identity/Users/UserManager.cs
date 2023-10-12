@@ -1,8 +1,9 @@
 ﻿using BlazorHero.CleanArchitecture.Application.Requests.Identity;
 using BlazorHero.CleanArchitecture.Application.Responses.Identity;
 using BlazorHero.CleanArchitecture.Client.Infrastructure.Extensions;
+using BlazorHero.CleanArchitecture.Client.Infrastructure.Routes;
+using BlazorHero.CleanArchitecture.Shared.Constants.Application;
 using BlazorHero.CleanArchitecture.Shared.Wrapper;
-using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -11,82 +12,75 @@ using System.Threading.Tasks;
 namespace BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Identity.Users
 {
     public class UserManager : IUserManager
-    {
-        private readonly HttpClient _httpClient;
-
-        public UserManager(HttpClient httpClient)
-        {
-            _httpClient = httpClient;
+    {      
+        private readonly IHttpClientFactory _httpClientFactory;
+        public UserManager(IHttpClientFactory httpClientFactory)
+        {            
+            _httpClientFactory = httpClientFactory;
         }
 
         public async Task<IResult<List<UserResponse>>> GetAllAsync()
         {
-            var response = await _httpClient.GetAsync(Routes.UserEndpoints.GetAll);
+            var httpClient = _httpClientFactory.CreateClient(ApplicationConstants.ClientApi.IdentityClient);
+            var response = await httpClient.GetAsync(UserEndpoints.GetAll);
             return await response.ToResult<List<UserResponse>>();
         }
 
         public async Task<IResult<UserResponse>> GetAsync(string userId)
         {
-            var xd = new HttpClient();
-            xd.BaseAddress = new Uri("https://localhost:5025/");
-            var response = await xd.GetAsync(Routes.UserEndpoints.Get(userId));
-          
+            var httpClient = _httpClientFactory.CreateClient(ApplicationConstants.ClientApi.IdentityClient);
+            var response = await httpClient.GetAsync(UserEndpoints.Get(userId));          
             return await response.ToResult<UserResponse>();
         }
 
         public async Task<IResult> RegisterUserAsync(RegisterRequest request)
         {
-            RegisterRequestOWN registerRequestOWN = new RegisterRequestOWN()
-            {
-                FirstName = request.FirstName,
-                LastName = request.LastName,
-                Email = request.Email,
-                UserName = request.UserName,
-                Password = request.Password,
-                ConfirmPassword = request.ConfirmPassword,
-                PhoneNumber = request.PhoneNumber
-            };
-            var xd = new HttpClient();
-            xd.BaseAddress = new Uri("https://localhost:5025/");
-            var response = await xd.PostAsJsonAsync("/Account/register", registerRequestOWN);
+            var httpClient = _httpClientFactory.CreateClient(ApplicationConstants.ClientApi.IdentityClient);                   
+            var response = await httpClient.PostAsJsonAsync(AccountEndpoints.Register, request);
             return await response.ToResult();
         }
 
         public async Task<IResult> ToggleUserStatusAsync(ToggleUserStatusRequest request)
         {
-            var response = await _httpClient.PostAsJsonAsync(Routes.UserEndpoints.ToggleUserStatus, request);
+            var httpClient = _httpClientFactory.CreateClient(ApplicationConstants.ClientApi.IdentityClient);
+            var response = await httpClient.PostAsJsonAsync(UserEndpoints.ToggleUserStatus, request);
             return await response.ToResult();
         }
 
         public async Task<IResult<UserRolesResponse>> GetRolesAsync(string userId)
         {
-            var response = await _httpClient.GetAsync(Routes.UserEndpoints.GetUserRoles(userId));
+            var httpClient = _httpClientFactory.CreateClient(ApplicationConstants.ClientApi.IdentityClient);
+            var response = await httpClient.GetAsync(UserEndpoints.GetUserRoles(userId));
             return await response.ToResult<UserRolesResponse>();
         }
 
         public async Task<IResult> UpdateRolesAsync(UpdateUserRolesRequest request)
         {
-            var response = await _httpClient.PutAsJsonAsync(Routes.UserEndpoints.GetUserRoles(request.UserId), request);
+            var httpClient = _httpClientFactory.CreateClient(ApplicationConstants.ClientApi.IdentityClient);
+            var response = await httpClient.PutAsJsonAsync(UserEndpoints.GetUserRoles(request.UserId), request);
             return await response.ToResult<UserRolesResponse>();
         }
 
         public async Task<IResult> ForgotPasswordAsync(ForgotPasswordRequest model)
         {
-            var response = await _httpClient.PostAsJsonAsync(Routes.UserEndpoints.ForgotPassword, model);
+            var httpClient = _httpClientFactory.CreateClient(ApplicationConstants.ClientApi.IdentityClient);
+            var response = await httpClient.PostAsJsonAsync(UserEndpoints.ForgotPassword, model);
             return await response.ToResult();
         }
 
         public async Task<IResult> ResetPasswordAsync(ResetPasswordRequest request)
         {
-            var response = await _httpClient.PostAsJsonAsync(Routes.UserEndpoints.ResetPassword, request);
+            var httpClient = _httpClientFactory.CreateClient(ApplicationConstants.ClientApi.IdentityClient);
+            var response = await httpClient.PostAsJsonAsync(UserEndpoints.ResetPassword, request);
             return await response.ToResult();
         }
 
         public async Task<string> ExportToExcelAsync(string searchString = "")
         {
-            var response = await _httpClient.GetAsync(string.IsNullOrWhiteSpace(searchString)
-                ? Routes.UserEndpoints.Export
-                : Routes.UserEndpoints.ExportFiltered(searchString));
+            var httpClient = _httpClientFactory.CreateClient(ApplicationConstants.ClientApi.IdentityClient);
+            var response = await httpClient.GetAsync(string.IsNullOrWhiteSpace(searchString)
+                ? UserEndpoints.Export
+                : UserEndpoints.ExportFiltered(searchString));
             var data = await response.Content.ReadAsStringAsync();
             return data;
         }

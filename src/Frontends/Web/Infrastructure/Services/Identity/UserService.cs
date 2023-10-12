@@ -27,8 +27,7 @@ namespace BlazorHero.CleanArchitecture.Infrastructure.Services.Identity
     public class UserService : IUserService
     {
         private readonly UserManager<BlazorHeroUser> _userManager;
-        private readonly RoleManager<BlazorHeroRole> _roleManager;
-        private readonly IMailService _mailService;
+        private readonly RoleManager<BlazorHeroRole> _roleManager;  
         private readonly IStringLocalizer<UserService> _localizer;
         private readonly IExcelService _excelService;
         private readonly ICurrentUserService _currentUserService;
@@ -37,16 +36,14 @@ namespace BlazorHero.CleanArchitecture.Infrastructure.Services.Identity
         public UserService(
             UserManager<BlazorHeroUser> userManager,
             IMapper mapper,
-            RoleManager<BlazorHeroRole> roleManager,
-            IMailService mailService,
+            RoleManager<BlazorHeroRole> roleManager,          
             IStringLocalizer<UserService> localizer,
             IExcelService excelService,
             ICurrentUserService currentUserService)
         {
             _userManager = userManager;
             _mapper = mapper;
-            _roleManager = roleManager;
-            _mailService = mailService;
+            _roleManager = roleManager;       
             _localizer = localizer;
             _excelService = excelService;
             _currentUserService = currentUserService;
@@ -73,8 +70,8 @@ namespace BlazorHero.CleanArchitecture.Infrastructure.Services.Identity
                 LastName = request.LastName,
                 UserName = request.UserName,
                 PhoneNumber = request.PhoneNumber,
-                IsActive = request.ActivateUser,
-                EmailConfirmed = request.AutoConfirmEmail
+                IsActive = false,
+                EmailConfirmed = false
             };
 
             if (!string.IsNullOrWhiteSpace(request.PhoneNumber))
@@ -93,7 +90,7 @@ namespace BlazorHero.CleanArchitecture.Infrastructure.Services.Identity
                 if (result.Succeeded)
                 {
                     await _userManager.AddToRoleAsync(user, RoleConstants.BasicRole);
-                    if (!request.AutoConfirmEmail)
+                    if (false)
                     {
                         var verificationUri = await SendVerificationEmail(user, origin);
                         var mailRequest = new MailRequest

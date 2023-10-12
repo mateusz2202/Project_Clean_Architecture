@@ -6,5 +6,5 @@ namespace Identity.Application.Common.Interfaces;
 public interface IAuthenticationService
 {
     Task<Result<AuthenticationResponse>> AuthenticateAsync(AuthenticationRequest request);
-    Task<RegistrationResponse> RegisterAsync(RegistrationRequest request);
+    Task<IResult> RegisterAsync(RegistrationRequest request);
 }

@@ -2,6 +2,12 @@
 {
     public static class ApplicationConstants
     {
+        public static class ClientApi
+        {
+            public const string IdentityClient = "IdentityClient";
+            public const string BlazorHeroClient = "BlazorHero.API";
+        }
+
         public static class SignalR
         {
             public const string HubUrl = "/signalRHub";

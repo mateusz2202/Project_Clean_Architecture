@@ -24,7 +24,7 @@ public class AccountController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost("register")]
-    public async Task<ActionResult<RegistrationResponse>> RegisterUser(RegistrationRequest request)
+    public async Task<IActionResult> RegisterUser(RegistrationRequest request)
         => Ok(await _authenticationService.RegisterAsync(request));   
 
 }

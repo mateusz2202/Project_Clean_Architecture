@@ -11,6 +11,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 
 namespace Identity.Infrastructure.Services;
 
@@ -70,13 +71,12 @@ public class AuthenticationService : IAuthenticationService
         return await Result<AuthenticationResponse>.SuccessAsync(response);
     }
 
-    public async Task<RegistrationResponse> RegisterAsync(RegistrationRequest request)
+    public async Task<IResult> RegisterAsync(RegistrationRequest request)
     {
         var existingUser = await _userManager.FindByNameAsync(request.UserName);
 
-        if (existingUser != null)
-            throw new Exception($"Username '{request.UserName}' already exists.");
-
+        if (existingUser != null)          
+            return await Result.FailAsync(string.Format("Username {0} is already taken.", request.UserName));
 
         var user = new ApplicationUser
         {
@@ -84,27 +84,36 @@ public class AuthenticationService : IAuthenticationService
             FirstName = request.FirstName,
             LastName = request.LastName,
             UserName = request.UserName,
-            EmailConfirmed = false
+            PhoneNumber = request.PhoneNumber,
+            IsActive = true,
+            EmailConfirmed = true
         };
 
-        var existingEmail = await _userManager.FindByEmailAsync(request.Email);
-
-        if (existingEmail == null)
+        if (!string.IsNullOrWhiteSpace(request.PhoneNumber))
+        {
+            var userWithSamePhoneNumber = await _userManager.Users.FirstOrDefaultAsync(x => x.PhoneNumber == request.PhoneNumber);
+            if (userWithSamePhoneNumber != null)
+            {
+                return await Result.FailAsync(string.Format("Phone number {0} is already registered.", request.PhoneNumber));
+            }
+        }
+        var userWithSameEmail = await _userManager.FindByEmailAsync(request.Email);
+        if (userWithSameEmail == null)
         {
             var result = await _userManager.CreateAsync(user, request.Password);
-
             if (result.Succeeded)
             {
-                await _userManager.AddToRoleAsync(user, ApplicationConstans.RoleConstants.BasicRole);
-                return new RegistrationResponse() { UserId = user.Id };
+                await _userManager.AddToRoleAsync(user,ApplicationConstans.RoleConstants.BasicRole);               
+                return await Result<string>.SuccessAsync(user.Id, string.Format("User {0} Registered.", user.UserName));
             }
             else
-                throw new ValidationException(result.Errors);
-
+            {
+                return await Result.FailAsync(result.Errors.Select(a => a.Description.ToString()).ToList());
+            }
         }
         else
         {
-            throw new BadRequestException($"Email {request.Email} already exists.");
+            return await Result.FailAsync(string.Format("Email {0} is already registered.", request.Email));
         }
     }
 

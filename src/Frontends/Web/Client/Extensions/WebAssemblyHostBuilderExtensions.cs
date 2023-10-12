@@ -18,12 +18,12 @@ using BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.ExtendedAttrib
 using BlazorHero.CleanArchitecture.Domain.Entities.ExtendedAttributes;
 using BlazorHero.CleanArchitecture.Domain.Entities.Misc;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
+using BlazorHero.CleanArchitecture.Shared.Constants.Application;
 
 namespace BlazorHero.CleanArchitecture.Client.Extensions
 {
     public static class WebAssemblyHostBuilderExtensions
-    {
-        private const string ClientName = "BlazorHero.API";
+    {     
 
         public static WebAssemblyHostBuilder AddRootComponents(this WebAssemblyHostBuilder builder)
         {
@@ -62,14 +62,28 @@ namespace BlazorHero.CleanArchitecture.Client.Extensions
                 .AddTransient<AuthenticationHeaderHandler>()
                 .AddScoped(sp => sp
                     .GetRequiredService<IHttpClientFactory>()
-                    .CreateClient(ClientName).EnableIntercept(sp))
-                .AddHttpClient(ClientName, client =>
-                {
-                    client.DefaultRequestHeaders.AcceptLanguage.Clear();
-                    client.DefaultRequestHeaders.AcceptLanguage.ParseAdd(CultureInfo.DefaultThreadCurrentCulture?.TwoLetterISOLanguageName);
-                    client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
-                })
-                .AddHttpMessageHandler<AuthenticationHeaderHandler>();
+                    .CreateClient(ApplicationConstants.ClientApi.BlazorHeroClient)
+                    .EnableIntercept(sp))
+                .AddScoped(sp => sp
+                    .GetRequiredService<IHttpClientFactory>()
+                    .CreateClient(ApplicationConstants.ClientApi.IdentityClient)
+                    .EnableIntercept(sp));
+
+            builder.Services.AddHttpClient(ApplicationConstants.ClientApi.BlazorHeroClient, client =>
+            {
+                client.DefaultRequestHeaders.AcceptLanguage.Clear();
+                client.DefaultRequestHeaders.AcceptLanguage.ParseAdd(CultureInfo.DefaultThreadCurrentCulture?.TwoLetterISOLanguageName);
+                client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
+            }).AddHttpMessageHandler<AuthenticationHeaderHandler>();
+
+            builder.Services.AddHttpClient(ApplicationConstants.ClientApi.IdentityClient, client =>
+            {
+                client.DefaultRequestHeaders.AcceptLanguage.Clear();
+                client.DefaultRequestHeaders.AcceptLanguage.ParseAdd(CultureInfo.DefaultThreadCurrentCulture?.TwoLetterISOLanguageName);
+                client.BaseAddress = new Uri("https://localhost:5025/");
+            }).AddHttpMessageHandler<AuthenticationHeaderHandler>();
+
+
             builder.Services.AddHttpClientInterceptor();
             return builder;
         }
