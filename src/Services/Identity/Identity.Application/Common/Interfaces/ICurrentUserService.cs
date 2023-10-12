@@ -7,5 +7,6 @@ public interface ICurrentUserService
 {
     string? Email { get; }
     ClaimsPrincipal? User { get; }
+    public string UserId { get; }
 }
 

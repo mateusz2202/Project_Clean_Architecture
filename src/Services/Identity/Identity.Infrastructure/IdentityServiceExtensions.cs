@@ -32,8 +32,9 @@ public static class IdentityServiceExtensions
             .AddDefaultTokenProviders();
 
         services.AddTransient<IAuthenticationService, AuthenticationService>();
+        services.AddTransient<IUserService, UserService>();
 
-           services.AddAuthentication(authentication =>
+        services.AddAuthentication(authentication =>
             {
                 authentication.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 authentication.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
