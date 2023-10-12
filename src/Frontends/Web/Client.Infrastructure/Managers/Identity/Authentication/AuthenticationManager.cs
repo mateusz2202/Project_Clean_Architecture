@@ -52,34 +52,31 @@ namespace BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Identity.A
              */
             
             var xd = new HttpClient();
-            xd.BaseAddress = new Uri("http://localhost:5025/");
+            xd.BaseAddress = new Uri("https://localhost:5025/");
 
 
             var response = await xd.PostAsJsonAsync("/Account/authenticate", model);
             var responseO = await _httpClient.PostAsJsonAsync(TokenEndpoints.Get, model);
-           // var result = await responseO.ToResult<TokenResponse>();
-            var responseAsString = await response.Content.ReadAsStringAsync();
-            var result = new Result<AuthenticationResponse>()
-            {
-                Data = JsonSerializer.Deserialize<AuthenticationResponse>(responseAsString, new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true,
-                    ReferenceHandler = ReferenceHandler.Preserve
-                }),
-                Messages = new System.Collections.Generic.List<string>(),
-                Succeeded = true,
-            };
+            //var result = await responseO.ToResult<TokenResponse>();
+            var result = await response.ToResult<TokenResponse>();
+            //var responseAsString = await response.Content.ReadAsStringAsync();
+            //var result = new Result<AuthenticationResponse>()
+            //{
+            //    Data = JsonSerializer.Deserialize<AuthenticationResponse>(responseAsString, new JsonSerializerOptions
+            //    {
+            //        PropertyNameCaseInsensitive = true,
+            //        ReferenceHandler = ReferenceHandler.Preserve
+            //    }),
+            //    Messages = new System.Collections.Generic.List<string>(),
+            //    Succeeded = true,
+            //};
 
 
-            var randomNumber = new byte[32];
-            using var rng = RandomNumberGenerator.Create();
-            rng.GetBytes(randomNumber);
-            
-            var refreshToken = Convert.ToBase64String(randomNumber);
+          
             if (result.Succeeded)
             {
                 var token = result.Data.Token;
-
+                var refreshToken = result.Data.RefreshToken;
                 //var userImageURL = result.Data.UserImageURL;
                 await _localStorage.SetItemAsync(StorageConstants.Local.AuthToken, token);
                 await _localStorage.SetItemAsync(StorageConstants.Local.RefreshToken, refreshToken);

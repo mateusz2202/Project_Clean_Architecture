@@ -2,6 +2,7 @@
 using Identity.Application.Models.Authentication;
 using Identity.Infrastructure.Models;
 using Identity.Infrastructure.Services;
+using Identity.Shared.Permissions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -9,7 +10,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using System;
+using System.Reflection;
+using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 
@@ -31,27 +33,26 @@ public static class IdentityServiceExtensions
 
         services.AddTransient<IAuthenticationService, AuthenticationService>();
 
-        services.AddAuthentication(options =>
-        {
-            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        }).AddJwtBearer(o =>
+           services.AddAuthentication(authentication =>
             {
-                o.RequireHttpsMetadata = false;
-                o.SaveToken = false;
-                o.TokenValidationParameters = new TokenValidationParameters
+                authentication.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                authentication.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(bearer =>
+            {
+                bearer.RequireHttpsMetadata = false;
+                bearer.SaveToken = true;
+                bearer.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ClockSkew = TimeSpan.Zero,
-                    ValidIssuer = configuration["JwtSettings:Issuer"],
-                    ValidAudience = configuration["JwtSettings:Audience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSettings:Key"] ?? string.Empty))
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSettings:Key"] ?? string.Empty)),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,                 
+                    RoleClaimType = ClaimTypes.Role,
+                    ClockSkew = TimeSpan.Zero,                     
                 };
 
-                o.Events = new JwtBearerEvents()
+                bearer.Events = new JwtBearerEvents()
                 {
                     OnAuthenticationFailed = c =>
                     {
@@ -77,5 +78,19 @@ public static class IdentityServiceExtensions
                     }
                 };
             });
+
+            services.AddAuthorization(options =>
+            {
+                // Here I stored necessary permissions/roles in a constant
+                foreach (var prop in typeof(Permissions).GetNestedTypes().SelectMany(c => c.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)))
+                {
+                    var propertyValue = prop.GetValue(null);
+                    if (propertyValue is not null)
+                    {
+                        options.AddPolicy(propertyValue.ToString(), policy => policy.RequireClaim(ApplicationClaimTypes.Permission, propertyValue.ToString()));
+                    }
+                }
+            });
+       
     }
 }

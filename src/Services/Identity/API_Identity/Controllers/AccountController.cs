@@ -18,7 +18,7 @@ public class AccountController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost("authenticate")]
-    public async Task<ActionResult<AuthenticationResponse>> Login(AuthenticationRequest request)
+    public async Task<ActionResult> Login(AuthenticationRequest request)
         => Ok(await _authenticationService.AuthenticateAsync(request));
 
 

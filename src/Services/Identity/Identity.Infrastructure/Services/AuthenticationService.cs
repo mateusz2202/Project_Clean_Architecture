@@ -3,11 +3,13 @@ using Identity.Application.Common.Interfaces;
 using Identity.Application.Models.Authentication;
 using Identity.Infrastructure.Models;
 using Identity.Shared;
+using Identity.Shared.Wrapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Identity.Infrastructure.Services;
@@ -30,7 +32,7 @@ public class AuthenticationService : IAuthenticationService
         _roleManager = roleManager;
     }
 
-    public async Task<AuthenticationResponse> AuthenticateAsync(AuthenticationRequest request)
+    public async Task<Result<AuthenticationResponse>> AuthenticateAsync(AuthenticationRequest request)
     {
         ApplicationUser user = await _userManager.FindByEmailAsync(request.Email)
                                ?? throw new NotFoundException($"User with {request.Email} not found.");
@@ -50,17 +52,22 @@ public class AuthenticationService : IAuthenticationService
             throw new Exception($"Credentials for '{request.Email} aren't valid'.");
 
 
-        JwtSecurityToken jwtSecurityToken = await GenerateToken(user);
 
-        AuthenticationResponse response = new()
+        var token = await GenerateToken(user);
+        var refreshToken = GenerateRefreshToken();
+
+
+        var response = new AuthenticationResponse
         {
             Id = user.Id,
-            Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
             Email = user.Email ?? string.Empty,
-            UserName = user.UserName ?? string.Empty
+            UserName = user.UserName ?? string.Empty,
+            Token = token,
+            RefreshToken = refreshToken,
+            RefreshTokenExpiryTime = DateTime.Now.AddDays(7)
         };
 
-        return response;
+        return await Result<AuthenticationResponse>.SuccessAsync(response);
     }
 
     public async Task<RegistrationResponse> RegisterAsync(RegistrationRequest request)
@@ -101,7 +108,25 @@ public class AuthenticationService : IAuthenticationService
         }
     }
 
-    private async Task<JwtSecurityToken> GenerateToken(ApplicationUser user)
+    private async Task<string> GenerateToken(ApplicationUser user)
+         => GenerateEncryptedToken(GetSigningCredentials(), await GetClaimsAsync(user));
+
+    private string GenerateEncryptedToken(SigningCredentials signingCredentials, IEnumerable<Claim> claims)
+    {
+        var token = new JwtSecurityToken(
+           claims: claims,
+           expires: DateTime.UtcNow.AddMinutes(_jwtSettings.DurationInMinutes),
+           signingCredentials: signingCredentials);
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var encryptedToken = tokenHandler.WriteToken(token);
+        return encryptedToken;
+    }
+
+    private SigningCredentials GetSigningCredentials()
+        => new(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key)), SecurityAlgorithms.HmacSha256);
+
+
+    private async Task<IEnumerable<Claim>> GetClaimsAsync(ApplicationUser user)
     {
         var userClaims = await _userManager.GetClaimsAsync(user);
         var roles = await _userManager.GetRolesAsync(user);
@@ -114,10 +139,11 @@ public class AuthenticationService : IAuthenticationService
             var allPermissionsForThisRoles = await _roleManager.GetClaimsAsync(thisRole);
             permissionClaims.AddRange(allPermissionsForThisRoles);
         }
+
         var claims = new List<Claim>
             {
                 new(ClaimTypes.NameIdentifier, user.Id),
-                new(ClaimTypes.Email, user.Email??string.Empty),
+                new(ClaimTypes.Email, user.Email),
                 new(ClaimTypes.Name, user.FirstName),
                 new(ClaimTypes.Surname, user.LastName),
                 new(ClaimTypes.MobilePhone, user.PhoneNumber ?? string.Empty)
@@ -126,15 +152,16 @@ public class AuthenticationService : IAuthenticationService
         .Union(roleClaims)
         .Union(permissionClaims);
 
-        var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
-        var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
-
-        var jwtSecurityToken = new JwtSecurityToken(
-            issuer: _jwtSettings.Issuer,
-            audience: _jwtSettings.Audience,
-            claims: claims,
-            expires: DateTime.UtcNow.AddMinutes(_jwtSettings.DurationInMinutes),
-            signingCredentials: signingCredentials);
-        return jwtSecurityToken;
+        return claims;
     }
+
+    private string GenerateRefreshToken()
+    {
+        var randomNumber = new byte[32];
+        using var rng = RandomNumberGenerator.Create();
+        rng.GetBytes(randomNumber);
+        return Convert.ToBase64String(randomNumber);
+    }
+
+
 }
