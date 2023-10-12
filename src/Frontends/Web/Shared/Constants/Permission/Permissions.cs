@@ -123,13 +123,7 @@ namespace BlazorHero.CleanArchitecture.Shared.Constants.Permission
         {
             public const string View = "Permissions.Dashboards.View";
         }
-
-        [DisplayName("Hangfire")]
-        [Description("Hangfire Permissions")]
-        public static class Hangfire
-        {
-            public const string View = "Permissions.Hangfire.View";
-        }
+        
 
         [DisplayName("Audit Trails")]
         [Description("Audit Trails Permissions")]

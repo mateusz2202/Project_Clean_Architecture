@@ -2,21 +2,19 @@
 
 <MudAppBar Elevation="25">
     <MudIcon Icon="@CustomIcons.BlazorHero" Size="Size.Large" ViewBox="0 0 500 500" />
-    <MudText Typo="Typo.h6" Class="ml-4">Blazor Hero</MudText>
+    <MudText Typo="Typo.h6" Class="ml-4">Sprint</MudText>
     <MudToolBar DisableGutters="true">
         <MudIconButton Icon="@Icons.Material.Outlined.Menu" Color="Color.Inherit" OnClick="@((e) => DrawerToggle())" Class="ml-3" />
     </MudToolBar>
     <MudSpacer />
-    <MudHidden Breakpoint="Breakpoint.MdAndUp" Invert="true">
-        <MudButton DisableElevation Variant="Variant.Filled" Color="Color.Secondary" Link="https://www.buymeacoffee.com/codewithmukesh" Target="_blank" StartIcon="@Icons.Material.Filled.LocalDrink">@_localizer["Buy Me A Coffee"]</MudButton>
-        <MudDivider Vertical="true" FlexItem="true" DividerType="DividerType.Middle" Class="mx-4 my-5" />
-        <MudMenu EndIcon="@Icons.Filled.KeyboardArrowDown" Label="@_localizer["Support"]" Color="Color.Inherit" Dense="true" Direction="Direction.Right" OffsetY="true">
-            <MudText Typo="Typo.body2" Class="px-4 py-2"><b>@_localizer["Community"]</b></MudText>
-            <MudMenuItem Link="https://www.facebook.com/codewithmukesh" Target="_blank">@_localizer["Facebook Page"]</MudMenuItem>
-            <MudMenuItem Link="https://www.linkedin.com/in/iammukeshm/" Target="_blank">LinkedIn</MudMenuItem>
-            <MudText Typo="Typo.body2" Class="px-4 py-2"><b>@_localizer["Resources"]</b></MudText>
-            <MudMenuItem Link="https://mudblazor.com/" Target="_blank">@_localizer["MudBlazor Documentation"]</MudMenuItem>
-            <MudMenuItem Link="https://codewithmukesh.com/blog/blazor-hero-quick-start-guide/" Target="_blank">@_localizer["Quick-Start Guide"]</MudMenuItem>
+    <MudHidden Breakpoint="Breakpoint.MdAndUp" Invert="true">      
+        <MudDivider Vertical="true" FlexItem="true" DividerType="DividerType.Middle" Class="mx-4 my-5" />    
+        <MudMenu EndIcon="@Icons.Filled.KeyboardArrowDown" Label="About " Color="Color.Inherit" Dense="true" Direction="Direction.Right" OffsetY="true">
+            <MudText Typo="Typo.body2" Class="px-4 py-2"><b>@_localizer["Community"]</b></MudText>           
+            <MudMenuItem Link="https://www.linkedin.com/company/sprintpmc/about/" Target="_blank">LinkedIn</MudMenuItem>
+            <MudText Typo="Typo.body2" Class="px-4 py-2"><b>Websites</b></MudText>
+            <MudMenuItem Link="https://sprintpmc.com/" Target="_blank">SprintPMC</MudMenuItem>
+            <MudMenuItem Link="https://sprintcoders.com/" Target="_blank">SpintCoders</MudMenuItem>
         </MudMenu>
         <LanguageSelector />
         <MudTooltip Text="@_localizer["Toggle right-to-left/left-to-right"]">
@@ -24,26 +22,8 @@
         </MudTooltip>
         <MudTooltip Text="@_localizer["Toggle Dark Mode"]">
             <MudIconButton Icon="@Icons.Material.Filled.Brightness4" Color="Color.Inherit" OnClick="@((e) => ToggleDarkMode())" />
-        </MudTooltip>
-        <MudTooltip Text="@_localizer["Fork Repository"]">
-            <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" Link="https://github.com/blazorhero/CleanArchitecture" Target="_blank" />
-        </MudTooltip>
-    </MudHidden>
-    <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
-        <LanguageSelector />
-        <MudMenu Icon="@Icons.Filled.Settings" Color="Color.Inherit" Dense="true" Direction="Direction.Right" OffsetY="true">
-            <div class="px-2">
-                    <MudIconButton Icon="@Icons.Material.Filled.Brightness4" Color="Color.Inherit" OnClick="@((e) => ToggleDarkMode())" />
-                    <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" Link="https://github.com/blazorhero/CleanArchitecture" Target="_blank" />
-            </div>
-            <MudText Typo="Typo.body2" Class="px-4 py-2"><b>@_localizer["Community"]</b></MudText>
-            <MudMenuItem Link="https://www.facebook.com/codewithmukesh" Target="_blank">@_localizer["Facebook Page"]</MudMenuItem>
-            <MudMenuItem Link="https://www.linkedin.com/in/iammukeshm/" Target="_blank">LinkedIn</MudMenuItem>
-            <MudText Typo="Typo.body2" Class="px-4 py-2"><b>@_localizer["Resources"]</b></MudText>
-            <MudMenuItem Link="https://mudblazor.com/getting-started/installation" Target="_blank">@_localizer["MudBlazor Documentation"]</MudMenuItem>
-            <MudMenuItem Link="https://codewithmukesh.com/blog/blazor-hero-quick-start-guide/" Target="_blank">@_localizer["Quick-Start Guide"]</MudMenuItem>
-        </MudMenu>
-    </MudHidden>
+        </MudTooltip>       
+    </MudHidden>   
     <MudMenu Direction="_rightToLeft ? Direction.Right : Direction.Left" OffsetX="true" Dense="true" Class="mt-1 ml-4">
         <ActivatorContent>
             @if (string.IsNullOrEmpty(ImageDataUrl))

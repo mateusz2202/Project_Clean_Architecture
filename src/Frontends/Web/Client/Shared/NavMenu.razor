@@ -4,12 +4,7 @@
 <UserCard />
 <MudNavMenu>
     <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Home">@_localizer["Home"]</MudNavLink>
-    @if (_canViewHangfire)
-    {
-        <MudNavLink Href="/jobs" Target="_blank" Icon="@Icons.Material.Outlined.Work">
-            @_localizer["Hangfire"]
-        </MudNavLink>
-    }
+  
     <MudNavLink Href="https://codewithmukesh.com/blog/blazor-hero-quick-start-guide/" Target="_blank" Icon="@Icons.Material.Outlined.ReadMore">
         @_localizer["Quick Start Guide"]
     </MudNavLink>
@@ -90,8 +85,7 @@
 
 @code {
     private ClaimsPrincipal _authenticationStateProviderUser;
-
-    private bool _canViewHangfire;
+    
     private bool _canViewDashboards;
     private bool _canViewDocuments;
     private bool _canViewDocumentTypes;
@@ -104,8 +98,7 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        _authenticationStateProviderUser = await _stateProvider.GetAuthenticationStateProviderUserAsync();
-        _canViewHangfire = (await _authorizationService.AuthorizeAsync(_authenticationStateProviderUser, Permissions.Hangfire.View)).Succeeded;
+        _authenticationStateProviderUser = await _stateProvider.GetAuthenticationStateProviderUserAsync();     
         _canViewDashboards = (await _authorizationService.AuthorizeAsync(_authenticationStateProviderUser, Permissions.Dashboards.View)).Succeeded;
         _canViewDocuments = (await _authorizationService.AuthorizeAsync(_authenticationStateProviderUser, Permissions.Documents.View)).Succeeded;
         _canViewDocumentTypes = (await _authorizationService.AuthorizeAsync(_authenticationStateProviderUser, Permissions.DocumentTypes.View)).Succeeded;
