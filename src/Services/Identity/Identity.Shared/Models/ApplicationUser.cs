@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Identity.Shared.Models;
 
-public class ApplicationUser : IdentityUser, IAuditableEntity
+public class ApplicationUser : IdentityUser<string>, IAuditableEntity<string>
 {
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;

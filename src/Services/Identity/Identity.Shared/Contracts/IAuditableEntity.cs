@@ -1,6 +1,10 @@
 ﻿namespace Identity.Shared.Contracts;
 
-public interface IAuditableEntity
+public interface IAuditableEntity<TId> : IAuditableEntity, IEntity<TId>
+{
+}
+
+public interface IAuditableEntity: IEntity
 {
     public string CreatedBy { get; set; }
     public DateTime CreatedOn { get; set; }

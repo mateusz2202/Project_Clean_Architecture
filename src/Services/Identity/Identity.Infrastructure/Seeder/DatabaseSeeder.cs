@@ -51,7 +51,9 @@ public class DatabaseSeeder : IDatabaseSeeder
                 Email = "mukesh@blazorhero.com",
                 UserName = "mukesh",
                 EmailConfirmed = true,
-                PhoneNumberConfirmed = true
+                PhoneNumberConfirmed = true,
+                CreatedOn = DateTime.Now,
+                IsActive = true
             };
             var superUserInDb = await _userManager.FindByEmailAsync(superUser.Email);
             if (superUserInDb == null)
