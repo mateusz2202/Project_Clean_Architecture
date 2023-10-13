@@ -24,13 +24,13 @@ public class RoleService : IRoleService
         RoleManager<ApplicationRole> roleManager,
         IMapper mapper,
         UserManager<ApplicationUser> userManager,
-        IRoleClaimService roleClaimService,       
+        IRoleClaimService roleClaimService,
         ICurrentUserService currentUserService)
     {
         _roleManager = roleManager;
         _mapper = mapper;
         _userManager = userManager;
-        _roleClaimService = roleClaimService;      
+        _roleClaimService = roleClaimService;
         _currentUserService = currentUserService;
     }
 
@@ -140,7 +140,7 @@ public class RoleService : IRoleService
         {
             var existingRole = await _roleManager.FindByNameAsync(request.Name);
             if (existingRole != null) return await Result<string>.FailAsync("Similar Role already exists.");
-            var response = await _roleManager.CreateAsync(new ApplicationRole() { Name=request.Name,Description=request.Description});
+            var response = await _roleManager.CreateAsync(new ApplicationRole() { Name = request.Name, Description = request.Description });
             if (response.Succeeded)
             {
                 return await Result<string>.SuccessAsync(string.Format("Role {0} Created.", request.Name));
@@ -153,10 +153,14 @@ public class RoleService : IRoleService
         else
         {
             var existingRole = await _roleManager.FindByIdAsync(request.Id);
-            if (existingRole.Name == ApplicationConstans.RoleConstants.AdministratorRole || existingRole.Name == ApplicationConstans.RoleConstants.BasicRole)
+            if (existingRole == null)
+                return await Result<string>.FailAsync(string.Format("Not found Role."));
+
+            if (existingRole?.Name == ApplicationConstans.RoleConstants.AdministratorRole || existingRole?.Name == ApplicationConstans.RoleConstants.BasicRole)
             {
                 return await Result<string>.FailAsync(string.Format("Not allowed to modify {0} Role.", existingRole.Name));
             }
+            
             existingRole.Name = request.Name;
             existingRole.NormalizedName = request.Name.ToUpper();
             existingRole.Description = request.Description;

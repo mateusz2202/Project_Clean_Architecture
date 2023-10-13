@@ -8,9 +8,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Identity.Infrastructure;
 
-public class IndentityDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string, IdentityUserClaim<string>, IdentityUserRole<string>, IdentityUserLogin<string>,ApplicationRoleClaim, IdentityUserToken<string>>
+public class IndentityDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string, IdentityUserClaim<string>, IdentityUserRole<string>, IdentityUserLogin<string>, ApplicationRoleClaim, IdentityUserToken<string>>
 {
-   
+
     private readonly ICurrentUserService _currentUserService;
 
     public IndentityDbContext(DbContextOptions<IndentityDbContext> options, ICurrentUserService currentUserService)
@@ -25,7 +25,65 @@ public class IndentityDbContext : IdentityDbContext<ApplicationUser, Application
 
     public DbSet<Audit> AuditTrails { get; set; }
 
-    public virtual async Task<int> SaveChangesAsync(string userId = null, CancellationToken cancellationToken = new())
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        foreach (var property in builder.Model.GetEntityTypes()
+            .SelectMany(t => t.GetProperties())
+            .Where(p => p.ClrType == typeof(decimal) || p.ClrType == typeof(decimal?)))
+        {
+            property.SetColumnType("decimal(18,2)");
+        }
+
+        foreach (var property in builder.Model.GetEntityTypes()
+            .SelectMany(t => t.GetProperties())
+            .Where(p => p.Name is "ModifiedBy" or "CreatedBy"))
+        {
+            property.SetColumnType("nvarchar(128)");
+        }
+        base.OnModelCreating(builder);
+
+        builder.Entity<ApplicationUser>(entity =>
+        {
+            entity.ToTable(name: "Users");
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+        });
+
+        builder.Entity<ApplicationRole>(entity =>
+        {
+            entity.ToTable(name: "Roles");
+        });
+        builder.Entity<IdentityUserRole<string>>(entity =>
+        {
+            entity.ToTable("UserRoles");
+        });
+
+        builder.Entity<IdentityUserClaim<string>>(entity =>
+        {
+            entity.ToTable("UserClaims");
+        });
+
+        builder.Entity<IdentityUserLogin<string>>(entity =>
+        {
+            entity.ToTable("UserLogins");
+        });
+
+        builder.Entity<ApplicationRoleClaim>(entity =>
+        {
+            entity.ToTable(name: "RoleClaims")
+                  .HasOne(d => d.Role)
+                  .WithMany(p => p.RoleClaims)
+                  .HasForeignKey(d => d.RoleId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        builder.Entity<IdentityUserToken<string>>(entity =>
+        {
+            entity.ToTable("UserTokens");
+        });
+
+    }   
+
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
     {
         foreach (var entry in ChangeTracker.Entries<IAuditableEntity>().ToList())
         {
@@ -33,21 +91,28 @@ public class IndentityDbContext : IdentityDbContext<ApplicationUser, Application
             {
                 case EntityState.Added:
                     entry.Entity.CreatedOn = DateTime.UtcNow;
-                    entry.Entity.CreatedBy = _currentUserService?.UserId ?? string.Empty;
-                    entry.Entity.ModifiedOn = DateTime.UtcNow;
-                    entry.Entity.ModifiedBy = _currentUserService?.UserId ?? string.Empty;
+                    entry.Entity.CreatedBy = _currentUserService.UserId;
                     break;
+
                 case EntityState.Modified:
                     entry.Entity.ModifiedOn = DateTime.UtcNow;
-                    entry.Entity.ModifiedBy = _currentUserService?.UserId ?? string.Empty;
+                    entry.Entity.ModifiedBy = _currentUserService.UserId;
                     break;
             }
         }
-        var auditEntries = OnBeforeSaveChanges(userId);     
-        var result = await base.SaveChangesAsync(cancellationToken);
-        await OnAfterSaveChanges(auditEntries, cancellationToken);
-        return result;
-    }
+        if (string.IsNullOrEmpty(_currentUserService.UserId))
+        {
+            return await base.SaveChangesAsync(cancellationToken);
+        }
+        else
+        {
+            var auditEntries = OnBeforeSaveChanges(_currentUserService.UserId);
+            var result = await base.SaveChangesAsync(cancellationToken);
+            await OnAfterSaveChanges(auditEntries, cancellationToken);
+            return result;
+        }
+    }   
+   
     private List<AuditEntry> OnBeforeSaveChanges(string userId)
     {
         ChangeTracker.DetectChanges();

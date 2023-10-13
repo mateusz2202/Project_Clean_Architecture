@@ -9,7 +9,7 @@ namespace BlazorHero.CleanArchitecture.Client.Infrastructure.Mappings
         public RoleProfile()
         {
             CreateMap<PermissionResponse, PermissionRequest>().ReverseMap();
-            CreateMap<RoleClaimResponse, RoleClaimRequest>().ReverseMap();
+            CreateMap<RoleClaimResponse, RoleClaimRequest>().ReverseMap();       
         }
     }
 }

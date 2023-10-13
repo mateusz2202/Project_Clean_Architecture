@@ -23,9 +23,8 @@ public static class DependencyInjection
     {
         services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
 
-        services.AddDbContext<IndentityDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DbConnectionString"),
-            b => b.MigrationsAssembly(typeof(IndentityDbContext).Assembly.FullName)))
-            .AddTransient<IDatabaseSeeder, DatabaseSeeder>();
+        services.AddDbContext<IndentityDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DbConnectionString")))
+                .AddTransient<IDatabaseSeeder, DatabaseSeeder>();
 
         services.AddIdentity<ApplicationUser, ApplicationRole>()
             .AddEntityFrameworkStores<IndentityDbContext>()

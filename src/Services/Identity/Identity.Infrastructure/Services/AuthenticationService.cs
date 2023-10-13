@@ -12,6 +12,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using Identity.Application.Responses;
 
 namespace Identity.Infrastructure.Services;
 
@@ -33,49 +34,40 @@ public class AuthenticationService : IAuthenticationService
         _roleManager = roleManager;
     }
 
-    public async Task<Result<AuthenticationResponse>> AuthenticateAsync(AuthenticationRequest request)
+    public async Task<Result<TokenResponse>> AuthenticateAsync(AuthenticationRequest request)
     {
-        ApplicationUser user = await _userManager.FindByEmailAsync(request.Email)
-                               ?? throw new NotFoundException($"User with {request.Email} not found.");
+        var user = await _userManager.FindByEmailAsync(request.Email);
+
+        if (user == null)
+            return await Result<TokenResponse>.FailAsync($"User with {request.Email} not found.");
 
         if (!user.EmailConfirmed)
-            throw new BadRequestException("E-Mail not confirmed");
+            return await Result<TokenResponse>.FailAsync("E-Mail not confirmed");
 
         var passwordValid = await _userManager.CheckPasswordAsync(user, request.Password);
 
         if (!passwordValid)
-            throw new BadRequestException("Invalid Credentials");
+            return await Result<TokenResponse>.FailAsync("Invalid Credentials");
 
 
         var result = await _signInManager.PasswordSignInAsync(user.UserName ?? string.Empty, request.Password, false, lockoutOnFailure: false);
 
         if (!result.Succeeded)
-            throw new Exception($"Credentials for '{request.Email} aren't valid'.");
-
-
+            return await Result<TokenResponse>.FailAsync($"Credentials for '{request.Email} aren't valid'.");
 
         var token = await GenerateToken(user);
         var refreshToken = GenerateRefreshToken();
+        
+        var response = new TokenResponse { Token = token, RefreshToken = refreshToken, UserImageURL = user.ProfilePictureDataUrl ?? string.Empty };
 
-
-        var response = new AuthenticationResponse
-        {
-            Id = user.Id,
-            Email = user.Email ?? string.Empty,
-            UserName = user.UserName ?? string.Empty,
-            Token = token,
-            RefreshToken = refreshToken,
-            RefreshTokenExpiryTime = DateTime.Now.AddDays(7)
-        };
-
-        return await Result<AuthenticationResponse>.SuccessAsync(response);
+        return await Result<TokenResponse>.SuccessAsync(response);
     }
 
     public async Task<IResult> RegisterAsync(RegistrationRequest request)
     {
         var existingUser = await _userManager.FindByNameAsync(request.UserName);
 
-        if (existingUser != null)          
+        if (existingUser != null)
             return await Result.FailAsync(string.Format("Username {0} is already taken.", request.UserName));
 
         var user = new ApplicationUser
@@ -103,7 +95,7 @@ public class AuthenticationService : IAuthenticationService
             var result = await _userManager.CreateAsync(user, request.Password);
             if (result.Succeeded)
             {
-                await _userManager.AddToRoleAsync(user,ApplicationConstans.RoleConstants.BasicRole);               
+                await _userManager.AddToRoleAsync(user, ApplicationConstans.RoleConstants.BasicRole);
                 return await Result<string>.SuccessAsync(user.Id, string.Format("User {0} Registered.", user.UserName));
             }
             else

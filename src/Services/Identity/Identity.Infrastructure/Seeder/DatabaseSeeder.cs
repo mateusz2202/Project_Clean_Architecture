@@ -35,8 +35,9 @@ public class DatabaseSeeder : IDatabaseSeeder
         {
             var adminRole = new ApplicationRole
             {
-                Name = ApplicationConstans.RoleConstants.AdministratorRole
-            };
+                Name = ApplicationConstans.RoleConstants.AdministratorRole,
+                Description= "Administrator role with full permissions",
+            };         
             var adminRoleInDb = await _roleManager.FindByNameAsync(ApplicationConstans.RoleConstants.AdministratorRole);
             if (adminRoleInDb == null)
             {
@@ -45,11 +46,11 @@ public class DatabaseSeeder : IDatabaseSeeder
             }
 
             var superUser = new ApplicationUser
-            {
-                FirstName = "Mukesh",
-                LastName = "Murugan",
-                Email = "mukesh@blazorhero.com",
-                UserName = "mukesh",
+            {               
+                FirstName = "Mateusz",
+                LastName = "Jóźwik",
+                Email = "jmate220@gmail.com",
+                UserName = "Mateusz",
                 EmailConfirmed = true,
                 PhoneNumberConfirmed = true,
                 CreatedOn = DateTime.Now,
@@ -74,28 +75,32 @@ public class DatabaseSeeder : IDatabaseSeeder
         {
             var basicRole = new ApplicationRole()
             {
-                Name = ApplicationConstans.RoleConstants.BasicRole
+                Name = ApplicationConstans.RoleConstants.BasicRole,
+                Description= "Basic role with default permissions"
             };
             var basicRoleInDb = await _roleManager.FindByNameAsync(ApplicationConstans.RoleConstants.BasicRole);
             if (basicRoleInDb == null)
             {
                 await _roleManager.CreateAsync(basicRole);
+                basicRoleInDb = await _roleManager.FindByNameAsync(ApplicationConstans.RoleConstants.BasicRole);
             }
 
             var basicUser = new ApplicationUser
-            {
-                FirstName = "John",
-                LastName = "Doe",
-                Email = "john@blazorhero.com",
-                UserName = "johndoe",
+            {                
+                FirstName = "Rafał",
+                LastName = "Breński",
+                Email = "rafal.brenski@gmail.com",
+                UserName = "Konto_Test",
                 EmailConfirmed = true,
-                PhoneNumberConfirmed = true
+                PhoneNumberConfirmed = true,
+                CreatedOn = DateTime.Now,
+                IsActive = true
             };
             var basicUserInDb = await _userManager.FindByEmailAsync(basicUser.Email);
             if (basicUserInDb == null)
             {
                 await _userManager.CreateAsync(basicUser, ApplicationConstans.UserConstants.DefaultPassword);
-                await _userManager.AddToRoleAsync(basicUser, ApplicationConstans.RoleConstants.BasicRole);
+                await _userManager.AddToRoleAsync(basicUser, ApplicationConstans.RoleConstants.BasicRole);                
             }
         }).GetAwaiter().GetResult();
     }
