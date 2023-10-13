@@ -1,5 +1,4 @@
 ﻿using BlazorHero.CleanArchitecture.Application.Interfaces.Repositories;
-using BlazorHero.CleanArchitecture.Application.Interfaces.Services.Identity;
 using BlazorHero.CleanArchitecture.Domain.Entities.Catalog;
 using BlazorHero.CleanArchitecture.Shared.Wrapper;
 using MediatR;
@@ -21,16 +20,12 @@ namespace BlazorHero.CleanArchitecture.Application.Features.Dashboards.Queries.G
 
     internal class GetDashboardDataQueryHandler : IRequestHandler<GetDashboardDataQuery, Result<DashboardDataResponse>>
     {
-        private readonly IUnitOfWork<int> _unitOfWork;
-        private readonly IUserService _userService;
-        private readonly IRoleService _roleService;
+        private readonly IUnitOfWork<int> _unitOfWork;   
         private readonly IStringLocalizer<GetDashboardDataQueryHandler> _localizer;
 
-        public GetDashboardDataQueryHandler(IUnitOfWork<int> unitOfWork, IUserService userService, IRoleService roleService, IStringLocalizer<GetDashboardDataQueryHandler> localizer)
+        public GetDashboardDataQueryHandler(IUnitOfWork<int> unitOfWork, IStringLocalizer<GetDashboardDataQueryHandler> localizer)
         {
-            _unitOfWork = unitOfWork;
-            _userService = userService;
-            _roleService = roleService;
+            _unitOfWork = unitOfWork;         
             _localizer = localizer;
         }
 
@@ -42,9 +37,7 @@ namespace BlazorHero.CleanArchitecture.Application.Features.Dashboards.Queries.G
                 BrandCount = await _unitOfWork.Repository<Brand>().Entities.CountAsync(cancellationToken),
                 DocumentCount = await _unitOfWork.Repository<Document>().Entities.CountAsync(cancellationToken),
                 DocumentTypeCount = await _unitOfWork.Repository<DocumentType>().Entities.CountAsync(cancellationToken),
-                DocumentExtendedAttributeCount = await _unitOfWork.Repository<DocumentExtendedAttribute>().Entities.CountAsync(cancellationToken),
-                UserCount = await _userService.GetCountAsync(),
-                RoleCount = await _roleService.GetCountAsync()
+                DocumentExtendedAttributeCount = await _unitOfWork.Repository<DocumentExtendedAttribute>().Entities.CountAsync(cancellationToken),            
             };
 
             var selectedYear = DateTime.Now.Year;

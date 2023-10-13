@@ -3,7 +3,6 @@ using BlazorHero.CleanArchitecture.Application.Interfaces.Serialization.Options;
 using BlazorHero.CleanArchitecture.Application.Interfaces.Serialization.Serializers;
 using BlazorHero.CleanArchitecture.Application.Interfaces.Serialization.Settings;
 using BlazorHero.CleanArchitecture.Application.Interfaces.Services;
-using BlazorHero.CleanArchitecture.Application.Interfaces.Services.Account;
 using BlazorHero.CleanArchitecture.Application.Interfaces.Services.Identity;
 using BlazorHero.CleanArchitecture.Application.Serialization.JsonConverters;
 using BlazorHero.CleanArchitecture.Application.Serialization.Options;
@@ -252,10 +251,6 @@ namespace BlazorHero.CleanArchitecture.Server.Extensions
 
         internal static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
-            services.AddTransient<IRoleClaimService, RoleClaimService>();
-            services.AddTransient<ITokenService, IdentityService>();
-            services.AddTransient<IRoleService, RoleService>();
-            services.AddTransient<IAccountService, AccountService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IChatService, ChatService>();
             services.AddTransient<IUploadService, UploadService>();
