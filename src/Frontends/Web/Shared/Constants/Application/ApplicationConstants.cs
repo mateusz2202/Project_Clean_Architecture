@@ -5,6 +5,7 @@
         public static class ClientApi
         {
             public const string IdentityClient = "IdentityClient";
+            public const string ApiGateway = "ApiGateway";
             public const string BlazorHeroClient = "BlazorHero.API";
         }
 

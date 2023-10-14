@@ -67,6 +67,10 @@ namespace BlazorHero.CleanArchitecture.Client.Extensions
                 .AddScoped(sp => sp
                     .GetRequiredService<IHttpClientFactory>()
                     .CreateClient(ApplicationConstants.ClientApi.IdentityClient)
+                    .EnableIntercept(sp))
+                .AddScoped(sp => sp
+                    .GetRequiredService<IHttpClientFactory>()
+                    .CreateClient(ApplicationConstants.ClientApi.ApiGateway)
                     .EnableIntercept(sp));
 
             builder.Services.AddHttpClient(ApplicationConstants.ClientApi.BlazorHeroClient, client =>
@@ -83,6 +87,12 @@ namespace BlazorHero.CleanArchitecture.Client.Extensions
                 client.BaseAddress = new Uri("https://localhost:5025/");
             }).AddHttpMessageHandler<AuthenticationHeaderHandler>();
 
+            builder.Services.AddHttpClient(ApplicationConstants.ClientApi.ApiGateway, client =>
+            {
+                client.DefaultRequestHeaders.AcceptLanguage.Clear();
+                client.DefaultRequestHeaders.AcceptLanguage.ParseAdd(CultureInfo.DefaultThreadCurrentCulture?.TwoLetterISOLanguageName);
+                client.BaseAddress = new Uri("https://localhost:7205/");
+            }).AddHttpMessageHandler<AuthenticationHeaderHandler>();
 
             builder.Services.AddHttpClientInterceptor();
             return builder;

@@ -4,15 +4,15 @@
     {
         public static string GetAllPaged(int pageNumber, int pageSize, string searchString)
         {
-            return $"api/documents?pageNumber={pageNumber}&pageSize={pageSize}&searchString={searchString}";
+            return $"document/api/documents?pageNumber={pageNumber}&pageSize={pageSize}&searchString={searchString}";
         }
 
         public static string GetById(int documentId)
         {
-            return $"api/documents/{documentId}";
+            return $"document/api/documents/{documentId}";
         }
 
-        public static string Save = "api/documents";
-        public static string Delete = "api/documents";
+        public static string Save = "document/api/documents";
+        public static string Delete = "document/api/documents";
     }
 }

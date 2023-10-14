@@ -7,7 +7,7 @@
         {
           "Name": "API_GW",
           "Version": "1.0",
-          "Url": "http://localhost:5205/swagger/v1/swagger.json"
+          "Url": "https://localhost:7205/swagger/v1/swagger.json"
         }
       ]
     },
@@ -18,7 +18,7 @@
         {
           "Name": "Document.Api",
           "Version": "1.0",
-          "Url": "http://localhost:5205/document/swagger/v1/swagger.json"
+          "Url": "https://localhost:7205/document/swagger/v1/swagger.json"
         }
       ]
     },
@@ -29,7 +29,7 @@
         {
           "Name": "Operation.Api",
           "Version": "1.0",
-          "Url": "http://localhost:5205/operation/swagger/v1/swagger.json"
+          "Url": "https://localhost:7205/operation/swagger/v1/swagger.json"
         }
       ]
     }

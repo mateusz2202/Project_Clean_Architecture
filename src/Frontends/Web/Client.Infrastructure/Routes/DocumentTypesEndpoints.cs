@@ -4,14 +4,14 @@
     {
         public static string ExportFiltered(string searchString)
         {
-            return $"{Export}?searchString={searchString}";
+            return $"document/{Export}?searchString={searchString}";
         }
 
-        public static string Export = "api/documentTypes/export";
+        public static string Export = "document/api/documentTypes/export";
 
-        public static string GetAll = "api/documentTypes";
-        public static string Delete = "api/documentTypes";
-        public static string Save = "api/documentTypes";
-        public static string GetCount = "api/documentTypes/count";
+        public static string GetAll = "document/api/documentTypes";
+        public static string Delete = "document/api/documentTypes";
+        public static string Save = "document/api/documentTypes";
+        public static string GetCount = "document/api/documentTypes/count";
     }
 }

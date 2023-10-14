@@ -3,6 +3,8 @@ using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 using Ocelot.Provider.Polly;
 using API_Gateway.Config;
+using System.Configuration;
+using API_Gateway.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +23,15 @@ builder.Configuration.SetBasePath(Directory.GetCurrentDirectory())
     .AddOcelot(routes, builder.Environment)
     .AddEnvironmentVariables();
 
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy",
+    builder => builder
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader());  
+});
 
 // Add services to the container.
 
@@ -44,6 +55,9 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+app.UseCors("CorsPolicy");
+app.UsePreflightRequestHandler();
+
 app.UseSwaggerForOcelotUI(options =>
 {
     options.PathToSwaggerGenerator = "/swagger/docs";
@@ -54,3 +68,4 @@ app.UseSwaggerForOcelotUI(options =>
 app.MapControllers();
 
 app.Run();
+
