@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <RootNamespace>BlazorHero.CleanArchitecture.Infrastructure.Shared</RootNamespace>
     <AssemblyName>BlazorHero.CleanArchitecture.Infrastructure.Shared</AssemblyName>
     <LangVersion>latest</LangVersion>
@@ -11,7 +11,7 @@
     <ProjectReference Include="..\Application\Application.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="MailKit" Version="3.1.0" />
-    <PackageReference Include="MimeKit" Version="3.1.0" />
+    <PackageReference Include="MailKit" Version="4.2.0" />
+    <PackageReference Include="MimeKit" Version="4.2.0" />
   </ItemGroup>
 </Project>
