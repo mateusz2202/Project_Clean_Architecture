@@ -81,15 +81,11 @@ namespace BlazorHero.CleanArchitecture.Server.Extensions
 
                 services.AddCors(options =>
                 {
-                    options.AddDefaultPolicy(
-                        builder =>
-                        {
-                            builder
-                                .AllowCredentials()
-                                .AllowAnyHeader()
-                                .AllowAnyMethod()
-                                .WithOrigins(config.ApplicationUrl.TrimEnd('/'));
-                        });
+                    options.AddPolicy("CorsPolicy",
+                    builder => builder
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader());
                 });
             }
             

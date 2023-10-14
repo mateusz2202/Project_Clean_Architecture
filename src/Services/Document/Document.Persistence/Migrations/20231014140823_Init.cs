@@ -17,11 +17,11 @@ namespace Document.Persistence.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(128)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(128)", nullable: true),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedBy = table.Column<string>(type: "nvarchar(128)", nullable: false),
+                    ModifiedBy = table.Column<string>(type: "nvarchar(128)", nullable: true),
                     ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
@@ -35,14 +35,14 @@ namespace Document.Persistence.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsPublic = table.Column<bool>(type: "bit", nullable: false),
-                    URL = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    URL = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DocumentTypeId = table.Column<int>(type: "int", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(128)", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(128)", nullable: true),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedBy = table.Column<string>(type: "nvarchar(128)", nullable: false),
+                    ModifiedBy = table.Column<string>(type: "nvarchar(128)", nullable: true),
                     ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
@@ -62,9 +62,9 @@ namespace Document.Persistence.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CreatedBy = table.Column<string>(type: "nvarchar(128)", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(128)", nullable: true),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedBy = table.Column<string>(type: "nvarchar(128)", nullable: false),
+                    ModifiedBy = table.Column<string>(type: "nvarchar(128)", nullable: true),
                     ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     EntityId = table.Column<int>(type: "int", nullable: false),
                     Type = table.Column<byte>(type: "tinyint", nullable: false),

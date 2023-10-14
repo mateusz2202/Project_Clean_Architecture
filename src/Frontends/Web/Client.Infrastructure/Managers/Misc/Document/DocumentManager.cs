@@ -8,6 +8,7 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using BlazorHero.CleanArchitecture.Application.Features.Documents.Queries.GetById;
 using BlazorHero.CleanArchitecture.Shared.Constants.Application;
+using System.IO;
 
 namespace BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Misc.Document
 {
@@ -16,7 +17,7 @@ namespace BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Misc.Docum
         private readonly IHttpClientFactory _httpClientFactory;
 
         public DocumentManager(IHttpClientFactory httpClientFactory)
-        {           
+        {
             _httpClientFactory = httpClientFactory;
         }
 
@@ -30,19 +31,8 @@ namespace BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Misc.Docum
         public async Task<PaginatedResult<GetAllDocumentsResponse>> GetAllAsync(GetAllPagedDocumentsRequest request)
         {
             var httpClient = _httpClientFactory.CreateClient(ApplicationConstants.ClientApi.ApiGateway);
-            try
-            {
-                var path = Routes.DocumentsEndpoints.GetAllPaged(request.PageNumber, request.PageSize, request.SearchString);
-                var response = await httpClient.GetAsync(path);
-                return await response.ToPaginatedResult<GetAllDocumentsResponse>();
-            }
-            catch (System.Exception e)
-            {
-
-                throw;
-            }
-         
-           
+            var response = await httpClient.GetAsync(Routes.DocumentsEndpoints.GetAllPaged(request.PageNumber, request.PageSize, request.SearchString));
+            return await response.ToPaginatedResult<GetAllDocumentsResponse>();
         }
 
         public async Task<IResult<GetDocumentByIdResponse>> GetByIdAsync(GetDocumentByIdQuery request)

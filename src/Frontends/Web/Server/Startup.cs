@@ -82,6 +82,7 @@ namespace BlazorHero.CleanArchitecture.Server
             app.UseAuthorization();          
             app.UseEndpoints();
             app.ConfigureSwagger();
+            app.UseCors("CorsPolicy");
             app.Initialize(_configuration);
         }
     }
