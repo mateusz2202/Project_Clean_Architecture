@@ -82,4 +82,10 @@ internal static class ResultExtensions
         return await response.ToResult<T>();
     }
 
+    internal static async Task<IResult<T>> PuttAsJsonResult<T, V>(this HttpClient httpClient, string uriString, V value)
+    {
+        var response = await httpClient.PutAsJsonAsync(uriString, value);
+        return await response.ToResult<T>();
+    }
+
 }

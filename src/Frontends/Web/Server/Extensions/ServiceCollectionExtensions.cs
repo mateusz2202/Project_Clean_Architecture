@@ -8,7 +8,6 @@ using BlazorHero.CleanArchitecture.Application.Serialization.JsonConverters;
 using BlazorHero.CleanArchitecture.Application.Serialization.Options;
 using BlazorHero.CleanArchitecture.Application.Serialization.Serializers;
 using BlazorHero.CleanArchitecture.Application.Serialization.Settings;
-using BlazorHero.CleanArchitecture.Infrastructure;
 using BlazorHero.CleanArchitecture.Infrastructure.Contexts;
 using BlazorHero.CleanArchitecture.Infrastructure.Models.Identity;
 using BlazorHero.CleanArchitecture.Infrastructure.Services;
@@ -209,8 +208,8 @@ namespace BlazorHero.CleanArchitecture.Server.Extensions
             IConfiguration configuration)
             => services
                 .AddDbContext<BlazorHeroContext>(options => options
-                    .UseSqlServer(configuration.GetConnectionString("DefaultConnection")))
-            .AddTransient<IDatabaseSeeder, DatabaseSeeder>();
+                    .UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+     
 
         internal static IServiceCollection AddCurrentUserService(this IServiceCollection services)
         {
@@ -248,10 +247,8 @@ namespace BlazorHero.CleanArchitecture.Server.Extensions
         internal static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
             services.AddTransient<IUserService, UserService>();
-            services.AddTransient<IChatService, ChatService>();
-            services.AddTransient<IUploadService, UploadService>();
-            services.AddTransient<IAuditService, AuditService>();
-            services.AddScoped<IExcelService, ExcelService>();
+            services.AddTransient<IChatService, ChatService>();     
+            services.AddTransient<IAuditService, AuditService>();  
             return services;
         }
 

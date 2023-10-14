@@ -28,7 +28,11 @@ public static class UserEndpoints
         return $"api/identity/user/profile-picture/{userId}";
     }
 
-    public static string Export = "api/identity/user/export";
+    public static string Export(string searchString) => string.IsNullOrWhiteSpace(searchString)
+                                                            ? ExportEndpoint
+                                                            : ExportFiltered(searchString);
+
+    private static string ExportEndpoint = "api/identity/user/export";
     public static string Register = "api/identity/user";
     public static string ToggleUserStatus = "api/identity/user/toggle-status";
     public static string ForgotPassword = "api/identity/user/forgot-password";

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http;
-using System.Net.Http.Json;
 using System.Threading.Tasks;
 using BlazorHero.CleanArchitecture.Application.Requests.Identity;
 using BlazorHero.CleanArchitecture.Application.Responses.Identity;
@@ -15,35 +14,22 @@ public class RoleClaimManager : IRoleClaimManager
     private readonly IHttpClientFactory _httpClientFactory;
 
     public RoleClaimManager(IHttpClientFactory httpClientFactory)
-    {            
+    {
         _httpClientFactory = httpClientFactory;
     }
+    private HttpClient IdentityClient() => _httpClientFactory.CreateClient(ApplicationConstants.ClientApi.IdentityClient);
 
     public async Task<IResult<string>> DeleteAsync(string id)
-    {
-        var httpClient = _httpClientFactory.CreateClient(ApplicationConstants.ClientApi.IdentityClient);
-        var response = await httpClient.DeleteAsync($"{Routes.RoleClaimsEndpoints.Delete}/{id}");
-        return await response.ToResult<string>();
-    }
+        => await IdentityClient().DeleteResult<string>($"{Routes.RoleClaimsEndpoints.Delete}/{id}");
 
     public async Task<IResult<List<RoleClaimResponse>>> GetRoleClaimsAsync()
-    {
-        var httpClient = _httpClientFactory.CreateClient(ApplicationConstants.ClientApi.IdentityClient);
-        var response = await httpClient.GetAsync(Routes.RoleClaimsEndpoints.GetAll);
-        return await response.ToResult<List<RoleClaimResponse>>();
-    }
+        => await IdentityClient().GetResult<List<RoleClaimResponse>>(Routes.RoleClaimsEndpoints.GetAll);
 
     public async Task<IResult<List<RoleClaimResponse>>> GetRoleClaimsByRoleIdAsync(string roleId)
-    {
-        var httpClient = _httpClientFactory.CreateClient(ApplicationConstants.ClientApi.IdentityClient);
-        var response = await httpClient.GetAsync($"{Routes.RoleClaimsEndpoints.GetAll}/{roleId}");
-        return await response.ToResult<List<RoleClaimResponse>>();
-    }
+        => await IdentityClient().GetResult<List<RoleClaimResponse>>($"{Routes.RoleClaimsEndpoints.GetAll}/{roleId}");
 
     public async Task<IResult<string>> SaveAsync(RoleClaimRequest role)
-    {
-        var httpClient = _httpClientFactory.CreateClient(ApplicationConstants.ClientApi.IdentityClient);
-        var response = await httpClient.PostAsJsonAsync(Routes.RoleClaimsEndpoints.Save, role);
-        return await response.ToResult<string>();
-    }
+        => await IdentityClient().PostAsJsonResult<string, RoleClaimRequest>(Routes.RoleClaimsEndpoints.Save, role);
+
+
 }

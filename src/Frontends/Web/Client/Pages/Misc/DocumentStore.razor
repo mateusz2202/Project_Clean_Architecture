@@ -1,7 +1,7 @@
 ﻿@page "/document-store"
 @attribute [Authorize(Policy = Permissions.Documents.View)]
 @inject Microsoft.Extensions.Localization.IStringLocalizer<DocumentStore> _localizer
-@using BlazorHero.CleanArchitecture.Application.Features.Documents.Queries.GetAll
+@using BlazorHero.CleanArchitecture.Application.Features.Documents
 
 <style>
     .mud-table-container {

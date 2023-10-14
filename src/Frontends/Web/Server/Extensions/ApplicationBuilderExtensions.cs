@@ -1,13 +1,11 @@
 ﻿using System.Globalization;
 using System.Linq;
-using BlazorHero.CleanArchitecture.Application.Interfaces.Services;
 using BlazorHero.CleanArchitecture.Server.Hubs;
 using BlazorHero.CleanArchitecture.Server.Middlewares;
 using BlazorHero.CleanArchitecture.Shared.Constants.Localization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using BlazorHero.CleanArchitecture.Shared.Constants.Application;
 using BlazorHero.CleanArchitecture.Application.Configurations;
@@ -76,21 +74,7 @@ namespace BlazorHero.CleanArchitecture.Server.Extensions
             app.UseMiddleware<RequestCultureMiddleware>();
 
             return app;
-        }
-
-        internal static IApplicationBuilder Initialize(this IApplicationBuilder app, Microsoft.Extensions.Configuration.IConfiguration _configuration)
-        {
-            using var serviceScope = app.ApplicationServices.CreateScope();
-
-            var initializers = serviceScope.ServiceProvider.GetServices<IDatabaseSeeder>();
-
-            foreach (var initializer in initializers)
-            {
-                initializer.Initialize();
-            }
-
-            return app;
-        }
+        }        
 
         private static AppConfiguration GetApplicationSettings(IConfiguration configuration)
         {

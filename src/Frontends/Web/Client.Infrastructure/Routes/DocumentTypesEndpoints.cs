@@ -4,10 +4,14 @@
     {
         public static string ExportFiltered(string searchString)
         {
-            return $"document/{Export}?searchString={searchString}";
+            return $"document/{ExportEndpoint}?searchString={searchString}";
         }
 
-        public static string Export = "document/api/documentTypes/export";
+        public static string ExportEndpoint = "document/api/documentTypes/export";
+
+        public static string Export(string searchString) => string.IsNullOrWhiteSpace(searchString)
+                                                            ? ExportEndpoint
+                                                            : ExportFiltered(searchString);
 
         public static string GetAll = "document/api/documentTypes";
         public static string Delete = "document/api/documentTypes";

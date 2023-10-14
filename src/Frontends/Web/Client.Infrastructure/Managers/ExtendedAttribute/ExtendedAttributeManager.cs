@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Net.Http.Json;
 using System.Threading.Tasks;
-using BlazorHero.CleanArchitecture.Application.Features.ExtendedAttributes.Commands.AddEdit;
-using BlazorHero.CleanArchitecture.Application.Features.ExtendedAttributes.Queries.Export;
-using BlazorHero.CleanArchitecture.Application.Features.ExtendedAttributes.Queries.GetAll;
-using BlazorHero.CleanArchitecture.Application.Features.ExtendedAttributes.Queries.GetAllByEntityId;
+using BlazorHero.CleanArchitecture.Application.Features.ExtendedAttributes;
 using BlazorHero.CleanArchitecture.Client.Infrastructure.Extensions;
 using BlazorHero.CleanArchitecture.Domain.Contracts;
 using BlazorHero.CleanArchitecture.Shared.Constants.Application;
@@ -23,46 +19,30 @@ namespace BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.ExtendedAt
         private readonly IHttpClientFactory _httpClientFactory;
 
         public ExtendedAttributeManager(IHttpClientFactory httpClientFactory)
-        {           
+        {
             _httpClientFactory = httpClientFactory;
         }
 
+        private HttpClient ApiClient() => _httpClientFactory.CreateClient(ApplicationConstants.ClientApi.ApiGateway);
+
         public async Task<IResult<string>> ExportToExcelAsync(ExportExtendedAttributesQuery<TId, TEntityId, TEntity, TExtendedAttribute> request)
-        {
-            var httpClient = _httpClientFactory.CreateClient(ApplicationConstants.ClientApi.ApiGateway);
-            var response = await httpClient.GetAsync(string.IsNullOrWhiteSpace(request.SearchString) && !request.IncludeEntity && !request.OnlyCurrentGroup
+            => await ApiClient().GetResult<string>(string.IsNullOrWhiteSpace(request.SearchString) && !request.IncludeEntity && !request.OnlyCurrentGroup
                 ? Routes.ExtendedAttributesEndpoints.Export(typeof(TEntity).Name, request.EntityId, request.IncludeEntity, request.OnlyCurrentGroup, request.CurrentGroup)
                 : Routes.ExtendedAttributesEndpoints.ExportFiltered(typeof(TEntity).Name, request.SearchString, request.EntityId, request.IncludeEntity, request.OnlyCurrentGroup, request.CurrentGroup));
-            return await response.ToResult<string>();
-        }
+
 
         public async Task<IResult<TId>> DeleteAsync(TId id)
-        {
-            var httpClient = _httpClientFactory.CreateClient(ApplicationConstants.ClientApi.ApiGateway);
-            var response = await httpClient.DeleteAsync($"{Routes.ExtendedAttributesEndpoints.Delete(typeof(TEntity).Name)}/{id}");
-            return await response.ToResult<TId>();
-        }
+            => await ApiClient().DeleteResult<TId>($"{Routes.ExtendedAttributesEndpoints.Delete(typeof(TEntity).Name)}/{id}");
 
         public async Task<IResult<List<GetAllExtendedAttributesResponse<TId, TEntityId>>>> GetAllAsync()
-        {
-            var httpClient = _httpClientFactory.CreateClient(ApplicationConstants.ClientApi.ApiGateway);
-            var response = await httpClient.GetAsync(Routes.ExtendedAttributesEndpoints.GetAll(typeof(TEntity).Name));
-            return await response.ToResult<List<GetAllExtendedAttributesResponse<TId, TEntityId>>>();
-        }
+            => await ApiClient().GetResult<List<GetAllExtendedAttributesResponse<TId, TEntityId>>>(Routes.ExtendedAttributesEndpoints.GetAll(typeof(TEntity).Name));
 
         public async Task<IResult<List<GetAllExtendedAttributesByEntityIdResponse<TId, TEntityId>>>> GetAllByEntityIdAsync(TEntityId entityId)
-        {
-            var httpClient = _httpClientFactory.CreateClient(ApplicationConstants.ClientApi.ApiGateway);
-            var route = Routes.ExtendedAttributesEndpoints.GetAllByEntityId(typeof(TEntity).Name, entityId);
-            var response = await httpClient.GetAsync(route);
-            return await response.ToResult<List<GetAllExtendedAttributesByEntityIdResponse<TId, TEntityId>>>();
-        }
+            => await ApiClient().GetResult<List<GetAllExtendedAttributesByEntityIdResponse<TId, TEntityId>>>(Routes.ExtendedAttributesEndpoints.GetAllByEntityId(typeof(TEntity).Name, entityId));
 
         public async Task<IResult<TId>> SaveAsync(AddEditExtendedAttributeCommand<TId, TEntityId, TEntity, TExtendedAttribute> request)
-        {
-            var httpClient = _httpClientFactory.CreateClient(ApplicationConstants.ClientApi.ApiGateway);
-            var response = await httpClient.PostAsJsonAsync(Routes.ExtendedAttributesEndpoints.Save(typeof(TEntity).Name), request);
-            return await response.ToResult<TId>();
-        }
+            => await ApiClient().PostAsJsonResult<TId, AddEditExtendedAttributeCommand<TId, TEntityId, TEntity, TExtendedAttribute>>(Routes.ExtendedAttributesEndpoints.Save(typeof(TEntity).Name), request);
+
+
     }
 }

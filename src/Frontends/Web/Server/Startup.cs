@@ -44,15 +44,12 @@ namespace BlazorHero.CleanArchitecture.Server
             services.AddJwtAuthentication(services.GetApplicationSettings(_configuration));
             services.AddSignalR();
             services.AddApplicationLayer();
-            services.AddApplicationServices();
-            services.AddRepositories();
-            services.AddExtendedAttributesUnitOfWork();
+            services.AddApplicationServices();   
             services.AddSharedInfrastructure(_configuration);
             services.RegisterSwagger();
             services.AddInfrastructureMappings();         
             services.AddControllers().AddValidators();
-            services.AddExtendedAttributesValidators();
-            services.AddExtendedAttributesHandlers();
+            services.AddExtendedAttributesValidators();         
             services.AddRazorPages();
             services.AddApiVersioning(config =>
             {
@@ -82,8 +79,7 @@ namespace BlazorHero.CleanArchitecture.Server
             app.UseAuthorization();          
             app.UseEndpoints();
             app.ConfigureSwagger();
-            app.UseCors("CorsPolicy");
-            app.Initialize(_configuration);
+            app.UseCors("CorsPolicy");        
         }
     }
 }

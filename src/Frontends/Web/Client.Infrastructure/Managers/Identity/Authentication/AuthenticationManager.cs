@@ -37,6 +37,7 @@ public class AuthenticationManager : IAuthenticationManager
         _authenticationStateProvider = authenticationStateProvider;
         _localizer = localizer;
     }
+    private HttpClient IdentityClient() => _httpClientFactory.CreateClient(ApplicationConstants.ClientApi.IdentityClient);
 
     public async Task<ClaimsPrincipal> CurrentUser()
     {
@@ -77,13 +78,12 @@ public class AuthenticationManager : IAuthenticationManager
     }
 
     public async Task<IResult> Logout()
-    {
-        var httpClient = _httpClientFactory.CreateClient(ApplicationConstants.ClientApi.IdentityClient);
+    {      
         await _localStorage.RemoveItemAsync(StorageConstants.Local.AuthToken);
         await _localStorage.RemoveItemAsync(StorageConstants.Local.RefreshToken);
         await _localStorage.RemoveItemAsync(StorageConstants.Local.UserImageURL);
         ((BlazorHeroStateProvider)_authenticationStateProvider).MarkUserAsLoggedOut();
-        httpClient.DefaultRequestHeaders.Authorization = null;
+        IdentityClient().DefaultRequestHeaders.Authorization = null;
         return await Result.SuccessAsync();
     }
 

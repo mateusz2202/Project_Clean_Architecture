@@ -1,5 +1,5 @@
 ﻿using System;
-using BlazorHero.CleanArchitecture.Application.Features.ExtendedAttributes.Queries.Export;
+using BlazorHero.CleanArchitecture.Application.Features.ExtendedAttributes;
 using BlazorHero.CleanArchitecture.Application.Specifications.Base;
 using BlazorHero.CleanArchitecture.Domain.Contracts;
 

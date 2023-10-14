@@ -5,7 +5,6 @@ using BlazorHero.CleanArchitecture.Shared.Constants.Application;
 using BlazorHero.CleanArchitecture.Shared.Wrapper;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Net.Http.Json;
 using System.Threading.Tasks;
 
 namespace BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Identity.Roles;
@@ -19,38 +18,22 @@ public class RoleManager : IRoleManager
         _httpClientFactory = httpClientFactory;
     }
 
+    private HttpClient IdentityClient() => _httpClientFactory.CreateClient(ApplicationConstants.ClientApi.IdentityClient);
+
     public async Task<IResult<string>> DeleteAsync(string id)
-    {
-        var httpClient = _httpClientFactory.CreateClient(ApplicationConstants.ClientApi.IdentityClient);
-        var response = await httpClient.DeleteAsync($"{Routes.RolesEndpoints.Delete}/{id}");
-        return await response.ToResult<string>();
-    }
+        => await IdentityClient().DeleteResult<string>($"{Routes.RolesEndpoints.Delete}/{id}");
 
     public async Task<IResult<List<RoleResponse>>> GetRolesAsync()
-    {
-        var httpClient = _httpClientFactory.CreateClient(ApplicationConstants.ClientApi.IdentityClient);
-        var response = await httpClient.GetAsync(Routes.RolesEndpoints.GetAll);
-        return await response.ToResult<List<RoleResponse>>();
-    }
+        => await IdentityClient().GetResult<List<RoleResponse>>(Routes.RolesEndpoints.GetAll);
 
     public async Task<IResult<string>> SaveAsync(RoleRequest role)
-    {
-        var httpClient = _httpClientFactory.CreateClient(ApplicationConstants.ClientApi.IdentityClient);
-        var response = await httpClient.PostAsJsonAsync(Routes.RolesEndpoints.Save, role);
-        return await response.ToResult<string>();
-    }
+        => await IdentityClient().PostAsJsonResult<string, RoleRequest>(Routes.RolesEndpoints.Save, role);
 
     public async Task<IResult<PermissionResponse>> GetPermissionsAsync(string roleId)
-    {
-        var httpClient = _httpClientFactory.CreateClient(ApplicationConstants.ClientApi.IdentityClient);
-        var response = await httpClient.GetAsync(Routes.RolesEndpoints.GetPermissions + roleId);
-        return await response.ToResult<PermissionResponse>();
-    }
+       => await IdentityClient().GetResult<PermissionResponse>(Routes.RolesEndpoints.GetPermissions + roleId);
 
     public async Task<IResult<string>> UpdatePermissionsAsync(PermissionRequest request)
-    {
-        var httpClient = _httpClientFactory.CreateClient(ApplicationConstants.ClientApi.IdentityClient);
-        var response = await httpClient.PutAsJsonAsync(Routes.RolesEndpoints.UpdatePermissions, request);
-        return await response.ToResult<string>();
-    }
+        => await IdentityClient().PuttAsJsonResult<string, PermissionRequest>(Routes.RolesEndpoints.UpdatePermissions, request);
+
+
 }
