@@ -1,9 +1,7 @@
-﻿using BlazorHero.CleanArchitecture.Application.Features.Brands.Queries.GetAll;
-using BlazorHero.CleanArchitecture.Shared.Wrapper;
+﻿using BlazorHero.CleanArchitecture.Shared.Wrapper;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using BlazorHero.CleanArchitecture.Application.Features.Brands.Commands.AddEdit;
-using BlazorHero.CleanArchitecture.Application.Features.Brands.Commands.Import;
+using BlazorHero.CleanArchitecture.Application.Features.Brands;
 
 namespace BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Catalog.Brand;
 

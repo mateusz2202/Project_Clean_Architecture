@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.SignalR.Client;
 using MudBlazor;
 using System.Threading.Tasks;
 using Blazored.FluentValidation;
-using BlazorHero.CleanArchitecture.Application.Features.Brands.Commands.AddEdit;
 using BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Catalog.Brand;
+using BlazorHero.CleanArchitecture.Application.Features.Brands;
 
 namespace BlazorHero.CleanArchitecture.Client.Pages.Catalog
 {
