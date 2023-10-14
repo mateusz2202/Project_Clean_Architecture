@@ -3,8 +3,6 @@ using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 using Ocelot.Provider.Polly;
 using API_Gateway.Config;
-using System.Configuration;
-using API_Gateway.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -56,7 +54,6 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.UseCors("CorsPolicy");
-app.UsePreflightRequestHandler();
 
 app.UseSwaggerForOcelotUI(options =>
 {
