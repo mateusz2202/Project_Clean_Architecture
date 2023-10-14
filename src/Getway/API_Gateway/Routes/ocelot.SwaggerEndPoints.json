@@ -12,6 +12,17 @@
       ]
     },
     {
+      "Key": "document",
+      "TransformByOcelotConfig": true,
+      "Config": [
+        {
+          "Name": "Document.Api",
+          "Version": "1.0",
+          "Url": "http://localhost:5205/document/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
       "Key": "operation",
       "TransformByOcelotConfig": true,
       "Config": [
