@@ -11,7 +11,7 @@ public static class PersistenceServiceRegistration
     public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
     => services
             .AddDbContext<DocumentDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DbConnectionString")))
-            .AddRepositories();
+            .AddRepositories();       
 
 
     private static IServiceCollection AddRepositories(this IServiceCollection services)
