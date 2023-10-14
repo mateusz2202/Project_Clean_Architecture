@@ -1,18 +1,17 @@
-﻿namespace BlazorHero.CleanArchitecture.Client.Infrastructure.Routes
+﻿namespace BlazorHero.CleanArchitecture.Client.Infrastructure.Routes;
+
+public static class BrandsEndpoints
 {
-    public static class BrandsEndpoints
+    public static string ExportFiltered(string searchString)
     {
-        public static string ExportFiltered(string searchString)
-        {
-            return $"{Export}?searchString={searchString}";
-        }
+        return $"product/{Export}?searchString={searchString}";
+    }
 
-        public static string Export = "api/v1/brands/export";
+    public static string Export = "product/api/brands/export";
 
-        public static string GetAll = "api/v1/brands";
-        public static string Delete = "api/v1/brands";
-        public static string Save = "api/v1/brands";
-        public static string GetCount = "api/v1/brands/count";
-        public static string Import = "api/v1/brands/import";
-  }
+    public static string GetAll = "product/api/brands";
+    public static string Delete = "product/api/brands";
+    public static string Save = "product/api/brands";
+    public static string GetCount = "product/api/brands/count";
+    public static string Import = "product/api/brands/import";
 }
