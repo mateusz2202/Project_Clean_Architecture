@@ -8,6 +8,8 @@ using Product.Application.Application.Features.Products.Queries.GetProductImage;
 
 namespace Product.Api.Controllers;
 
+[Route("api/[controller]")]
+[ApiController]
 public class ProductsController : ControllerBase
 {
     private readonly IMediator _mediator;

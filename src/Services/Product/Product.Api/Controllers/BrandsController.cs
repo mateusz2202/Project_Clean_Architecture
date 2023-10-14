@@ -9,6 +9,8 @@ using Product.Application.Application.Features.Brands.Queries.GetById;
 
 namespace Product.Api.Controllers;
 
+[Route("api/[controller]")]
+[ApiController]
 public class BrandsController : ControllerBase
 {
     private readonly IMediator _mediator;
