@@ -11,12 +11,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.12" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="MMLib.SwaggerForOcelot" Version="7.0.1" />
-    <PackageReference Include="Ocelot" Version="19.0.3" />
-    <PackageReference Include="Ocelot.Cache.CacheManager" Version="19.0.3" />
-    <PackageReference Include="Ocelot.Provider.Polly" Version="19.0.3" />
+    <PackageReference Include="Ocelot" Version="20.0.0" />
+    <PackageReference Include="Ocelot.Cache.CacheManager" Version="20.0.0" />
+    <PackageReference Include="Ocelot.Provider.Polly" Version="20.0.0" />
   </ItemGroup>
 
 </Project>

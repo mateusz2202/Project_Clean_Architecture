@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <PackageReference Include="EPPlus" Version="6.2.10" />
-    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>
