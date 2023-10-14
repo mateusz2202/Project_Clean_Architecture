@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using BlazorHero.CleanArchitecture.Application.Configurations;
 using BlazorHero.CleanArchitecture.Application.Features.ExtendedAttributes;
 using BlazorHero.CleanArchitecture.Application.Validators.Features.ExtendedAttributes;
 using FluentValidation;
@@ -12,7 +11,7 @@ internal static class MvcBuilderExtensions
 {
     internal static IMvcBuilder AddValidators(this IMvcBuilder builder)
     {
-        builder.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<AppConfiguration>());
+        builder.Services.AddFluentValidationAutoValidation();
         return builder;
     }
 

@@ -1,9 +1,6 @@
-﻿using BlazorHero.CleanArchitecture.Application.Interfaces.Common;
+﻿namespace BlazorHero.CleanArchitecture.Application.Interfaces.Services;
 
-namespace BlazorHero.CleanArchitecture.Application.Interfaces.Services
+public interface ICurrentUserService 
 {
-    public interface ICurrentUserService : IService
-    {
-        string UserId { get; }
-    }
+    string UserId { get; }
 }

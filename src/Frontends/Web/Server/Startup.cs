@@ -1,14 +1,10 @@
 using BlazorHero.CleanArchitecture.Application.Extensions;
 using BlazorHero.CleanArchitecture.Infrastructure.Extensions;
 using BlazorHero.CleanArchitecture.Server.Extensions;
-using BlazorHero.CleanArchitecture.Server.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
-using System.IO;
 using BlazorHero.CleanArchitecture.Server.Managers.Preferences;
 using Microsoft.Extensions.Localization;
 
@@ -31,16 +27,13 @@ public class Startup
             options.ResourcesPath = "Resources";
         });
         services.AddCurrentUserService();
-        services.AddSerialization();
-        services.AddDatabase(_configuration);
+        services.AddSerialization();      
         services.AddServerStorage(); 
         services.AddScoped<ServerPreferenceManager>();
-        services.AddServerLocalization();
-        services.AddIdentity();
+        services.AddServerLocalization();     
         services.AddJwtAuthentication(services.GetApplicationSettings(_configuration));
         services.AddSignalR();
-        services.AddApplicationLayer();
-        services.AddApplicationServices();   
+        services.AddApplicationLayer();   
         services.AddSharedInfrastructure(_configuration);
         services.RegisterSwagger();
         services.AddInfrastructureMappings();         
@@ -54,15 +47,9 @@ public class Startup
     {
         app.UseForwarding(_configuration);
         app.UseExceptionHandling(env);
-        app.UseHttpsRedirection();
-        app.UseMiddleware<ErrorHandlerMiddleware>();
+        app.UseHttpsRedirection();     
         app.UseBlazorFrameworkFiles();
-        app.UseStaticFiles();
-        app.UseStaticFiles(new StaticFileOptions
-        {
-            FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Files")),
-            RequestPath = new PathString("/Files")
-        });
+        app.UseStaticFiles();       
         app.UseRequestLocalizationByCulture();
         app.UseRouting();
         app.UseAuthentication();

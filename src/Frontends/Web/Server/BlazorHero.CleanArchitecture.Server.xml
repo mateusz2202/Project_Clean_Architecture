@@ -4,47 +4,5 @@
         <name>BlazorHero.CleanArchitecture.Server</name>
     </assembly>
     <members>
-        <member name="M:BlazorHero.CleanArchitecture.Server.Controllers.Communication.ChatsController.GetChatHistoryAsync(System.String)">
-            <summary>
-            Get user wise chat history
-            </summary>
-            <param name="contactId"></param>
-            <returns>Status 200 OK</returns>
-        </member>
-        <member name="M:BlazorHero.CleanArchitecture.Server.Controllers.Communication.ChatsController.GetChatUsersAsync">
-            <summary>
-            get available users
-            </summary>
-            <returns>Status 200 OK</returns>
-        </member>
-        <member name="M:BlazorHero.CleanArchitecture.Server.Controllers.Communication.ChatsController.SaveMessageAsync(BlazorHero.CleanArchitecture.Application.Models.Chat.ChatHistory{BlazorHero.CleanArchitecture.Application.Interfaces.Chat.IChatUser})">
-            <summary>
-            Save Chat Message
-            </summary>
-            <param name="message"></param>
-            <returns>Status 200 OK</returns>
-        </member>
-        <member name="M:BlazorHero.CleanArchitecture.Server.Controllers.Utilities.AuditsController.GetUserTrailsAsync">
-            <summary>
-            Get Current User Audit Trails
-            </summary>
-            <returns>Status 200 OK</returns>
-        </member>
-        <member name="M:BlazorHero.CleanArchitecture.Server.Controllers.Utilities.AuditsController.ExportExcel(System.String,System.Boolean,System.Boolean)">
-            <summary>
-            Search Audit Trails and Export to Excel
-            </summary>
-            <param name="searchString"></param>
-            <param name="searchInOldValues"></param>
-            <param name="searchInNewValues"></param>
-            <returns>Status 200 OK</returns>
-        </member>
-        <member name="M:BlazorHero.CleanArchitecture.Server.Controllers.Utilities.PreferencesController.ChangeLanguageAsync(System.String)">
-            <summary>
-            Change Language Preference
-            </summary>
-            <param name="languageCode"></param>
-            <returns>Status 200 OK</returns>
-        </member>
     </members>
 </doc>
