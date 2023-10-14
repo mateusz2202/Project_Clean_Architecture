@@ -1,11 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using FluentValidation;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
+using Product.Application.Common.Behaviours;
+using System.Reflection;
+
 
 namespace Product.Application;
 
-internal class ApplicationServiceRegistration
+public static class ApplicationServiceRegistration
 {
+    public static IServiceCollection AddApplication(this IServiceCollection services)
+        => services
+            .AddAutoMapper(Assembly.GetExecutingAssembly())
+            .AddValidatorsFromAssembly(Assembly.GetExecutingAssembly())
+            .AddMediatR(x => x.RegisterServicesFromAssemblyContaining(typeof(ApplicationServiceRegistration)))
+            .AddLazyCache()
+            .AddPipelins();
+
+
+    public static IServiceCollection AddPipelins(this IServiceCollection services)
+        => services
+            .AddTransient(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehaviour<,>))
+            .AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>))
+            .AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+
+
 }

@@ -12,14 +12,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Common\" />
+    <Folder Include="Common\Exceptions\" />
+    <Folder Include="Common\Behaviours\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="FluentValidation" Version="11.7.1" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageReference Include="LazyCache.AspNetCore" Version="2.4.0" />
     <PackageReference Include="MediatR" Version="12.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.12" />
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.3.5" />
   </ItemGroup>
