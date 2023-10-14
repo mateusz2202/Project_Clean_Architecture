@@ -32,6 +32,11 @@ public static class ProductsEndpoints
 
     public static string Save = "product/api/products";
     public static string Delete = "product/api/products";
-    public static string Export = "product/api/products/export";
- 
+
+    private static string ExportEndpoint = "product/api/products/export";
+
+    public static string Export(string searchString) => string.IsNullOrWhiteSpace(searchString)
+                                                         ? ExportEndpoint
+                                                         : ExportFiltered(searchString);
+
 }

@@ -3,7 +3,6 @@ using BlazorHero.CleanArchitecture.Client.Infrastructure.Extensions;
 using BlazorHero.CleanArchitecture.Shared.Wrapper;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Net.Http.Json;
 using System.Threading.Tasks;
 using BlazorHero.CleanArchitecture.Application.Features.Brands.Commands.AddEdit;
 using BlazorHero.CleanArchitecture.Application.Features.Brands.Commands.Import;
@@ -19,41 +18,21 @@ public class BrandManager : IBrandManager
     {
         _httpClientFactory = httpClientFactory;
     }
+    private HttpClient ApiClient() => _httpClientFactory.CreateClient(ApplicationConstants.ClientApi.ApiGateway);
 
     public async Task<IResult<string>> ExportToExcelAsync(string searchString = "")
-    {
-        var httpClient = _httpClientFactory.CreateClient(ApplicationConstants.ClientApi.ApiGateway);
-        var response = await httpClient.GetAsync(string.IsNullOrWhiteSpace(searchString)
-            ? Routes.BrandsEndpoints.Export
-            : Routes.BrandsEndpoints.ExportFiltered(searchString));
-        return await response.ToResult<string>();
-    }
+        => await ApiClient().GetResult<string>(Routes.BrandsEndpoints.Export(searchString));
 
     public async Task<IResult<int>> DeleteAsync(int id)
-    {
-        var httpClient = _httpClientFactory.CreateClient(ApplicationConstants.ClientApi.ApiGateway);
-        var response = await httpClient.DeleteAsync($"{Routes.BrandsEndpoints.Delete}/{id}");
-        return await response.ToResult<int>();
-    }
+        => await ApiClient().DeleteResult<int>($"{Routes.BrandsEndpoints.Delete}/{id}");
 
     public async Task<IResult<List<GetAllBrandsResponse>>> GetAllAsync()
-    {
-        var httpClient = _httpClientFactory.CreateClient(ApplicationConstants.ClientApi.ApiGateway);
-        var response = await httpClient.GetAsync(Routes.BrandsEndpoints.GetAll);
-        return await response.ToResult<List<GetAllBrandsResponse>>();
-    }
+        => await ApiClient().GetResult<List<GetAllBrandsResponse>>(Routes.BrandsEndpoints.GetAll);
 
     public async Task<IResult<int>> SaveAsync(AddEditBrandCommand request)
-    {
-        var httpClient = _httpClientFactory.CreateClient(ApplicationConstants.ClientApi.ApiGateway);
-        var response = await httpClient.PostAsJsonAsync(Routes.BrandsEndpoints.Save, request);
-        return await response.ToResult<int>();
-    }
+        => await ApiClient().PostAsJsonResult<int, AddEditBrandCommand>(Routes.BrandsEndpoints.Save, request);
 
     public async Task<IResult<int>> ImportAsync(ImportBrandsCommand request)
-    {
-        var httpClient = _httpClientFactory.CreateClient(ApplicationConstants.ClientApi.ApiGateway);
-        var response = await httpClient.PostAsJsonAsync(Routes.BrandsEndpoints.Import, request);
-        return await response.ToResult<int>();
-    }
+       => await ApiClient().PostAsJsonResult<int, ImportBrandsCommand>(Routes.BrandsEndpoints.Import, request);
+
 }

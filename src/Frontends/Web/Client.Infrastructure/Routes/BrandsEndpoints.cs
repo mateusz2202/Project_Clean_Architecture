@@ -7,7 +7,10 @@ public static class BrandsEndpoints
         return $"product/{Export}?searchString={searchString}";
     }
 
-    public static string Export = "product/api/brands/export";
+    private static string ExportEndpoint = "product/api/brands/export";
+    public static string Export(string searchString) => string.IsNullOrWhiteSpace(searchString)
+                                                       ? ExportEndpoint
+                                                       : ExportFiltered(searchString);
 
     public static string GetAll = "product/api/brands";
     public static string Delete = "product/api/brands";

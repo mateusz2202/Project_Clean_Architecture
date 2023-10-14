@@ -1,4 +1,4 @@
-﻿using BlazorHero.CleanArchitecture.Application.Features.Products.Commands.AddEdit;
+﻿using BlazorHero.CleanArchitecture.Application.Features.Products;
 using FluentValidation;
 using Microsoft.Extensions.Localization;
 
