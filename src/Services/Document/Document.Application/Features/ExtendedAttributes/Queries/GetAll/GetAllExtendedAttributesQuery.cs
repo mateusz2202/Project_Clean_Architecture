@@ -9,10 +9,10 @@ using MediatR;
 namespace Document.Application.Features.ExtendedAttributes.Queries.GetAll;
 
 public class GetAllExtendedAttributesQuery<TId, TEntityId, TEntity, TExtendedAttribute>
-     : IRequest<Result<List<GetAllExtendedAttributesResponse<TId, TEntityId>>>>
-         where TEntity : AuditableEntity<TEntityId>, IEntityWithExtendedAttributes<TExtendedAttribute>, IEntity<TEntityId>
-         where TExtendedAttribute : AuditableEntityExtendedAttribute<TId, TEntityId, TEntity>, IEntity<TId>
-         where TId : IEquatable<TId>
+        : IRequest<Result<List<GetAllExtendedAttributesResponse<TId, TEntityId>>>>
+            where TEntity : AuditableEntity<TEntityId>, IEntityWithExtendedAttributes<TExtendedAttribute>, IEntity<TEntityId>
+            where TExtendedAttribute : AuditableEntityExtendedAttribute<TId, TEntityId, TEntity>, IEntity<TId>
+            where TId : IEquatable<TId>
 {
     public GetAllExtendedAttributesQuery()
     {

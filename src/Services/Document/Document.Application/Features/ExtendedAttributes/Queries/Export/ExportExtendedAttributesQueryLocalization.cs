@@ -49,9 +49,7 @@ internal class ExportExtendedAttributesQueryHandler<TId, TEntityId, TEntity, TEx
     private readonly IExcelService _excelService;
     private readonly IUnitOfWork<TId> _unitOfWork;  
 
-    public ExportExtendedAttributesQueryHandler(IExcelService excelService
-        , IUnitOfWork<TId> unitOfWork
-        , IStringLocalizer<ExportExtendedAttributesQueryLocalization> localizer)
+    public ExportExtendedAttributesQueryHandler(IExcelService excelService, IUnitOfWork<TId> unitOfWork)
     {
         _excelService = excelService;
         _unitOfWork = unitOfWork;      

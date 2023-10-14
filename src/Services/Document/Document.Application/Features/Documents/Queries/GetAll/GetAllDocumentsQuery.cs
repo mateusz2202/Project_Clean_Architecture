@@ -8,19 +8,7 @@ using System.Linq.Expressions;
 
 namespace Document.Application.Features.Documents.Queries.GetAll;
 
-public class GetAllDocumentsQuery : IRequest<PaginatedResult<GetAllDocumentsResponse>>
-{
-    public int PageNumber { get; set; }
-    public int PageSize { get; set; }
-    public string SearchString { get; set; }
-
-    public GetAllDocumentsQuery(int pageNumber, int pageSize, string searchString)
-    {
-        PageNumber = pageNumber;
-        PageSize = pageSize;
-        SearchString = searchString;
-    }
-}
+public record GetAllDocumentsQuery(int PageNumber, int PageSize, string SearchString) : IRequest<PaginatedResult<GetAllDocumentsResponse>>;
 
 internal class GetAllDocumentsQueryHandler : IRequestHandler<GetAllDocumentsQuery, PaginatedResult<GetAllDocumentsResponse>>
 {
