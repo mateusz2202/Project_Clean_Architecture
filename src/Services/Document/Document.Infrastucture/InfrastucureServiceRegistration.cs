@@ -13,6 +13,7 @@ public static class InfrastucureServiceRegistration
 
     private static IServiceCollection AddServices(this IServiceCollection services)
         => services
+            .AddTransient<IExcelService, ExcelService>()
             .AddTransient<IUploadService, UploadService>();
           
 }
