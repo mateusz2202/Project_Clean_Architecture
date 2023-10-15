@@ -1,11 +1,10 @@
 ﻿#nullable enable
 using System;
-using BlazorHero.CleanArchitecture.Domain.Contracts;
-using BlazorHero.CleanArchitecture.Domain.Enums;
+using BlazorHero.CleanArchitecture.Application.Enums;
 
 namespace BlazorHero.CleanArchitecture.Application.Features.ExtendedAttributes;
 
-public class GetAllExtendedAttributesByEntityIdResponse<TId, TEntityId> : IEntityAuditableExtendedAttribute
+public class GetAllExtendedAttributesByEntityIdResponse<TId, TEntityId> 
 {
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     public TId Id { get; set; }
@@ -43,7 +42,7 @@ public class GetAllExtendedAttributesByEntityIdResponse<TId, TEntityId> : IEntit
 
     public DateTime CreatedOn { get; set; }
 
-    public string? LastModifiedBy { get; set; }
+    public string? ModifiedBy { get; set; }
 
-    public DateTime? LastModifiedOn { get; set; }
+    public DateTime? ModifiedOn { get; set; }
 }
