@@ -30,8 +30,7 @@ public class Startup
         services.AddSerialization();      
         services.AddServerStorage(); 
         services.AddScoped<ServerPreferenceManager>();
-        services.AddServerLocalization();     
-        services.AddJwtAuthentication(services.GetApplicationSettings(_configuration));
+        services.AddServerLocalization();    
         services.AddSignalR();
         services.AddApplicationLayer();     
         services.AddInfrastructureMappings();
@@ -41,8 +40,7 @@ public class Startup
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IStringLocalizer<Startup> localizer)
-    {
-        app.UseForwarding(_configuration);
+    {       
         app.UseExceptionHandling(env);
         app.UseHttpsRedirection();     
         app.UseBlazorFrameworkFiles();
