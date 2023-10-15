@@ -1,4 +1,4 @@
-using BlazorHero.CleanArchitecture.Application.Extensions;
+using BlazorHero.CleanArchitecture.Application;
 using BlazorHero.CleanArchitecture.Server.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

@@ -55,25 +55,14 @@ public static class WebAssemblyHostBuilderExtensions
             .AddScoped<BlazorHeroStateProvider>()
             .AddScoped<AuthenticationStateProvider, BlazorHeroStateProvider>()
             .AddManagers()             
-            .AddTransient<AuthenticationHeaderHandler>()
-            .AddScoped(sp => sp
-                .GetRequiredService<IHttpClientFactory>()
-                .CreateClient(ApplicationConstants.ClientApi.BlazorHeroClient)
-                .EnableIntercept(sp))
+            .AddTransient<AuthenticationHeaderHandler>()          
             .AddScoped(sp => sp
                 .GetRequiredService<IHttpClientFactory>()
                 .CreateClient(ApplicationConstants.ClientApi.IdentityClient)
                 .EnableIntercept(sp))
             .AddScoped(sp => sp
                 .GetRequiredService<IHttpClientFactory>()
-                .CreateClient(ApplicationConstants.ClientApi.ApiGateway));                 
-
-        builder.Services.AddHttpClient(ApplicationConstants.ClientApi.BlazorHeroClient, client =>
-        {
-            client.DefaultRequestHeaders.AcceptLanguage.Clear();
-            client.DefaultRequestHeaders.AcceptLanguage.ParseAdd(CultureInfo.DefaultThreadCurrentCulture?.TwoLetterISOLanguageName);
-            client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
-        }).AddHttpMessageHandler<AuthenticationHeaderHandler>();
+                .CreateClient(ApplicationConstants.ClientApi.ApiGateway)); 
 
         builder.Services.AddHttpClient(ApplicationConstants.ClientApi.IdentityClient, client =>
         {
