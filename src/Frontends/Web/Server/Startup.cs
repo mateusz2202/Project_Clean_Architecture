@@ -33,8 +33,7 @@ public class Startup
         services.AddServerLocalization();     
         services.AddJwtAuthentication(services.GetApplicationSettings(_configuration));
         services.AddSignalR();
-        services.AddApplicationLayer();   
-        services.AddSharedInfrastructure(_configuration);
+        services.AddApplicationLayer();         
         services.RegisterSwagger();
         services.AddInfrastructureMappings();         
         services.AddControllers().AddValidators();

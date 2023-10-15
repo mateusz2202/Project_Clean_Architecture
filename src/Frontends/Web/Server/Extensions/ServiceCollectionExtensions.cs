@@ -7,7 +7,6 @@ using BlazorHero.CleanArchitecture.Application.Serialization.JsonConverters;
 using BlazorHero.CleanArchitecture.Application.Serialization.Options;
 using BlazorHero.CleanArchitecture.Application.Serialization.Serializers;
 using BlazorHero.CleanArchitecture.Application.Serialization.Settings;
-using BlazorHero.CleanArchitecture.Infrastructure.Shared.Services;
 using BlazorHero.CleanArchitecture.Server.Localization;
 using BlazorHero.CleanArchitecture.Server.Managers.Preferences;
 using BlazorHero.CleanArchitecture.Server.Services;
@@ -20,8 +19,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -207,17 +204,6 @@ internal static class ServiceCollectionExtensions
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         return services;
     }
-
-   
-
-    internal static IServiceCollection AddSharedInfrastructure(this IServiceCollection services, IConfiguration configuration)
-    {
-        services.AddTransient<IDateTimeService, SystemDateTimeService>();
-        services.Configure<MailConfiguration>(configuration.GetSection("MailConfiguration"));
-        services.AddTransient<IMailService, SMTPMailService>();
-        return services;
-    }
-
    
 
     internal static IServiceCollection AddJwtAuthentication(
