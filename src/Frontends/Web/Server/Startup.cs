@@ -33,11 +33,9 @@ public class Startup
         services.AddServerLocalization();     
         services.AddJwtAuthentication(services.GetApplicationSettings(_configuration));
         services.AddSignalR();
-        services.AddApplicationLayer();         
-        services.RegisterSwagger();
-        services.AddInfrastructureMappings();         
-        services.AddControllers().AddValidators();
-        services.AddExtendedAttributesValidators();         
+        services.AddApplicationLayer();     
+        services.AddInfrastructureMappings();
+        services.AddControllers();         
         services.AddRazorPages();            
         services.AddLazyCache();
     }
@@ -53,8 +51,7 @@ public class Startup
         app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();          
-        app.UseEndpoints();
-        app.ConfigureSwagger();
+        app.UseEndpoints();      
         app.UseCors("CorsPolicy");        
     }
 }
