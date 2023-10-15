@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using BlazorHero.CleanArchitecture.Application.Requests.Identity;
-using BlazorHero.CleanArchitecture.Application.Responses.Identity;
+using BlazorApp.Application.Requests.Identity;
+using BlazorApp.Application.Responses.Identity;
 
-namespace BlazorHero.CleanArchitecture.Client.Infrastructure.Mappings;
+namespace BlazorApp.Client.Infrastructure.Mappings;
 
 public class RoleProfile : Profile
 {

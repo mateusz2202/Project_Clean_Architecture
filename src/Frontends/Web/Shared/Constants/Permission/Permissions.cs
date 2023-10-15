@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 
-namespace BlazorHero.CleanArchitecture.Shared.Constants.Permission
+namespace BlazorApp.Shared.Constants.Permission
 {
     public static class Permissions
     {

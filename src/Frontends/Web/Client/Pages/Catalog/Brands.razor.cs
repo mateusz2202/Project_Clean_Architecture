@@ -1,5 +1,5 @@
-﻿using BlazorHero.CleanArchitecture.Client.Extensions;
-using BlazorHero.CleanArchitecture.Shared.Constants.Application;
+﻿using BlazorApp.Client.Extensions;
+using BlazorApp.Shared.Constants.Application;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
 using MudBlazor;
@@ -8,16 +8,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Catalog.Brand;
-using BlazorHero.CleanArchitecture.Shared.Constants.Permission;
+using BlazorApp.Client.Infrastructure.Managers.Catalog.Brand;
+using BlazorApp.Shared.Constants.Permission;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.JSInterop;
-using BlazorHero.CleanArchitecture.Shared.Wrapper;
-using BlazorHero.CleanArchitecture.Application.Requests;
-using BlazorHero.CleanArchitecture.Client.Shared.Components;
-using BlazorHero.CleanArchitecture.Application.Features.Brands;
+using BlazorApp.Shared.Wrapper;
+using BlazorApp.Application.Requests;
+using BlazorApp.Client.Shared.Components;
+using BlazorApp.Application.Features.Brands;
 
-namespace BlazorHero.CleanArchitecture.Client.Pages.Catalog;
+namespace BlazorApp.Client.Pages.Catalog;
 
 public partial class Brands
 {

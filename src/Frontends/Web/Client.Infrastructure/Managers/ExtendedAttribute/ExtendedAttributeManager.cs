@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using BlazorHero.CleanArchitecture.Application.Features.ExtendedAttributes;
-using BlazorHero.CleanArchitecture.Client.Infrastructure.Extensions;
-using BlazorHero.CleanArchitecture.Shared.Constants.Application;
-using BlazorHero.CleanArchitecture.Shared.Wrapper;
+using BlazorApp.Application.Features.ExtendedAttributes;
+using BlazorApp.Client.Infrastructure.Extensions;
+using BlazorApp.Shared.Constants.Application;
+using BlazorApp.Shared.Wrapper;
 
-namespace BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.ExtendedAttribute;
+namespace BlazorApp.Client.Infrastructure.Managers.ExtendedAttribute;
 
 public class ExtendedAttributeManager<TId, TEntityId, TEntity, TExtendedAttribute> 
 {

@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using BlazorHero.CleanArchitecture.Application.Features.DocumentTypes;
-using BlazorHero.CleanArchitecture.Client.Infrastructure.Extensions;
-using BlazorHero.CleanArchitecture.Shared.Constants.Application;
-using BlazorHero.CleanArchitecture.Shared.Wrapper;
+using BlazorApp.Application.Features.DocumentTypes;
+using BlazorApp.Client.Infrastructure.Extensions;
+using BlazorApp.Shared.Constants.Application;
+using BlazorApp.Shared.Wrapper;
 
-namespace BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Misc.DocumentType;
+namespace BlazorApp.Client.Infrastructure.Managers.Misc.DocumentType;
 
 public class DocumentTypeManager : IDocumentTypeManager
 {

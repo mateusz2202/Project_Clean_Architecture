@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace BlazorHero.CleanArchitecture.Server;
+namespace BlazorApp.Server;
 
 public class Program
 {

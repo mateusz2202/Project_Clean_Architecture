@@ -1,10 +1,10 @@
 ﻿using System;
-using BlazorHero.CleanArchitecture.Application.Features.ExtendedAttributes;
-using BlazorHero.CleanArchitecture.Application.Enums;
+using BlazorApp.Application.Features.ExtendedAttributes;
+using BlazorApp.Application.Enums;
 using FluentValidation;
 using Microsoft.Extensions.Localization;
 
-namespace BlazorHero.CleanArchitecture.Application.Validators.Features.ExtendedAttributes;
+namespace BlazorApp.Application.Validators.Features.ExtendedAttributes;
 
 public class AddEditExtendedAttributeCommandValidatorLocalization
 {

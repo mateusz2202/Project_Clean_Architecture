@@ -1,4 +1,4 @@
-﻿namespace BlazorHero.CleanArchitecture.Application.Features.DocumentTypes;
+﻿namespace BlazorApp.Application.Features.DocumentTypes;
 
 public class GetAllDocumentTypesResponse
 {

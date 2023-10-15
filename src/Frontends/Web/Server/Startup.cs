@@ -1,10 +1,10 @@
-using BlazorHero.CleanArchitecture.Application;
-using BlazorHero.CleanArchitecture.Server.Extensions;
+using BlazorApp.Application;
+using BlazorApp.Server.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BlazorHero.CleanArchitecture.Server;
+namespace BlazorApp.Server;
 
 public class Startup
 {
@@ -16,6 +16,7 @@ public class Startup
         services.AddControllers();
         services.AddRazorPages();            
         services.AddLazyCache();
+        services.AddCurrentUserService();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

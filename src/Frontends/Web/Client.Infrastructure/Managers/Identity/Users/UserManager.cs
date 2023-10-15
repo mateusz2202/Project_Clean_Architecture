@@ -1,14 +1,14 @@
-﻿using BlazorHero.CleanArchitecture.Application.Requests.Identity;
-using BlazorHero.CleanArchitecture.Application.Responses.Identity;
-using BlazorHero.CleanArchitecture.Client.Infrastructure.Extensions;
-using BlazorHero.CleanArchitecture.Client.Infrastructure.Routes;
-using BlazorHero.CleanArchitecture.Shared.Constants.Application;
-using BlazorHero.CleanArchitecture.Shared.Wrapper;
+﻿using BlazorApp.Application.Requests.Identity;
+using BlazorApp.Application.Responses.Identity;
+using BlazorApp.Client.Infrastructure.Extensions;
+using BlazorApp.Client.Infrastructure.Routes;
+using BlazorApp.Shared.Constants.Application;
+using BlazorApp.Shared.Wrapper;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Identity.Users;
+namespace BlazorApp.Client.Infrastructure.Managers.Identity.Users;
 
 public class UserManager : IUserManager
 {

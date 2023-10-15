@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
-    <RootNamespace>BlazorHero.CleanArchitecture.Application</RootNamespace>
-    <AssemblyName>BlazorHero.CleanArchitecture.Application</AssemblyName>
+    <RootNamespace>BlazorApp.Application</RootNamespace>
+    <AssemblyName>BlazorApp.Application</AssemblyName>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>

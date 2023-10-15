@@ -1,12 +1,12 @@
-﻿using BlazorHero.CleanArchitecture.Application.Features.Products;
-using BlazorHero.CleanArchitecture.Application.Requests.Catalog;
-using BlazorHero.CleanArchitecture.Client.Infrastructure.Extensions;
-using BlazorHero.CleanArchitecture.Shared.Constants.Application;
-using BlazorHero.CleanArchitecture.Shared.Wrapper;
+﻿using BlazorApp.Application.Features.Products;
+using BlazorApp.Application.Requests.Catalog;
+using BlazorApp.Client.Infrastructure.Extensions;
+using BlazorApp.Shared.Constants.Application;
+using BlazorApp.Shared.Wrapper;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Catalog.Product;
+namespace BlazorApp.Client.Infrastructure.Managers.Catalog.Product;
 
 public class ProductManager : IProductManager
 {

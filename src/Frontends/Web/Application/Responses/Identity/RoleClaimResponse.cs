@@ -1,4 +1,4 @@
-﻿namespace BlazorHero.CleanArchitecture.Application.Responses.Identity;
+﻿namespace BlazorApp.Application.Responses.Identity;
 
 public class RoleClaimResponse
 {

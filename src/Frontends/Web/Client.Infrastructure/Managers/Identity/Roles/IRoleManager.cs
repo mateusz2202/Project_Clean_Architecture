@@ -1,10 +1,10 @@
-﻿using BlazorHero.CleanArchitecture.Application.Requests.Identity;
-using BlazorHero.CleanArchitecture.Application.Responses.Identity;
-using BlazorHero.CleanArchitecture.Shared.Wrapper;
+﻿using BlazorApp.Application.Requests.Identity;
+using BlazorApp.Application.Responses.Identity;
+using BlazorApp.Shared.Wrapper;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Identity.Roles
+namespace BlazorApp.Client.Infrastructure.Managers.Identity.Roles
 {
     public interface IRoleManager : IManager
     {

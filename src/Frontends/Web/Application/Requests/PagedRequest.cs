@@ -1,4 +1,4 @@
-﻿namespace BlazorHero.CleanArchitecture.Application.Requests;
+﻿namespace BlazorApp.Application.Requests;
 
 public abstract class PagedRequest
 {

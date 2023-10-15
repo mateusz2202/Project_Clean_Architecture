@@ -1,9 +1,9 @@
-﻿using BlazorHero.CleanArchitecture.Shared.Wrapper;
+﻿using BlazorApp.Shared.Wrapper;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using BlazorHero.CleanArchitecture.Application.Features.Brands;
+using BlazorApp.Application.Features.Brands;
 
-namespace BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Catalog.Brand;
+namespace BlazorApp.Client.Infrastructure.Managers.Catalog.Brand;
 
 public interface IBrandManager : IManager
 {

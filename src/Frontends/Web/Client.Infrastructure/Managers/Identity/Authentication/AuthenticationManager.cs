@@ -1,12 +1,12 @@
 ﻿using Blazored.LocalStorage;
-using BlazorHero.CleanArchitecture.Application.Requests.Identity;
-using BlazorHero.CleanArchitecture.Application.Responses.Identity;
-using BlazorHero.CleanArchitecture.Client.Infrastructure.Authentication;
-using BlazorHero.CleanArchitecture.Client.Infrastructure.Extensions;
-using BlazorHero.CleanArchitecture.Client.Infrastructure.Routes;
-using BlazorHero.CleanArchitecture.Shared.Constants.Application;
-using BlazorHero.CleanArchitecture.Shared.Constants.Storage;
-using BlazorHero.CleanArchitecture.Shared.Wrapper;
+using BlazorApp.Application.Requests.Identity;
+using BlazorApp.Application.Responses.Identity;
+using BlazorApp.Client.Infrastructure.Authentication;
+using BlazorApp.Client.Infrastructure.Extensions;
+using BlazorApp.Client.Infrastructure.Routes;
+using BlazorApp.Shared.Constants.Application;
+using BlazorApp.Shared.Constants.Storage;
+using BlazorApp.Shared.Wrapper;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Localization;
 using System;
@@ -17,7 +17,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 
 
-namespace BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Identity.Authentication;
+namespace BlazorApp.Client.Infrastructure.Managers.Identity.Authentication;
 
 public class AuthenticationManager : IAuthenticationManager
 {

@@ -1,8 +1,8 @@
-﻿using BlazorHero.CleanArchitecture.Shared.Managers;
+﻿using BlazorApp.Shared.Managers;
 using MudBlazor;
 using System.Threading.Tasks;
 
-namespace BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Preferences
+namespace BlazorApp.Client.Infrastructure.Managers.Preferences
 {
     public interface IClientPreferenceManager : IPreferenceManager
     {

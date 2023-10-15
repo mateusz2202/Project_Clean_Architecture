@@ -1,8 +1,8 @@
 ﻿#nullable enable
 using System;
-using BlazorHero.CleanArchitecture.Application.Enums;
+using BlazorApp.Application.Enums;
 
-namespace BlazorHero.CleanArchitecture.Application.Features.ExtendedAttributes;
+namespace BlazorApp.Application.Features.ExtendedAttributes;
 
 public class GetAllExtendedAttributesByEntityIdResponse<TId, TEntityId> 
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BlazorHero.CleanArchitecture.Application.Features.Documents;
+namespace BlazorApp.Application.Features.Documents;
 
 public class GetAllDocumentsResponse
 {

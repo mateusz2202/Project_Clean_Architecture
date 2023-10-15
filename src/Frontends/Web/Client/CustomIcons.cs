@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace BlazorHero.CleanArchitecture.Client
+namespace BlazorApp.Client
 {
     [ExcludeFromCodeCoverage]
     public class CustomIcons

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using BlazorHero.CleanArchitecture.Application.Interfaces.Services;
+using BlazorApp.Application.Interfaces.Services;
 
-namespace BlazorHero.CleanArchitecture.Client.Services;
+namespace BlazorApp.Server.Services;
 
 public class CurrentUserService : ICurrentUserService
 {

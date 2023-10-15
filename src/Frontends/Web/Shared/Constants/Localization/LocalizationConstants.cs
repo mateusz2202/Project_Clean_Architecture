@@ -1,4 +1,4 @@
-﻿namespace BlazorHero.CleanArchitecture.Shared.Constants.Localization;
+﻿namespace BlazorApp.Shared.Constants.Localization;
 
 public static class LocalizationConstants
 {

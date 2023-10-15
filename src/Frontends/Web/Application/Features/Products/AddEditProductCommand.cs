@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using BlazorHero.CleanArchitecture.Application.Requests;
+using BlazorApp.Application.Requests;
 
-namespace BlazorHero.CleanArchitecture.Application.Features.Products;
+namespace BlazorApp.Application.Features.Products;
 
 public class AddEditProductCommand
 {

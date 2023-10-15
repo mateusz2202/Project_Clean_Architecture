@@ -53,7 +53,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "src\Frontend
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "src\Frontends\Web\Client\Client.csproj", "{F842E7C0-82DC-40A9-A8D9-5438F2D13526}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client.Infrastructure", "src\Frontends\Web\Client.Infrastructure\Client.Infrastructure.csproj", "{C69AB133-CCE2-4EAD-A2E7-95FD96FF3863}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "src\Frontends\Web\Client.Infrastructure\Infrastructure.csproj", "{C69AB133-CCE2-4EAD-A2E7-95FD96FF3863}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "src\Frontends\Web\Server\Server.csproj", "{B239C23D-F4BB-413E-A019-A2BA64F01F56}"
 EndProject

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using BlazorHero.CleanArchitecture.Application.Requests;
+using BlazorApp.Application.Requests;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using MudBlazor;
@@ -8,12 +8,12 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Blazored.FluentValidation;
-using BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Misc.Document;
-using BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Misc.DocumentType;
-using BlazorHero.CleanArchitecture.Application.Features.Documents;
-using BlazorHero.CleanArchitecture.Application.Features.DocumentTypes;
+using BlazorApp.Client.Infrastructure.Managers.Misc.Document;
+using BlazorApp.Client.Infrastructure.Managers.Misc.DocumentType;
+using BlazorApp.Application.Features.Documents;
+using BlazorApp.Application.Features.DocumentTypes;
 
-namespace BlazorHero.CleanArchitecture.Client.Pages.Misc
+namespace BlazorApp.Client.Pages.Misc
 {
     public partial class AddEditDocumentModal
     {

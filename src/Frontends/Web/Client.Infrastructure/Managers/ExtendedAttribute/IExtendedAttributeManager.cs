@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using BlazorHero.CleanArchitecture.Application.Features.ExtendedAttributes;
-using BlazorHero.CleanArchitecture.Shared.Wrapper;
+using BlazorApp.Application.Features.ExtendedAttributes;
+using BlazorApp.Shared.Wrapper;
 
-namespace BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.ExtendedAttribute;
+namespace BlazorApp.Client.Infrastructure.Managers.ExtendedAttribute;
 
 public interface IExtendedAttributeManager<TId, TEntityId, TEntity, TExtendedAttribute>
 {

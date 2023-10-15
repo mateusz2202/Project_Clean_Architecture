@@ -1,12 +1,12 @@
-﻿using BlazorHero.CleanArchitecture.Client.Infrastructure.Extensions;
-using BlazorHero.CleanArchitecture.Shared.Wrapper;
+﻿using BlazorApp.Client.Infrastructure.Extensions;
+using BlazorApp.Shared.Wrapper;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using BlazorHero.CleanArchitecture.Shared.Constants.Application;
-using BlazorHero.CleanArchitecture.Application.Features.Brands;
+using BlazorApp.Shared.Constants.Application;
+using BlazorApp.Application.Features.Brands;
 
-namespace BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Catalog.Brand;
+namespace BlazorApp.Client.Infrastructure.Managers.Catalog.Brand;
 
 public class BrandManager : IBrandManager
 {

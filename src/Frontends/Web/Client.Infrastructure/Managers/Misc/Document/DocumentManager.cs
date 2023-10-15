@@ -1,12 +1,12 @@
-﻿using BlazorHero.CleanArchitecture.Application.Requests.Documents;
-using BlazorHero.CleanArchitecture.Client.Infrastructure.Extensions;
-using BlazorHero.CleanArchitecture.Shared.Wrapper;
+﻿using BlazorApp.Application.Requests.Documents;
+using BlazorApp.Client.Infrastructure.Extensions;
+using BlazorApp.Shared.Wrapper;
 using System.Net.Http;
 using System.Threading.Tasks;
-using BlazorHero.CleanArchitecture.Shared.Constants.Application;
-using BlazorHero.CleanArchitecture.Application.Features.Documents;
+using BlazorApp.Shared.Constants.Application;
+using BlazorApp.Application.Features.Documents;
 
-namespace BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Misc.Document;
+namespace BlazorApp.Client.Infrastructure.Managers.Misc.Document;
 
 public class DocumentManager : IDocumentManager
 {

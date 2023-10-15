@@ -1,9 +1,9 @@
-﻿using BlazorHero.CleanArchitecture.Client.Extensions;
+﻿using BlazorApp.Client.Extensions;
 using Microsoft.AspNetCore.Components;
 using System.Threading.Tasks;
-using BlazorHero.CleanArchitecture.Shared.Constants.Storage;
+using BlazorApp.Shared.Constants.Storage;
 
-namespace BlazorHero.CleanArchitecture.Client.Shared.Components
+namespace BlazorApp.Client.Shared.Components
 {
     public partial class UserCard
     {

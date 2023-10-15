@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using BlazorHero.CleanArchitecture.Application.Features.ExtendedAttributes;
-using BlazorHero.CleanArchitecture.Client.Extensions;
-using BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.ExtendedAttribute;
-using BlazorHero.CleanArchitecture.Application.Enums;
-using BlazorHero.CleanArchitecture.Shared.Constants.Application;
+using BlazorApp.Application.Features.ExtendedAttributes;
+using BlazorApp.Client.Extensions;
+using BlazorApp.Client.Infrastructure.Managers.ExtendedAttribute;
+using BlazorApp.Application.Enums;
+using BlazorApp.Shared.Constants.Application;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.JSInterop;
 using MudBlazor;
 
-namespace BlazorHero.CleanArchitecture.Client.Shared.Components;
+namespace BlazorApp.Client.Shared.Components;
 
 public class ExtendedAttributesLocalization
 {

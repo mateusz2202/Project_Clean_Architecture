@@ -1,4 +1,4 @@
-﻿namespace BlazorHero.CleanArchitecture.Application.Requests.Identity
+﻿namespace BlazorApp.Application.Requests.Identity
 {
     public class RoleClaimRequest
     {

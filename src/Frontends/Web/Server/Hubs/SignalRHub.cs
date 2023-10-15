@@ -1,9 +1,9 @@
-﻿using BlazorHero.CleanArchitecture.Shared.Constants.Application;
+﻿using BlazorApp.Shared.Constants.Application;
 using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
 
 
-namespace BlazorHero.CleanArchitecture.Server.Hubs;
+namespace BlazorApp.Server.Hubs;
 public class SignalRHub : Hub
 {
     public async Task PingRequestAsync(string userId)

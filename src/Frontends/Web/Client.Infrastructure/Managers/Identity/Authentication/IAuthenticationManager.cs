@@ -1,9 +1,9 @@
-﻿using BlazorHero.CleanArchitecture.Application.Requests.Identity;
-using BlazorHero.CleanArchitecture.Shared.Wrapper;
+﻿using BlazorApp.Application.Requests.Identity;
+using BlazorApp.Shared.Wrapper;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Identity.Authentication
+namespace BlazorApp.Client.Infrastructure.Managers.Identity.Authentication
 {
     public interface IAuthenticationManager : IManager
     {

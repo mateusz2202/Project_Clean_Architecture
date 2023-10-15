@@ -1,6 +1,6 @@
 { 
   "profiles": {    
-    "BlazorHero.CleanArchitecture.Server": {
+    "BlazorApp.Server": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {

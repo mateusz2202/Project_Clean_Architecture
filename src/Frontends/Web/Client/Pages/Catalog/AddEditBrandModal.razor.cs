@@ -1,14 +1,14 @@
-﻿using BlazorHero.CleanArchitecture.Client.Extensions;
-using BlazorHero.CleanArchitecture.Shared.Constants.Application;
+﻿using BlazorApp.Client.Extensions;
+using BlazorApp.Shared.Constants.Application;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
 using MudBlazor;
 using System.Threading.Tasks;
 using Blazored.FluentValidation;
-using BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Catalog.Brand;
-using BlazorHero.CleanArchitecture.Application.Features.Brands;
+using BlazorApp.Client.Infrastructure.Managers.Catalog.Brand;
+using BlazorApp.Application.Features.Brands;
 
-namespace BlazorHero.CleanArchitecture.Client.Pages.Catalog
+namespace BlazorApp.Client.Pages.Catalog
 {
     public partial class AddEditBrandModal
     {

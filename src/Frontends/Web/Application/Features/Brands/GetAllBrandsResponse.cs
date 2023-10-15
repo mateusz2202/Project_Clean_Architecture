@@ -1,4 +1,4 @@
-﻿namespace BlazorHero.CleanArchitecture.Application.Features.Brands;
+﻿namespace BlazorApp.Application.Features.Brands;
 
 public class GetAllBrandsResponse
 {

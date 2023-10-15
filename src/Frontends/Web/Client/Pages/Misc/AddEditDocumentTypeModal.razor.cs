@@ -1,14 +1,14 @@
 ﻿using System.Threading.Tasks;
 using Blazored.FluentValidation;
-using BlazorHero.CleanArchitecture.Application.Features.DocumentTypes;
-using BlazorHero.CleanArchitecture.Client.Extensions;
-using BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Misc.DocumentType;
-using BlazorHero.CleanArchitecture.Shared.Constants.Application;
+using BlazorApp.Application.Features.DocumentTypes;
+using BlazorApp.Client.Extensions;
+using BlazorApp.Client.Infrastructure.Managers.Misc.DocumentType;
+using BlazorApp.Shared.Constants.Application;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
 using MudBlazor;
 
-namespace BlazorHero.CleanArchitecture.Client.Pages.Misc
+namespace BlazorApp.Client.Pages.Misc
 {
     public partial class AddEditDocumentTypeModal
     {

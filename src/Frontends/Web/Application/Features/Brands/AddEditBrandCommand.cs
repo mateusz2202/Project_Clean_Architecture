@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BlazorHero.CleanArchitecture.Application.Features.Brands;
+namespace BlazorApp.Application.Features.Brands;
 
 public partial class AddEditBrandCommand
 {

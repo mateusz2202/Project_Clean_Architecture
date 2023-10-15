@@ -1,4 +1,4 @@
-﻿namespace BlazorHero.CleanArchitecture.Application.Interfaces.Services;
+﻿namespace BlazorApp.Application.Interfaces.Services;
 
 public interface ICurrentUserService 
 {

@@ -1,14 +1,14 @@
-﻿using BlazorHero.CleanArchitecture.Client.Extensions;
-using BlazorHero.CleanArchitecture.Shared.Constants.Application;
+﻿using BlazorApp.Client.Extensions;
+using BlazorApp.Shared.Constants.Application;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.JSInterop;
 using MudBlazor;
 using System.Threading.Tasks;
-using BlazorHero.CleanArchitecture.Shared.Constants.Storage;
+using BlazorApp.Shared.Constants.Storage;
 
-namespace BlazorHero.CleanArchitecture.Client.Pages.Communication;
+namespace BlazorApp.Client.Pages.Communication;
 
 public partial class Chat
 {

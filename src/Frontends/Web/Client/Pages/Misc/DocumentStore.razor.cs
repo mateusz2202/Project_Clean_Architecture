@@ -1,18 +1,18 @@
-﻿using BlazorHero.CleanArchitecture.Application.Requests.Documents;
-using BlazorHero.CleanArchitecture.Client.Extensions;
+﻿using BlazorApp.Application.Requests.Documents;
+using BlazorApp.Client.Extensions;
 using MudBlazor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Misc.Document;
-using BlazorHero.CleanArchitecture.Shared.Constants.Permission;
+using BlazorApp.Client.Infrastructure.Managers.Misc.Document;
+using BlazorApp.Shared.Constants.Permission;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
-using BlazorHero.CleanArchitecture.Application.Features.Documents;
+using BlazorApp.Application.Features.Documents;
 
-namespace BlazorHero.CleanArchitecture.Client.Pages.Misc
+namespace BlazorApp.Client.Pages.Misc
 {
     public partial class DocumentStore
     {

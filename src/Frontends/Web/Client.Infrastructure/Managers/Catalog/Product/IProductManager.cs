@@ -1,9 +1,9 @@
-﻿using BlazorHero.CleanArchitecture.Application.Features.Products;
-using BlazorHero.CleanArchitecture.Application.Requests.Catalog;
-using BlazorHero.CleanArchitecture.Shared.Wrapper;
+﻿using BlazorApp.Application.Features.Products;
+using BlazorApp.Application.Requests.Catalog;
+using BlazorApp.Shared.Wrapper;
 using System.Threading.Tasks;
 
-namespace BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Catalog.Product;
+namespace BlazorApp.Client.Infrastructure.Managers.Catalog.Product;
 
 public interface IProductManager : IManager
 {

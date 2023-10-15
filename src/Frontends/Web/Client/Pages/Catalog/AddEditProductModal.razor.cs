@@ -1,6 +1,6 @@
-﻿using BlazorHero.CleanArchitecture.Application.Requests;
-using BlazorHero.CleanArchitecture.Client.Extensions;
-using BlazorHero.CleanArchitecture.Shared.Constants.Application;
+﻿using BlazorApp.Application.Requests;
+using BlazorApp.Client.Extensions;
+using BlazorApp.Shared.Constants.Application;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.SignalR.Client;
@@ -11,12 +11,12 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Blazored.FluentValidation;
-using BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Catalog.Brand;
-using BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Catalog.Product;
-using BlazorHero.CleanArchitecture.Application.Features.Products;
-using BlazorHero.CleanArchitecture.Application.Features.Brands;
+using BlazorApp.Client.Infrastructure.Managers.Catalog.Brand;
+using BlazorApp.Client.Infrastructure.Managers.Catalog.Product;
+using BlazorApp.Application.Features.Products;
+using BlazorApp.Application.Features.Brands;
 
-namespace BlazorHero.CleanArchitecture.Client.Pages.Catalog
+namespace BlazorApp.Client.Pages.Catalog
 {
     public partial class AddEditProductModal
     {

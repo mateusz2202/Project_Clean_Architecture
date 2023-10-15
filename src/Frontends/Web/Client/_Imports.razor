@@ -15,33 +15,33 @@
 @using Blazored.FluentValidation
 
 @*Client Services*@
-@using BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Identity.Account
-@using BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Identity.Authentication
-@using BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Identity.Roles
-@using BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Identity.RoleClaims
-@using BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Identity.Users
-@using BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Preferences
-@using BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Interceptors
-@using BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Catalog.Product
-@using BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Catalog.Brand
-@using BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Misc.Document
-@using BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Misc.DocumentType
+@using BlazorApp.Client.Infrastructure.Managers.Identity.Account
+@using BlazorApp.Client.Infrastructure.Managers.Identity.Authentication
+@using BlazorApp.Client.Infrastructure.Managers.Identity.Roles
+@using BlazorApp.Client.Infrastructure.Managers.Identity.RoleClaims
+@using BlazorApp.Client.Infrastructure.Managers.Identity.Users
+@using BlazorApp.Client.Infrastructure.Managers.Preferences
+@using BlazorApp.Client.Infrastructure.Managers.Interceptors
+@using BlazorApp.Client.Infrastructure.Managers.Catalog.Product
+@using BlazorApp.Client.Infrastructure.Managers.Catalog.Brand
+@using BlazorApp.Client.Infrastructure.Managers.Misc.Document
+@using BlazorApp.Client.Infrastructure.Managers.Misc.DocumentType
 
 @*Shared Libraries*@
-@using BlazorHero.CleanArchitecture.Shared.Constants.Permission
-@using BlazorHero.CleanArchitecture.Client.Shared.Components
+@using BlazorApp.Shared.Constants.Permission
+@using BlazorApp.Client.Shared.Components
 
-@using BlazorHero.CleanArchitecture.Client
-@using BlazorHero.CleanArchitecture.Client.Shared
-@using BlazorHero.CleanArchitecture.Client.Shared.Dialogs
-@using BlazorHero.CleanArchitecture.Client.Infrastructure.Settings
+@using BlazorApp.Client
+@using BlazorApp.Client.Shared
+@using BlazorApp.Client.Shared.Dialogs
+@using BlazorApp.Client.Infrastructure.Settings
 
-@using BlazorHero.CleanArchitecture.Application.Requests.Identity
+@using BlazorApp.Application.Requests.Identity
 
-@using BlazorHero.CleanArchitecture.Client.Pages.Authentication
+@using BlazorApp.Client.Pages.Authentication
 
-@using BlazorHero.CleanArchitecture.Client.Infrastructure.Authentication
-@using BlazorHero.CleanArchitecture.Client.Extensions
+@using BlazorApp.Client.Infrastructure.Authentication
+@using BlazorApp.Client.Extensions
 
 @attribute [Authorize]
 @inject IAuthenticationManager _authenticationManager

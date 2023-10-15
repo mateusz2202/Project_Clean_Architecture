@@ -1,9 +1,9 @@
-﻿using BlazorHero.CleanArchitecture.Application.Requests.Documents;
-using BlazorHero.CleanArchitecture.Shared.Wrapper;
+﻿using BlazorApp.Application.Requests.Documents;
+using BlazorApp.Shared.Wrapper;
 using System.Threading.Tasks;
-using BlazorHero.CleanArchitecture.Application.Features.Documents;
+using BlazorApp.Application.Features.Documents;
 
-namespace BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Misc.Document;
+namespace BlazorApp.Client.Infrastructure.Managers.Misc.Document;
 
 public interface IDocumentManager : IManager
 {

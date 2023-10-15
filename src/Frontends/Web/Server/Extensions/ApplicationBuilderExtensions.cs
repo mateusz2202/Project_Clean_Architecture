@@ -1,14 +1,17 @@
 ﻿using System.Globalization;
 using System.Linq;
-using BlazorHero.CleanArchitecture.Server.Hubs;
-using BlazorHero.CleanArchitecture.Shared.Constants.Localization;
+using BlazorApp.Server.Hubs;
+using BlazorApp.Shared.Constants.Localization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Hosting;
-using BlazorHero.CleanArchitecture.Shared.Constants.Application;
+using BlazorApp.Shared.Constants.Application;
+using Microsoft.Extensions.DependencyInjection;
+using BlazorApp.Application.Interfaces.Services;
+using BlazorApp.Server.Services;
 
-namespace BlazorHero.CleanArchitecture.Server.Extensions;
+namespace BlazorApp.Server.Extensions;
 
 internal static class ApplicationBuilderExtensions
 {
@@ -47,7 +50,14 @@ internal static class ApplicationBuilderExtensions
         });
 
         return app;
-    }       
+    }
 
-  
+    internal static IServiceCollection AddCurrentUserService(this IServiceCollection services)
+    {
+        services.AddHttpContextAccessor();
+        services.AddScoped<ICurrentUserService, CurrentUserService>();
+        return services;
+    }
+
+
 }

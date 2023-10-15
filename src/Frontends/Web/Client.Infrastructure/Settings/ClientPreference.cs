@@ -1,8 +1,8 @@
 ﻿using System.Linq;
-using BlazorHero.CleanArchitecture.Shared.Constants.Localization;
-using BlazorHero.CleanArchitecture.Shared.Settings;
+using BlazorApp.Shared.Constants.Localization;
+using BlazorApp.Shared.Settings;
 
-namespace BlazorHero.CleanArchitecture.Client.Infrastructure.Settings;
+namespace BlazorApp.Client.Infrastructure.Settings;
 
 public record ClientPreference : IPreference
 {

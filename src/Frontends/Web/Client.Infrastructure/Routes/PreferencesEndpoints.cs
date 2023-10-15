@@ -1,4 +1,4 @@
-﻿namespace BlazorHero.CleanArchitecture.Client.Infrastructure.Routes
+﻿namespace BlazorApp.Client.Infrastructure.Routes
 {
     public static class PreferencesEndpoints
     {

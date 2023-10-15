@@ -1,6 +1,6 @@
 {  
   "profiles": {
-    "BlazorHero.CleanArchitecture": {
+    "BlazorApp": {
       "commandName": "Project",
       "dotnetRunMessages": "true",
       "launchBrowser": true,

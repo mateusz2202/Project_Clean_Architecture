@@ -1,8 +1,8 @@
-﻿using BlazorHero.CleanArchitecture.Application.Requests;
+﻿using BlazorApp.Application.Requests;
 using System.ComponentModel.DataAnnotations;
 
 
-namespace BlazorHero.CleanArchitecture.Application.Features.Documents;
+namespace BlazorApp.Application.Features.Documents;
 
 public partial class AddEditDocumentCommand 
 {

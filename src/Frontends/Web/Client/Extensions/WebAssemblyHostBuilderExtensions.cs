@@ -1,8 +1,8 @@
 ﻿using Blazored.LocalStorage;
-using BlazorHero.CleanArchitecture.Client.Infrastructure.Authentication;
-using BlazorHero.CleanArchitecture.Client.Infrastructure.Managers;
-using BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Preferences;
-using BlazorHero.CleanArchitecture.Shared.Constants.Permission;
+using BlazorApp.Client.Infrastructure.Authentication;
+using BlazorApp.Client.Infrastructure.Managers;
+using BlazorApp.Client.Infrastructure.Managers.Preferences;
+using BlazorApp.Shared.Constants.Permission;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -15,9 +15,9 @@ using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
-using BlazorHero.CleanArchitecture.Shared.Constants.Application;
+using BlazorApp.Shared.Constants.Application;
 
-namespace BlazorHero.CleanArchitecture.Client.Extensions;
+namespace BlazorApp.Client.Extensions;
 
 public static class WebAssemblyHostBuilderExtensions
 {     

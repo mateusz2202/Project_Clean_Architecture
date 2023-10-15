@@ -1,6 +1,6 @@
-﻿using BlazorHero.CleanArchitecture.Application.Requests;
+﻿using BlazorApp.Application.Requests;
 
-namespace BlazorHero.CleanArchitecture.Application.Features.Brands;
+namespace BlazorApp.Application.Features.Brands;
 
 public partial class ImportBrandsCommand
 {

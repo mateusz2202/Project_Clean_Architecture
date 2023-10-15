@@ -1,16 +1,15 @@
-using BlazorHero.CleanArchitecture.Client.Extensions;
-using BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Preferences;
+using BlazorApp.Client.Extensions;
+using BlazorApp.Client.Infrastructure.Managers.Preferences;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using BlazorHero.CleanArchitecture.Client.Infrastructure.Settings;
-using BlazorHero.CleanArchitecture.Shared.Constants.Localization;
-using BlazorHero.CleanArchitecture.Client.Services;
-using BlazorHero.CleanArchitecture.Application.Interfaces.Services;
+using BlazorApp.Client.Infrastructure.Settings;
+using BlazorApp.Shared.Constants.Localization;
 
-namespace BlazorHero.CleanArchitecture.Client;
+
+namespace BlazorApp.Client;
 
 public static class Program
 {
@@ -20,8 +19,7 @@ public static class Program
                       .CreateDefault(args)
                       .AddRootComponents()
                       .AddClientServices();
-
-        builder.Services.AddCurrentUserService();        
+            
         var host = builder.Build();
     
         var storageService = host.Services.GetRequiredService<ClientPreferenceManager>();
@@ -38,10 +36,5 @@ public static class Program
         }
         await builder.Build().RunAsync();
     }
-
-    internal static IServiceCollection AddCurrentUserService(this IServiceCollection services)
-    {        
-        services.AddScoped<ICurrentUserService, CurrentUserService>();
-        return services;
-    }
+  
 }

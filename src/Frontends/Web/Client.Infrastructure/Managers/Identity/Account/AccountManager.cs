@@ -1,11 +1,11 @@
-﻿using BlazorHero.CleanArchitecture.Application.Requests.Identity;
-using BlazorHero.CleanArchitecture.Client.Infrastructure.Extensions;
-using BlazorHero.CleanArchitecture.Shared.Constants.Application;
-using BlazorHero.CleanArchitecture.Shared.Wrapper;
+﻿using BlazorApp.Application.Requests.Identity;
+using BlazorApp.Client.Infrastructure.Extensions;
+using BlazorApp.Shared.Constants.Application;
+using BlazorApp.Shared.Wrapper;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Identity.Account;
+namespace BlazorApp.Client.Infrastructure.Managers.Identity.Account;
 
 public class AccountManager : IAccountManager
 {

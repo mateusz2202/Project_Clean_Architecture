@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
-namespace BlazorHero.CleanArchitecture.Application;
+namespace BlazorApp.Application;
 
 public static class ServiceCollectionExtensions
 {

@@ -3,8 +3,8 @@
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>
-    <RootNamespace>BlazorHero.CleanArchitecture.Client</RootNamespace>
-    <AssemblyName>BlazorHero.CleanArchitecture.Client</AssemblyName>
+    <RootNamespace>BlazorApp.Client</RootNamespace>
+    <AssemblyName>BlazorApp.Client</AssemblyName>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
@@ -43,7 +43,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Client.Infrastructure\Client.Infrastructure.csproj" />
+    <ProjectReference Include="..\Client.Infrastructure\Infrastructure.csproj" />
     <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
 

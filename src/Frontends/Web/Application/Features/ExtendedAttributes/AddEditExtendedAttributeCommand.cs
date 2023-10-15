@@ -1,9 +1,9 @@
 ﻿#nullable enable
-using BlazorHero.CleanArchitecture.Application.Enums;
+using BlazorApp.Application.Enums;
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace BlazorHero.CleanArchitecture.Application.Features.ExtendedAttributes;
+namespace BlazorApp.Application.Features.ExtendedAttributes;
 
 internal class AddEditExtendedAttributeCommandLocalization
 {

@@ -1,7 +1,7 @@
 ﻿@page "/identity/user-roles/{Id}"
 @attribute [Authorize(Policy = Permissions.Roles.View)]
 @inject Microsoft.Extensions.Localization.IStringLocalizer<UserRoles> _localizer
-@using BlazorHero.CleanArchitecture.Application.Responses.Identity
+@using BlazorApp.Application.Responses.Identity
 @using Microsoft.AspNetCore.Components
 
 <HeroTitle Title="@Title" Description="@Description" />
