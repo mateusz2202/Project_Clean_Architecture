@@ -1,0 +1,59 @@
+﻿@*Libraries*@
+@using System.Net.Http
+@using System.Net.Http.Json
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components.Web.Virtualization
+@using Microsoft.AspNetCore.Components.WebAssembly.Http
+@using Microsoft.JSInterop
+@using Microsoft.AspNetCore.Identity;
+@using MudBlazor
+@using Blazored.LocalStorage;
+@using Blazored.FluentValidation
+
+@*Client Services*@
+@using BlazorApp.Client.Infrastructure.Managers.Identity.Account
+@using BlazorApp.Client.Infrastructure.Managers.Identity.Authentication
+@using BlazorApp.Client.Infrastructure.Managers.Identity.Roles
+@using BlazorApp.Client.Infrastructure.Managers.Identity.RoleClaims
+@using BlazorApp.Client.Infrastructure.Managers.Identity.Users
+@using BlazorApp.Client.Infrastructure.Managers.Preferences
+@using BlazorApp.Client.Infrastructure.Managers.Interceptors
+@using BlazorApp.Client.Infrastructure.Managers.Catalog.Product
+@using BlazorApp.Client.Infrastructure.Managers.Catalog.Brand
+@using BlazorApp.Client.Infrastructure.Managers.Misc.Document
+@using BlazorApp.Client.Infrastructure.Managers.Misc.DocumentType
+
+@*Shared Libraries*@
+@using BlazorApp.Shared.Constants.Permission
+@using BlazorApp.Client.Shared.Components
+
+@using BlazorApp.Client
+@using BlazorApp.Client.Shared
+@using BlazorApp.Client.Shared.Dialogs
+@using BlazorApp.Client.Infrastructure.Settings
+
+@using BlazorApp.Application.Requests.Identity
+
+@using BlazorApp.Client.Pages.Authentication
+
+@using BlazorApp.Client.Infrastructure.Authentication
+@using BlazorApp.Client.Extensions
+
+@attribute [Authorize]
+@inject IAuthenticationManager _authenticationManager
+@inject IAccountManager _accountManager
+@inject NavigationManager _navigationManager
+@inject BlazorAppStateProvider _stateProvider
+@inject IAuthorizationService _authorizationService
+@inject ISnackbar _snackBar
+@inject IDialogService _dialogService
+@inject HttpClient _httpClient
+@inject IHttpInterceptorManager _interceptor
+@inject ClientPreferenceManager _clientPreferenceManager
+@inject IUserManager _userManager
+@inject ILocalStorageService _localStorage;
+@inject IJSRuntime _jsRuntime;

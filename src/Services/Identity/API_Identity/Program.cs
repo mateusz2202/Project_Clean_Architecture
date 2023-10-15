@@ -4,7 +4,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 var app = builder
        .ConfigureServices()
-       .ConfigurePipeline();
+       .ConfigurePipeline()
+       .Initialize(builder.Configuration);
 
 
 app.Run();

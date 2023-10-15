@@ -21,4 +21,11 @@ public class RegistrationRequest
     [Required]
     [MinLength(6)]
     public string Password { get; set; } = string.Empty;
+
+    [Required]
+    [Compare(nameof(Password))]
+    public string ConfirmPassword { get; set; } = string.Empty;
+
+    [Phone]
+    public string PhoneNumber { get; set; } = string.Empty;
 }

@@ -1,61 +1,74 @@
 ﻿using Identity.Application.Common.Exceptions;
 using Identity.Application.Common.Interfaces;
 using Identity.Application.Models.Authentication;
-using Identity.Infrastructure.Models;
+using Identity.Shared.Models;
+using Identity.Shared;
+using Identity.Shared.Wrapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
+using Identity.Application.Responses;
 
 namespace Identity.Infrastructure.Services;
 
 public class AuthenticationService : IAuthenticationService
 {
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly RoleManager<ApplicationRole> _roleManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly JwtSettings _jwtSettings;
 
     public AuthenticationService(UserManager<ApplicationUser> userManager,
         IOptions<JwtSettings> jwtSettings,
-        SignInManager<ApplicationUser> signInManager)
+        SignInManager<ApplicationUser> signInManager,
+        RoleManager<ApplicationRole> roleManager)
     {
         _userManager = userManager;
         _jwtSettings = jwtSettings.Value;
         _signInManager = signInManager;
+        _roleManager = roleManager;
     }
 
-    public async Task<AuthenticationResponse> AuthenticateAsync(AuthenticationRequest request)
+    public async Task<Result<TokenResponse>> AuthenticateAsync(AuthenticationRequest request)
     {
-        ApplicationUser user = await _userManager.FindByEmailAsync(request.Email)
-                               ?? throw new NotFoundException($"User with {request.Email} not found.");
+        var user = await _userManager.FindByEmailAsync(request.Email);
+
+        if (user == null)
+            return await Result<TokenResponse>.FailAsync($"User with {request.Email} not found.");
+
+        if (!user.EmailConfirmed)
+            return await Result<TokenResponse>.FailAsync("E-Mail not confirmed");
+
+        var passwordValid = await _userManager.CheckPasswordAsync(user, request.Password);
+
+        if (!passwordValid)
+            return await Result<TokenResponse>.FailAsync("Invalid Credentials");
+
 
         var result = await _signInManager.PasswordSignInAsync(user.UserName ?? string.Empty, request.Password, false, lockoutOnFailure: false);
 
-        if (!result.Succeeded)        
-            throw new Exception($"Credentials for '{request.Email} aren't valid'.");        
+        if (!result.Succeeded)
+            return await Result<TokenResponse>.FailAsync($"Credentials for '{request.Email} aren't valid'.");
 
-        JwtSecurityToken jwtSecurityToken = await GenerateToken(user);
+        var token = await GenerateToken(user);
+        var refreshToken = GenerateRefreshToken();
+        
+        var response = new TokenResponse { Token = token, RefreshToken = refreshToken, UserImageURL = user.ProfilePictureDataUrl ?? string.Empty };
 
-        AuthenticationResponse response = new()
-        {
-            Id = user.Id,
-            Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
-            Email = user.Email ?? string.Empty,
-            UserName = user.UserName ?? string.Empty
-        };
-
-        return response;
+        return await Result<TokenResponse>.SuccessAsync(response);
     }
 
-    public async Task<RegistrationResponse> RegisterAsync(RegistrationRequest request)
+    public async Task<IResult> RegisterAsync(RegistrationRequest request)
     {
         var existingUser = await _userManager.FindByNameAsync(request.UserName);
 
-        if (existingUser != null)        
-            throw new Exception($"Username '{request.UserName}' already exists.");
-        
+        if (existingUser != null)
+            return await Result.FailAsync(string.Format("Username {0} is already taken.", request.UserName));
 
         var user = new ApplicationUser
         {
@@ -63,53 +76,93 @@ public class AuthenticationService : IAuthenticationService
             FirstName = request.FirstName,
             LastName = request.LastName,
             UserName = request.UserName,
+            PhoneNumber = request.PhoneNumber,
+            IsActive = true,
             EmailConfirmed = true
         };
 
-        var existingEmail = await _userManager.FindByEmailAsync(request.Email);
-
-        if (existingEmail == null)
+        if (!string.IsNullOrWhiteSpace(request.PhoneNumber))
+        {
+            var userWithSamePhoneNumber = await _userManager.Users.FirstOrDefaultAsync(x => x.PhoneNumber == request.PhoneNumber);
+            if (userWithSamePhoneNumber != null)
+            {
+                return await Result.FailAsync(string.Format("Phone number {0} is already registered.", request.PhoneNumber));
+            }
+        }
+        var userWithSameEmail = await _userManager.FindByEmailAsync(request.Email);
+        if (userWithSameEmail == null)
         {
             var result = await _userManager.CreateAsync(user, request.Password);
-
-            if (result.Succeeded)            
-                return new RegistrationResponse() { UserId = user.Id };            
-            else            
-                throw new ValidationException(result.Errors);
-            
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(user, ApplicationConstans.RoleConstants.BasicRole);
+                return await Result<string>.SuccessAsync(user.Id, string.Format("User {0} Registered.", user.UserName));
+            }
+            else
+            {
+                return await Result.FailAsync(result.Errors.Select(a => a.Description.ToString()).ToList());
+            }
         }
         else
         {
-            throw new BadRequestException($"Email {request.Email} already exists.");
+            return await Result.FailAsync(string.Format("Email {0} is already registered.", request.Email));
         }
     }
 
-    private async Task<JwtSecurityToken> GenerateToken(ApplicationUser user)
+    private async Task<string> GenerateToken(ApplicationUser user)
+         => GenerateEncryptedToken(GetSigningCredentials(), await GetClaimsAsync(user));
+
+    private string GenerateEncryptedToken(SigningCredentials signingCredentials, IEnumerable<Claim> claims)
+    {
+        var token = new JwtSecurityToken(
+           claims: claims,
+           expires: DateTime.UtcNow.AddMinutes(_jwtSettings.DurationInMinutes),
+           signingCredentials: signingCredentials);
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var encryptedToken = tokenHandler.WriteToken(token);
+        return encryptedToken;
+    }
+
+    private SigningCredentials GetSigningCredentials()
+        => new(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key)), SecurityAlgorithms.HmacSha256);
+
+
+    private async Task<IEnumerable<Claim>> GetClaimsAsync(ApplicationUser user)
     {
         var userClaims = await _userManager.GetClaimsAsync(user);
         var roles = await _userManager.GetRolesAsync(user);
-
-        var roleClaims = roles.Select(x => new Claim("roles", x));
-
-        var claims = new[]
+        var roleClaims = new List<Claim>();
+        var permissionClaims = new List<Claim>();
+        foreach (var role in roles)
         {
-                new Claim(JwtRegisteredClaimNames.Sub, user?.UserName ?? string.Empty),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, user?.Email ?? string.Empty),
-                new Claim("uid", user?.Id ?? string.Empty)
+            roleClaims.Add(new Claim(ClaimTypes.Role, role));
+            var thisRole = await _roleManager.FindByNameAsync(role);
+            var allPermissionsForThisRoles = await _roleManager.GetClaimsAsync(thisRole);
+            permissionClaims.AddRange(allPermissionsForThisRoles);
         }
+
+        var claims = new List<Claim>
+            {
+                new(ClaimTypes.NameIdentifier, user.Id),
+                new(ClaimTypes.Email, user.Email),
+                new(ClaimTypes.Name, user.FirstName),
+                new(ClaimTypes.Surname, user.LastName),
+                new(ClaimTypes.MobilePhone, user.PhoneNumber ?? string.Empty)
+            }
         .Union(userClaims)
-        .Union(roleClaims);
+        .Union(roleClaims)
+        .Union(permissionClaims);
 
-        var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
-        var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
-
-        var jwtSecurityToken = new JwtSecurityToken(
-            issuer: _jwtSettings.Issuer,
-            audience: _jwtSettings.Audience,
-            claims: claims,
-            expires: DateTime.UtcNow.AddMinutes(_jwtSettings.DurationInMinutes),
-            signingCredentials: signingCredentials);
-        return jwtSecurityToken;
+        return claims;
     }
+
+    private string GenerateRefreshToken()
+    {
+        var randomNumber = new byte[32];
+        using var rng = RandomNumberGenerator.Create();
+        rng.GetBytes(randomNumber);
+        return Convert.ToBase64String(randomNumber);
+    }
+
+
 }

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Identity.API.Controllers;
 
-[Route("[controller]")]
+[Route("api/identity/account")]
 [ApiController]
 [Authorize]
 public class AccountController : ControllerBase
@@ -18,13 +18,13 @@ public class AccountController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost("authenticate")]
-    public async Task<ActionResult<AuthenticationResponse>> Login(AuthenticationRequest request)
+    public async Task<ActionResult> Login(AuthenticationRequest request)
         => Ok(await _authenticationService.AuthenticateAsync(request));
 
 
     [AllowAnonymous]
     [HttpPost("register")]
-    public async Task<ActionResult<RegistrationResponse>> RegisterUser(RegistrationRequest request)
+    public async Task<IActionResult> RegisterUser(RegistrationRequest request)
         => Ok(await _authenticationService.RegisterAsync(request));   
 
 }

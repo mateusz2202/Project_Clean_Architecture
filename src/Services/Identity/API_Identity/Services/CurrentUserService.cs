@@ -15,6 +15,8 @@ public class CurrentUserService : ICurrentUserService
     public ClaimsPrincipal? User
         => _httpContextAccessor.HttpContext?.User;
 
+    public string UserId 
+        => _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
     public string? Email
         => User?.FindFirst(x => x.Type == ClaimTypes.Email)?.Value;
 
