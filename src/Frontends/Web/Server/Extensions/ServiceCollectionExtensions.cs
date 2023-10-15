@@ -12,7 +12,6 @@ using BlazorHero.CleanArchitecture.Server.Managers.Preferences;
 using BlazorHero.CleanArchitecture.Server.Services;
 using BlazorHero.CleanArchitecture.Server.Settings;
 using BlazorHero.CleanArchitecture.Shared.Constants.Localization;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Localization;
@@ -32,15 +31,7 @@ internal static class ServiceCollectionExtensions
         var localizer = serviceProvider.GetService<IStringLocalizer<T>>();
         await serviceProvider.DisposeAsync();
         return localizer;
-    }
-
-    internal static IServiceCollection AddForwarding(this IServiceCollection services, IConfiguration configuration)
-    {
-        var applicationSettingsConfiguration = configuration.GetSection(nameof(AppConfiguration));
-        var config = applicationSettingsConfiguration.Get<AppConfiguration>();     
-        
-        return services;
-    }
+    }   
 
     private static async Task SetCultureFromServerPreferenceAsync(IServiceProvider serviceProvider)
     {
@@ -64,17 +55,7 @@ internal static class ServiceCollectionExtensions
     {
         services.TryAddTransient(typeof(IStringLocalizer<>), typeof(ServerLocalizer<>));
         return services;
-    }
-
-    internal static AppConfiguration GetApplicationSettings(
-       this IServiceCollection services,
-       IConfiguration configuration)
-    {
-        var applicationSettingsConfiguration = configuration.GetSection(nameof(AppConfiguration));
-        services.Configure<AppConfiguration>(applicationSettingsConfiguration);
-        return applicationSettingsConfiguration.Get<AppConfiguration>();
-    }
-
+    }  
 
 
     internal static IServiceCollection AddSerialization(this IServiceCollection services)
@@ -91,8 +72,6 @@ internal static class ServiceCollectionExtensions
         services.AddScoped<IJsonSerializer, SystemTextJsonSerializer>(); // you can change it
         return services;
     }
-
-
  
 
     internal static IServiceCollection AddCurrentUserService(this IServiceCollection services)

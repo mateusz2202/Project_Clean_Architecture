@@ -59,8 +59,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "src\Frontends\Web
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "src\Frontends\Web\Infrastructure\Infrastructure.csproj", "{6663DE81-DF31-4D2D-A091-315CC2688927}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Shared", "src\Frontends\Web\Infrastructure.Shared\Infrastructure.Shared.csproj", "{2F927105-C3B5-42D7-AC22-92E06E99AAAE}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "src\Frontends\Web\Server\Server.csproj", "{B239C23D-F4BB-413E-A019-A2BA64F01F56}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "src\Frontends\Web\Shared\Shared.csproj", "{D8BE7EA5-ECD1-4B77-92B9-B3B1DC4DBDD4}"
@@ -69,31 +67,31 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.Shared", "src\Serv
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Document", "Document", "{06A10D4B-5A1B-4878-B4A6-C00B436DFB4E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Document.API", "src\Services\Document\Document.API\Document.API.csproj", "{F91AC726-FDF1-47B5-994B-FF21C0EDAAFD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Document.API", "src\Services\Document\Document.API\Document.API.csproj", "{F91AC726-FDF1-47B5-994B-FF21C0EDAAFD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Document.Application", "src\Services\Document\Document.Application\Document.Application.csproj", "{DEB20CF2-BA25-4D48-8218-C11A6059F230}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Document.Application", "src\Services\Document\Document.Application\Document.Application.csproj", "{DEB20CF2-BA25-4D48-8218-C11A6059F230}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Document.Infrastucture", "src\Services\Document\Document.Infrastucture\Document.Infrastucture.csproj", "{B3EFBD58-AAF4-41BE-AD08-53A232715713}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Document.Infrastucture", "src\Services\Document\Document.Infrastucture\Document.Infrastucture.csproj", "{B3EFBD58-AAF4-41BE-AD08-53A232715713}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Document.Persistence", "src\Services\Document\Document.Persistence\Document.Persistence.csproj", "{AD16E1F1-25C6-4A5A-B660-6F34125C00F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Document.Persistence", "src\Services\Document\Document.Persistence\Document.Persistence.csproj", "{AD16E1F1-25C6-4A5A-B660-6F34125C00F0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Document.Domain", "src\Services\Document\Document.Domain\Document.Domain.csproj", "{04C41E6B-9181-4EC6-849C-CC60D2010F24}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Document.Domain", "src\Services\Document\Document.Domain\Document.Domain.csproj", "{04C41E6B-9181-4EC6-849C-CC60D2010F24}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Document.Shared", "src\Services\Document\Document.Shared\Document.Shared.csproj", "{710BD808-9AE3-4A7F-AEA7-5A7A3DADAEFC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Document.Shared", "src\Services\Document\Document.Shared\Document.Shared.csproj", "{710BD808-9AE3-4A7F-AEA7-5A7A3DADAEFC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Product", "Product", "{A3272108-C371-4244-87A5-E3283057341F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Product.Api", "src\Services\Product\Product.Api\Product.Api.csproj", "{8BC0F002-2061-48C6-9614-26E6CE599664}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Product.Api", "src\Services\Product\Product.Api\Product.Api.csproj", "{8BC0F002-2061-48C6-9614-26E6CE599664}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Product.Application", "src\Services\Product\Product.Application\Product.Application.csproj", "{F264929F-564C-48EC-B6C3-9A4A95432C18}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Product.Application", "src\Services\Product\Product.Application\Product.Application.csproj", "{F264929F-564C-48EC-B6C3-9A4A95432C18}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Product.Domain", "src\Services\Product\Product.Domain\Product.Domain.csproj", "{FF4049CC-E1F7-4DAA-8315-1D75924848F7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Product.Domain", "src\Services\Product\Product.Domain\Product.Domain.csproj", "{FF4049CC-E1F7-4DAA-8315-1D75924848F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Product.Infrastucture", "src\Services\Product\Product.Infrastucture\Product.Infrastucture.csproj", "{237DB442-93AA-4B78-A8D3-32E1363D7792}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Product.Infrastucture", "src\Services\Product\Product.Infrastucture\Product.Infrastucture.csproj", "{237DB442-93AA-4B78-A8D3-32E1363D7792}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Product.Persistence", "src\Services\Product\Product.Persistence\Product.Persistence.csproj", "{1528C2A6-86FC-4E11-878D-FA949D0D384A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Product.Persistence", "src\Services\Product\Product.Persistence\Product.Persistence.csproj", "{1528C2A6-86FC-4E11-878D-FA949D0D384A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Product.Shared", "src\Services\Product\Product.Shared\Product.Shared.csproj", "{547B4429-B24D-4450-AB19-E4A09C5F65B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Product.Shared", "src\Services\Product\Product.Shared\Product.Shared.csproj", "{547B4429-B24D-4450-AB19-E4A09C5F65B5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -175,10 +173,6 @@ Global
 		{6663DE81-DF31-4D2D-A091-315CC2688927}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6663DE81-DF31-4D2D-A091-315CC2688927}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6663DE81-DF31-4D2D-A091-315CC2688927}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2F927105-C3B5-42D7-AC22-92E06E99AAAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2F927105-C3B5-42D7-AC22-92E06E99AAAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2F927105-C3B5-42D7-AC22-92E06E99AAAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2F927105-C3B5-42D7-AC22-92E06E99AAAE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B239C23D-F4BB-413E-A019-A2BA64F01F56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B239C23D-F4BB-413E-A019-A2BA64F01F56}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B239C23D-F4BB-413E-A019-A2BA64F01F56}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -270,7 +264,6 @@ Global
 		{C69AB133-CCE2-4EAD-A2E7-95FD96FF3863} = {77379EE5-EC3B-4836-B383-F38D8EC61249}
 		{F839FE38-6677-44E7-92C7-A6C091C21C01} = {77379EE5-EC3B-4836-B383-F38D8EC61249}
 		{6663DE81-DF31-4D2D-A091-315CC2688927} = {77379EE5-EC3B-4836-B383-F38D8EC61249}
-		{2F927105-C3B5-42D7-AC22-92E06E99AAAE} = {77379EE5-EC3B-4836-B383-F38D8EC61249}
 		{B239C23D-F4BB-413E-A019-A2BA64F01F56} = {77379EE5-EC3B-4836-B383-F38D8EC61249}
 		{D8BE7EA5-ECD1-4B77-92B9-B3B1DC4DBDD4} = {77379EE5-EC3B-4836-B383-F38D8EC61249}
 		{36E94EAF-9525-49F0-A79C-2C369F85A81D} = {C67A4E14-1661-4094-A516-D34375501C41}

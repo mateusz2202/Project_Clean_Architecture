@@ -3,11 +3,8 @@ using BlazorHero.CleanArchitecture.Shared.Constants.Application;
 using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
 using BlazorHero.CleanArchitecture.Application.Interfaces.Chat;
-using Microsoft.AspNetCore.Authorization;
 
 namespace BlazorHero.CleanArchitecture.Server.Hubs;
-
-
 public class SignalRHub : Hub
 {
     public async Task PingRequestAsync(string userId)

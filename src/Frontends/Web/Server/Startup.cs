@@ -3,25 +3,16 @@ using BlazorHero.CleanArchitecture.Infrastructure.Extensions;
 using BlazorHero.CleanArchitecture.Server.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using BlazorHero.CleanArchitecture.Server.Managers.Preferences;
-using Microsoft.Extensions.Localization;
 
 namespace BlazorHero.CleanArchitecture.Server;
 
 public class Startup
 {
-    public Startup(IConfiguration configuration)
-    {
-        _configuration = configuration;
-    }
-
-    private readonly IConfiguration _configuration;
-
+   
     public void ConfigureServices(IServiceCollection services)
-    {
-        services.AddForwarding(_configuration);
+    {     
         services.AddLocalization(options =>
         {
             options.ResourcesPath = "Resources";
@@ -33,13 +24,13 @@ public class Startup
         services.AddServerLocalization();    
         services.AddSignalR();
         services.AddApplicationLayer();     
-        services.AddInfrastructureMappings();
-        services.AddControllers();         
+        services.AddInfrastructureMappings();     
+        services.AddControllers();
         services.AddRazorPages();            
         services.AddLazyCache();
     }
 
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IStringLocalizer<Startup> localizer)
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {       
         app.UseExceptionHandling(env);
         app.UseHttpsRedirection();     
