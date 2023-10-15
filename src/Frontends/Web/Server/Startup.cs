@@ -1,10 +1,8 @@
 using BlazorHero.CleanArchitecture.Application.Extensions;
-using BlazorHero.CleanArchitecture.Infrastructure.Extensions;
 using BlazorHero.CleanArchitecture.Server.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using BlazorHero.CleanArchitecture.Server.Managers.Preferences;
 
 namespace BlazorHero.CleanArchitecture.Server;
 
@@ -12,19 +10,11 @@ public class Startup
 {
    
     public void ConfigureServices(IServiceCollection services)
-    {     
-        services.AddLocalization(options =>
-        {
-            options.ResourcesPath = "Resources";
-        });
+    {       
         services.AddCurrentUserService();
-        services.AddSerialization();      
-        services.AddServerStorage(); 
-        services.AddScoped<ServerPreferenceManager>();
-        services.AddServerLocalization();    
+        services.AddSerialization();          
         services.AddSignalR();
-        services.AddApplicationLayer();     
-        services.AddInfrastructureMappings();     
+        services.AddApplicationLayer();    
         services.AddControllers();
         services.AddRazorPages();            
         services.AddLazyCache();

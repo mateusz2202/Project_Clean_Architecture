@@ -6,25 +6,15 @@ using BlazorHero.CleanArchitecture.Application.Serialization.JsonConverters;
 using BlazorHero.CleanArchitecture.Application.Serialization.Options;
 using BlazorHero.CleanArchitecture.Application.Serialization.Serializers;
 using BlazorHero.CleanArchitecture.Application.Serialization.Settings;
-using BlazorHero.CleanArchitecture.Server.Localization;
 using BlazorHero.CleanArchitecture.Server.Services;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Localization;
 using System.Linq;
 
 
 namespace BlazorHero.CleanArchitecture.Server.Extensions;
 
 internal static class ServiceCollectionExtensions
-{       
-
-    internal static IServiceCollection AddServerLocalization(this IServiceCollection services)
-    {
-        services.TryAddTransient(typeof(IStringLocalizer<>), typeof(ServerLocalizer<>));
-        return services;
-    }  
-
+{   
 
     internal static IServiceCollection AddSerialization(this IServiceCollection services)
     {
