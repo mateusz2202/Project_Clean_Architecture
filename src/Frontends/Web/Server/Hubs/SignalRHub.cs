@@ -1,8 +1,7 @@
-﻿using BlazorHero.CleanArchitecture.Application.Models.Chat;
-using BlazorHero.CleanArchitecture.Shared.Constants.Application;
+﻿using BlazorHero.CleanArchitecture.Shared.Constants.Application;
 using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
-using BlazorHero.CleanArchitecture.Application.Interfaces.Chat;
+
 
 namespace BlazorHero.CleanArchitecture.Server.Hubs;
 public class SignalRHub : Hub
@@ -28,13 +27,7 @@ public class SignalRHub : Hub
     public async Task OnChangeRolePermissions(string userId, string roleId)
     {
         await Clients.All.SendAsync(ApplicationConstants.SignalR.LogoutUsersByRole, userId, roleId);
-    }
-
-    public async Task SendMessageAsync(ChatHistory<IChatUser> chatHistory, string userName)
-    {
-        await Clients.User(chatHistory.ToUserId).SendAsync(ApplicationConstants.SignalR.ReceiveMessage, chatHistory, userName);
-        await Clients.User(chatHistory.FromUserId).SendAsync(ApplicationConstants.SignalR.ReceiveMessage, chatHistory, userName);
-    }
+    }   
 
     public async Task ChatNotificationAsync(string message, string receiverUserId, string senderUserId)
     {

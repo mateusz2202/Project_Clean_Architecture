@@ -1,5 +1,4 @@
-﻿
-using BlazorHero.CleanArchitecture.Application.Interfaces.Serialization.Settings;
+﻿using BlazorHero.CleanArchitecture.Application.Interfaces.Serialization.Settings;
 using Newtonsoft.Json;
 
 namespace BlazorHero.CleanArchitecture.Application.Serialization.Settings;
