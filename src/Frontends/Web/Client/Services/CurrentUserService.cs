@@ -1,10 +1,10 @@
-﻿using BlazorHero.CleanArchitecture.Application.Interfaces.Services;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using BlazorHero.CleanArchitecture.Application.Interfaces.Services;
 
-namespace BlazorHero.CleanArchitecture.Server.Services;
+namespace BlazorHero.CleanArchitecture.Client.Services;
 
 public class CurrentUserService : ICurrentUserService
 {

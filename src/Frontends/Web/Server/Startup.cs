@@ -10,9 +10,7 @@ public class Startup
 {
    
     public void ConfigureServices(IServiceCollection services)
-    {       
-        services.AddCurrentUserService();
-        services.AddSerialization();          
+    {             
         services.AddSignalR();
         services.AddApplicationLayer();    
         services.AddControllers();
@@ -24,8 +22,7 @@ public class Startup
     {       
         app.UseExceptionHandling(env);
         app.UseHttpsRedirection();     
-        app.UseBlazorFrameworkFiles();
-        app.UseStaticFiles();       
+        app.UseBlazorFrameworkFiles();    
         app.UseRequestLocalizationByCulture();
         app.UseRouting();
         app.UseAuthentication();
