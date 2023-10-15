@@ -22,6 +22,15 @@ builder.Configuration.SetBasePath(Directory.GetCurrentDirectory())
     .AddEnvironmentVariables();
 
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy",
+    builder => builder
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader());  
+});
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -44,6 +53,8 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+app.UseCors("CorsPolicy");
+
 app.UseSwaggerForOcelotUI(options =>
 {
     options.PathToSwaggerGenerator = "/swagger/docs";
@@ -54,3 +65,4 @@ app.UseSwaggerForOcelotUI(options =>
 app.MapControllers();
 
 app.Run();
+

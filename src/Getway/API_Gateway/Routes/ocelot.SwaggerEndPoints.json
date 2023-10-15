@@ -7,7 +7,29 @@
         {
           "Name": "API_GW",
           "Version": "1.0",
-          "Url": "http://localhost:5205/swagger/v1/swagger.json"
+          "Url": "https://localhost:7205/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "document",
+      "TransformByOcelotConfig": true,
+      "Config": [
+        {
+          "Name": "Document.Api",
+          "Version": "1.0",
+          "Url": "https://localhost:7205/document/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "product",
+      "TransformByOcelotConfig": true,
+      "Config": [
+        {
+          "Name": "Product.Api",
+          "Version": "1.0",
+          "Url": "https://localhost:7205/product/swagger/v1/swagger.json"
         }
       ]
     },
@@ -18,10 +40,10 @@
         {
           "Name": "Operation.Api",
           "Version": "1.0",
-          "Url": "http://localhost:5205/operation/swagger/v1/swagger.json"
+          "Url": "https://localhost:7205/operation/swagger/v1/swagger.json"
         }
       ]
     }
-   
+
   ]
 }

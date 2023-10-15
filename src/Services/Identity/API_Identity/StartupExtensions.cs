@@ -5,6 +5,7 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using Identity.Application;
 using Identity.Infrastructure;
+using Identity.Infrastructure.Seeder;
 
 namespace Identity.API;
 
@@ -17,7 +18,7 @@ public static class StartupExtensions
 
         builder.Services.AddApplication();
         builder.Services.AddIdentity(builder.Configuration);
-
+     
         builder.Services.AddScoped<ExceptionHandlerMiddleware>();
         builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
@@ -98,6 +99,20 @@ public static class StartupExtensions
             options.OperationFilter<AppendAuthorizeToSummaryOperationFilter>();
 
         });
+    }
+
+    internal static WebApplication Initialize(this WebApplication app, Microsoft.Extensions.Configuration.IConfiguration _configuration)
+    {
+        using var serviceScope = ((IApplicationBuilder)app).ApplicationServices.CreateScope();
+
+        var initializers = serviceScope.ServiceProvider.GetServices<IDatabaseSeeder>();
+
+        foreach (var initializer in initializers)
+        {
+            initializer.Initialize();
+        }
+
+        return app;
     }
 
 }
