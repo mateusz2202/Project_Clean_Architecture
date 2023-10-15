@@ -108,7 +108,7 @@ public class UserService : IUserService
     {
         var user = await _userManager.FindByIdAsync(request.UserId) ?? throw new NotFoundException("Not found user"); ;
         
-        if (user.Email == "mukesh@blazorhero.com")
+        if (user.Email == "jmate220@gmail.com")
         {
             return await Result.FailAsync("Not Allowed.");
         }

@@ -16,7 +16,7 @@ public class ExcelService : IExcelService
     {
         ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
         using var p = new ExcelPackage();
-        p.Workbook.Properties.Author = "BlazorHero";
+        p.Workbook.Properties.Author = "BlazorApp";
         p.Workbook.Worksheets.Add("Audit Trails");
         var ws = p.Workbook.Worksheets[0];
         ws.Name = sheetName;

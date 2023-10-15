@@ -73,9 +73,9 @@ namespace BlazorApp.Client.Infrastructure.Managers.Preferences
             var preference = await GetPreference() as ClientPreference;
             if (preference != null)
             {
-                if (preference.IsDarkMode == true) return BlazorHeroTheme.DarkTheme;
+                if (preference.IsDarkMode == true) return BlazorAppTheme.DarkTheme;
             }
-            return BlazorHeroTheme.DefaultTheme;
+            return BlazorAppTheme.DefaultTheme;
         }
         public async Task<bool> IsRTL()
         {

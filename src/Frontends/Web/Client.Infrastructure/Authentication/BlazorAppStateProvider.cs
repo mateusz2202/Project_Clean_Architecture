@@ -13,12 +13,12 @@ using System.Threading.Tasks;
 
 namespace BlazorApp.Client.Infrastructure.Authentication;
 
-public class BlazorHeroStateProvider : AuthenticationStateProvider
+public class BlazorAppStateProvider : AuthenticationStateProvider
 {
     private readonly HttpClient _httpClient;
     private readonly ILocalStorageService _localStorage;
 
-    public BlazorHeroStateProvider(
+    public BlazorAppStateProvider(
         HttpClient httpClient,
         ILocalStorageService localStorage)
     {

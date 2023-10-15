@@ -65,7 +65,7 @@ public class AuthenticationManager : IAuthenticationManager
                 await _localStorage.SetItemAsync(StorageConstants.Local.UserImageURL, userImageURL);
             }
 
-            await ((BlazorHeroStateProvider)this._authenticationStateProvider).StateChangedAsync();
+            await ((BlazorAppStateProvider)this._authenticationStateProvider).StateChangedAsync();
 
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
@@ -82,7 +82,7 @@ public class AuthenticationManager : IAuthenticationManager
         await _localStorage.RemoveItemAsync(StorageConstants.Local.AuthToken);
         await _localStorage.RemoveItemAsync(StorageConstants.Local.RefreshToken);
         await _localStorage.RemoveItemAsync(StorageConstants.Local.UserImageURL);
-        ((BlazorHeroStateProvider)_authenticationStateProvider).MarkUserAsLoggedOut();
+        ((BlazorAppStateProvider)_authenticationStateProvider).MarkUserAsLoggedOut();
         IdentityClient().DefaultRequestHeaders.Authorization = null;
         return await Result.SuccessAsync();
     }

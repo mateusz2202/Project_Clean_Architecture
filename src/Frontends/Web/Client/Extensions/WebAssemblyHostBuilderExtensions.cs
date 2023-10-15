@@ -52,8 +52,8 @@ public static class WebAssemblyHostBuilderExtensions
             })
             .AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies())
             .AddScoped<ClientPreferenceManager>()
-            .AddScoped<BlazorHeroStateProvider>()
-            .AddScoped<AuthenticationStateProvider, BlazorHeroStateProvider>()
+            .AddScoped<BlazorAppStateProvider>()
+            .AddScoped<AuthenticationStateProvider, BlazorAppStateProvider>()
             .AddManagers()             
             .AddTransient<AuthenticationHeaderHandler>()          
             .AddScoped(sp => sp

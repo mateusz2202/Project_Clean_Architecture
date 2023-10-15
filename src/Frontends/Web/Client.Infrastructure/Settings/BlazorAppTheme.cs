@@ -2,7 +2,7 @@
 
 namespace BlazorApp.Client.Infrastructure.Settings;
 
-public class BlazorHeroTheme
+public class BlazorAppTheme
 {
     private static Typography DefaultTypography = new Typography()
     {
