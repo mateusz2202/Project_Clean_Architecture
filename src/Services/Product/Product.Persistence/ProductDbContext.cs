@@ -60,7 +60,7 @@ public class ProductDBContext : DbContext
     //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     //{
 
-    //    string connectionString = "Server=Hermes\\HERMES_SERVER;Database=SS_ProductDB;User ID=sa;Password=997997;TrustServerCertificate=True;Trusted_Connection=True;";
+    //    string connectionString = "Server=localhost;Database=SS_ProductDB;User ID=sa;Password=Xd1234!2;TrustServerCertificate=True;Trusted_Connection=False;";
     //    optionsBuilder.UseSqlServer(connectionString);
 
     //}
