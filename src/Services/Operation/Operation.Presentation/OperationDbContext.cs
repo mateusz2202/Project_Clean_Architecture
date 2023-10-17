@@ -7,7 +7,7 @@ namespace Operation.Persistence;
 
 public partial class OperationDbContext : DbContext
 {
-    private readonly ICurrentUserService _currentUserService; 
+    private readonly ICurrentUserService _currentUserService;
 
     public OperationDbContext(DbContextOptions<OperationDbContext> options, ICurrentUserService currentUserService)
         : base(options)
@@ -95,6 +95,12 @@ public partial class OperationDbContext : DbContext
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+    //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    //{
 
+    //    string connectionString = "Server=localhost;Database=SS_OperationDB;User ID=sa;Password=Xd1234!2;TrustServerCertificate=True;Trusted_Connection=False;";
+    //    optionsBuilder.UseSqlServer(connectionString);
+
+    //}
 
 }
